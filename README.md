@@ -22,6 +22,8 @@ This project is set up as a monorepo containing backend services and prepared fo
 hotel-management/
 ├── .gitignore
 ├── README.md
+├── api/
+│   └── staff-management-api.yaml # OpenAPI 3.0.3 specification for Receptionist API
 ├── backend/
 │   ├── .env                    # Real environment variables (NEVER committed)
 │   ├── .env.example            # Placeholder environment template (committed)
