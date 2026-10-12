@@ -15,7 +15,6 @@ const {
   Reservation,
   RoomNight,
   Payment,
-  AuditLog,
   IdempotencyKey,
   Session,
 } = require('../db/models');
@@ -45,7 +44,6 @@ async function seed() {
     Reservation.deleteMany({}),
     RoomNight.deleteMany({}),
     Payment.deleteMany({}),
-    AuditLog.deleteMany({}),
     IdempotencyKey.deleteMany({}),
     Session.deleteMany({}),
   ]);

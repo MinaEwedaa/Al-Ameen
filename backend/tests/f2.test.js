@@ -11,7 +11,7 @@ describe('Feature 2: Authentication & Session Management', () => {
   beforeEach(async () => {
     await Staff.deleteMany({});
     await Session.deleteMany({});
-    await AuditLog.deleteMany({});
+    await AuditLog.collection.deleteMany({});
 
     const passwordHash = await argon2.hash(password);
 
@@ -198,7 +198,7 @@ describe('Feature 2: Authentication & Session Management', () => {
 
     // Verify audit log captured REFRESH_REUSE
     const reuseLog = await AuditLog.findOne({ action: 'REFRESH_REUSE' });
-    expect(reuseLog).toBeDefined();
+    expect(reuseLog).not.toBeNull();
   });
 
   test('refresh endpoint rejects forbidden Origin header', async () => {

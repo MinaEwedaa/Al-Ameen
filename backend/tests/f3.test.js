@@ -72,7 +72,7 @@ describe('Feature 3: Shift Engine & Attendance', () => {
 
     expect(res.status).toBe(200);
     expect(res.body.read_only).toBe(false);
-    expect(res.body.shift).toBeDefined();
+    expect(res.body.shift).not.toBeNull();
     expect(res.body.shift.shift_date).toBe(today);
     expect(res.body.shift.shift_type).toBe('morning');
     expect(res.body.shift.start_time).toBe('07:00');
@@ -81,12 +81,12 @@ describe('Feature 3: Shift Engine & Attendance', () => {
 
     // Verify Shift DB document
     const shiftDoc = await Shift.findOne({ staff_id: morningStaff._id, shift_date: today });
-    expect(shiftDoc).toBeDefined();
+    expect(shiftDoc).not.toBeNull();
     expect(shiftDoc.status).toBe('active');
 
     // Verify Attendance DB document
     const attendanceDoc = await Attendance.findOne({ shift_id: shiftDoc._id });
-    expect(attendanceDoc).toBeDefined();
+    expect(attendanceDoc).not.toBeNull();
     expect(attendanceDoc.status).toBe('present');
     expect(attendanceDoc.date).toBe(today);
   });
@@ -180,7 +180,7 @@ describe('Feature 3: Shift Engine & Attendance', () => {
 
     // Shift and attendance are now opened
     const shiftDoc = await Shift.findOne({ staff_id: morningStaff._id, shift_date: today });
-    expect(shiftDoc).toBeDefined();
+    expect(shiftDoc).not.toBeNull();
     expect(shiftDoc.status).toBe('active');
   });
 
@@ -349,11 +349,11 @@ describe('Feature 3: Shift Engine & Attendance', () => {
 
     // Verify Attendance has check_out_at
     const attendanceDoc = await Attendance.findOne({ shift_id: shiftId });
-    expect(attendanceDoc.check_out_at).toBeDefined();
+    expect(attendanceDoc.check_out_at).toBeInstanceOf(Date);
 
     // Verify ShiftReport PDF stored with SHA256
     const reportDoc = await ShiftReport.findOne({ shift_id: shiftId });
-    expect(reportDoc).toBeDefined();
+    expect(reportDoc).not.toBeNull();
     expect(reportDoc.pdf).toBeInstanceOf(Buffer);
     expect(reportDoc.sha256).toBeDefined();
 
