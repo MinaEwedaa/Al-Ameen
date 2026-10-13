@@ -46,7 +46,7 @@ async function createGuest(payload, actorStaffId, ip) {
   if (!/^\+?\d{7,15}$/.test(phone)) {
   throw E.validation('Invalid phone number.');
 }
-  if (!/^[A-Z0-9]{6,30}$/.test(idNorm)) {
+  if (!/^[A-Z0-9]{7,30}$/.test(idNorm)) {
     throw E.validation('Invalid ID number.');
   }
 
@@ -112,7 +112,7 @@ async function searchGuests(filters, page = 1, limit = 20) {
 
   if (id_number !== undefined) {
     const idNorm = normalizeIdNumber(id_number);
-    if (!/^[A-Z0-9]{6,30}$/.test(idNorm)) {
+    if (!/^[A-Z0-9]{7,30}$/.test(idNorm)) {
       throw E.validation('Invalid ID number.');
     }
     conditions.push({ id_number_hash: blindIndex(idNorm) });

@@ -444,14 +444,18 @@ paths:
             application/json:
               schema:
                 type: object
-                required: [data, meta]
+                required: [guests, page, limit, total]
                 properties:
-                  data:
+                  guests:
                     type: array
                     items:
                       $ref: '#/components/schemas/Guest'
-                  meta:
-                    $ref: '#/components/schemas/Meta'
+                  page:
+                    type: integer
+                  limit:
+                    type: integer
+                  total:
+                    type: integer
         '400':
           $ref: '#/components/responses/BadRequest'
         '401':
@@ -1697,7 +1701,8 @@ components:
       required: [guest_id, name, phone, id_number]
       properties:
         guest_id:
-          type: integer
+          type: string
+          example: '6acdc9c681d42a01709fcb7a'
         name:
           type: string
         phone:
