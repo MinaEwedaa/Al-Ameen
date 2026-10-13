@@ -117,7 +117,7 @@ describe('Feature 5: Rooms & Dashboard', () => {
 
   test('GET /rooms returns DTOs: string ids, prices in EGP, sorted by room number', async () => {
     await makeRoom({ room_number: '205', floor: 2, room_type: 'suite' });
-    await makeRoom({ room_number: '101' });
+    await makeRoom({ room_number: '101', view: 'garden' });
 
     const res = await get('/api/v1/rooms');
     expect(res.status).toBe(200);
@@ -126,6 +126,7 @@ describe('Feature 5: Rooms & Dashboard', () => {
     const r = res.body.data[0];
     expect(typeof r.room_id).toBe('string');
     expect(r.floor).toBe(1);
+    expect(r.view).toBe('garden');
     expect(r.price_per_night).toBe(1500);
     expect(r.half_day_price).toBe(500);
     expect(r.status).toBe('available');

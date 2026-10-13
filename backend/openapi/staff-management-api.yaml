@@ -1640,6 +1640,11 @@ components:
           type: string
           nullable: true
           description: Name of the checked-in guest. Filled only when the room is occupied.
+        view:
+          type: string
+          nullable: true
+          enum: [nile, garden, city, null]
+          description: Room view. Null when not set.     
         updated_at:
           type: string
           format: date-time

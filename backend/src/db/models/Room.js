@@ -21,6 +21,14 @@ const roomSchema = new Schema(
     floor: {
       type: Number,
     },
+        floor: {
+      type: Number,
+    },
+    view: {
+      type: String,
+      enum: ['nile', 'garden', 'city'],
+      default: null,
+    },
     price_per_night: {
       type: Number,
       required: true,

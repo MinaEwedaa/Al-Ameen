@@ -5,6 +5,7 @@ function toRoomDto(room, { status, guestName = null } = {}) {
     room_id: String(room._id),
     room_number: room.room_number,
     floor: room.floor ?? null,
+    view: room.view ?? null,
     room_type: room.room_type,
     status: status || room.status,
     description: room.description || '',
