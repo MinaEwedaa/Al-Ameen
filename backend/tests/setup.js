@@ -1,4 +1,7 @@
 process.env.NODE_ENV = 'test';
+process.env.MONGODB_URI =
+  process.env.MONGODB_URI || 'mongodb://127.0.0.1:27017/test-placeholder';
+
 process.env.PORT = '3000';
 process.env.JWT_SECRET = process.env.JWT_SECRET || 'test_jwt_secret_must_be_long_enough_for_security_1234567890abcdef';
 process.env.ID_ENC_KEY = process.env.ID_ENC_KEY || Buffer.alloc(32).toString('base64');
