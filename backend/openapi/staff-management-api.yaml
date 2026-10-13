@@ -1610,11 +1610,18 @@ components:
           $ref: '#/components/schemas/PaymentTotals'
     Room:
       type: object
-      required: [room_id, room_type, status, description, price_per_night, half_day_price]
+      required: [room_id, room_number, room_type, status, description, price_per_night, half_day_price]
       properties:
         room_id:
+          type: string
+          example: '6acdc9c681d42a01709fcb7a'
+        room_number:
+          type: string
+          example: '101'
+        floor:
           type: integer
-          example: 101
+          nullable: true
+          example: 1
         room_type:
           type: string
           example: double
@@ -1629,6 +1636,14 @@ components:
           allOf:
             - $ref: '#/components/schemas/Money'
           description: Price of a half-day extension after check-out, or of an early arrival before 12:00.
+        current_guest_name:
+          type: string
+          nullable: true
+          description: Name of the checked-in guest. Filled only when the room is occupied.
+        updated_at:
+          type: string
+          format: date-time
+          nullable: true
     RoomStatusChange:
       type: object
       required: [status]
@@ -1644,9 +1659,9 @@ components:
       required: [history_id, room_id, status, changed_at, shift_id]
       properties:
         history_id:
-          type: integer
+          type: string
         room_id:
-          type: integer
+          type: string
         status:
           $ref: '#/components/schemas/RoomStatus'
         notes:
@@ -1656,7 +1671,8 @@ components:
           type: string
           format: date-time
         shift_id:
-          type: integer
+          type: string
+          nullable: true
     GuestCreate:
       type: object
       required: [name, phone, id_number]

@@ -42,6 +42,8 @@ app.use(
 // Module routes
 app.use('/api/v1/auth', require('./modules/auth/auth.routes'));
 app.use('/api/v1/shifts', require('./modules/shifts/shift.routes'));
+app.use('/api/v1/rooms', require('./modules/rooms/room.routes'));
+app.use('/api/v1/dashboard', require('./modules/dashboard/dashboard.routes'));
 
 if (env.nodeEnv === 'test') {
   app.post(
