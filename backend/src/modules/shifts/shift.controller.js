@@ -1,5 +1,5 @@
 const shiftService = require('./shift.service');
-
+const { getNow } = require('../../utils/clock');
 async function getCurrentShift(req, res, next) {
   try {
     const shift = await shiftService.getCurrentShift(req.auth.staff._id);
@@ -20,9 +20,7 @@ async function getShiftSummary(req, res, next) {
 
 async function handoverShift(req, res, next) {
   try {
-    const now = req.headers['x-test-time']
-      ? new Date(req.headers['x-test-time'])
-      : new Date();
+    const now = getNow(req);
     const updated = await shiftService.handoverShift(
       req.auth.staff,
       req.body?.shift_notes,

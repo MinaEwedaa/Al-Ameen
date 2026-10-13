@@ -2,16 +2,14 @@ const { Shift } = require('../db/models');
 const { shiftWindow } = require('../utils/time');
 const { E } = require('../utils/errors');
 const shiftService = require('../modules/shifts/shift.service');
-
+const { getNow } = require('../utils/clock');
 module.exports = async function requireShift(req, res, next) {
   try {
     if (!req.auth || !req.auth.staff) {
       throw E.unauthorized('Authentication required');
     }
 
-    const now = req.headers['x-test-time']
-      ? new Date(req.headers['x-test-time'])
-      : new Date();
+  const now = getNow(req);
 
     const session = req.auth.session;
 
@@ -49,4 +47,5 @@ module.exports = async function requireShift(req, res, next) {
   } catch (err) {
     next(err);
   }
+ 
 };
