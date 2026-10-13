@@ -488,6 +488,16 @@ paths:
         Returns `409 CONFLICT` if the room is already booked for an overlapping period (compared by date and time).
       parameters:
         - $ref: '#/components/parameters/IdempotencyKey'
+        - name: Authorization
+          in: header
+          required: false
+          schema:
+            type: string
+        - name: x-test-time
+          in: header
+          required: false
+          schema:
+            type: string
       requestBody:
         required: true
         content:
@@ -528,11 +538,11 @@ paths:
         - name: room_id
           in: query
           schema:
-            type: integer
+            type: string
         - name: guest_id
           in: query
           schema:
-            type: integer
+            type: string
         - name: check_in_from
           in: query
           schema:
