@@ -6,6 +6,9 @@ process.env.ID_HMAC_KEY = process.env.ID_HMAC_KEY || Buffer.alloc(32).toString('
 process.env.ALLOWED_ORIGINS = process.env.ALLOWED_ORIGINS || 'http://localhost:5173';
 process.env.COOKIE_SECURE = 'false';
 process.env.LATE_GRACE_MINUTES = '15';
+// supertest بيعمل كل الطلبات من نفس الـ IP، فنرفع حد الـ login limiter في الاختبارات بس.
+// rateLimit.js بيقرا القيمة دي فقط لما NODE_ENV === 'test'.
+process.env.LOGIN_RATE_LIMIT_MAX = '1000';
 // قيمة مؤقتة عشان env.js ما يرميش خطأ وقت الـ require (الـ URI الحقيقي بيتحط تحت في beforeAll)
 process.env.MONGODB_URI = process.env.MONGODB_URI || 'mongodb://127.0.0.1:27017/test_placeholder';
 
