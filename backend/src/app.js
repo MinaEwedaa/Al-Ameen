@@ -46,7 +46,7 @@ app.use('/api/v1/shifts', require('./modules/shifts/shift.routes'));
 app.use('/api/v1/rooms', require('./modules/rooms/room.routes'));
 app.use('/api/v1/dashboard', require('./modules/dashboard/dashboard.routes'));
 app.use('/api/v1/guests', require('./modules/guests/guest.routes'));
-
+app.use('/api/v1/reservations', require('./modules/reservations/reservation.routes'));
 if (env.nodeEnv === 'test') {
   app.post(
     '/api/v1/test-shift-write',
