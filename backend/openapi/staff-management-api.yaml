@@ -528,11 +528,11 @@ paths:
         - name: room_id
           in: query
           schema:
-            type: integer
+            type: string
         - name: guest_id
           in: query
           schema:
-            type: integer
+            type: string
         - name: check_in_from
           in: query
           schema:
