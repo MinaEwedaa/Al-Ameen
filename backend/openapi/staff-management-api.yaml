@@ -749,6 +749,8 @@ paths:
       parameters:
         - $ref: '#/components/parameters/ReservationId'
         - $ref: '#/components/parameters/IdempotencyKey'
+        - $ref: '#/components/parameters/AuthorizationHeader'
+        - $ref: '#/components/parameters/TestTimeHeader'
       responses:
         '200':
           description: Guest checked out
@@ -1053,6 +1055,8 @@ paths:
         Payments are append-only: there is no update or delete. A mistake is corrected from the Manager system with a reversing record, and `payment_verified` is set only there.
       parameters:
         - $ref: '#/components/parameters/IdempotencyKey'
+        - $ref: '#/components/parameters/AuthorizationHeader'
+        - $ref: '#/components/parameters/TestTimeHeader'
       requestBody:
         required: true
         content:
@@ -1268,6 +1272,18 @@ components:
         type: string
         format: uuid
       example: 3f2b8c5e-7d1a-4c0e-9b6a-2e8f4d1c7a90
+    AuthorizationHeader:
+      name: Authorization
+      in: header
+      required: false
+      schema:
+        type: string
+    TestTimeHeader:
+      name: x-test-time
+      in: header
+      required: false
+      schema:
+        type: string
     RoomId:
       name: room_id
       in: path

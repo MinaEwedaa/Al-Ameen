@@ -36,7 +36,7 @@ describe('F6 Guests API', () => {
       Shift.deleteMany({}),
       ShiftException.deleteMany({}),
       Attendance.deleteMany({}),
-      Payment.deleteMany({}),
+      Payment.collection.deleteMany({}),
       Reservation.deleteMany({}),
       CleaningTask.deleteMany({}),
       MaintenanceIssue.deleteMany({}),

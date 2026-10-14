@@ -59,4 +59,18 @@ paymentSchema.index(
   { unique: true, partialFilterExpression: { idempotency_key: { $type: 'string' } } }
 );
 
+
+const blocked = (op) => async function () {
+  throw new Error(`Payments are append-only: ${op} is not allowed`);
+};
+
+[
+  'updateOne', 'updateMany', 'findOneAndUpdate', 'findOneAndDelete',
+  'findOneAndReplace', 'replaceOne', 'deleteOne', 'deleteMany',
+].forEach((op) => paymentSchema.pre(op, blocked(op)));
+
+paymentSchema.pre('save', async function () {
+  if (!this.isNew) throw new Error('Payments are append-only: save on an existing payment is not allowed');
+});
+
 module.exports = model('Payment', paymentSchema);
