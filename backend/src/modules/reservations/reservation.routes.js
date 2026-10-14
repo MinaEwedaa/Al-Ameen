@@ -4,12 +4,12 @@ const { requireRole } = require('../../middleware/requireRole');
 const requireShift = require('../../middleware/requireShift');
 const idempotent = require('../../middleware/idempotency');
 const reservationController = require('./reservation.controller');
-
+const paymentController = require('../payments/payment.controller');
 const router = express.Router();
 
 router.use(authenticate);
 router.use(requireRole('receptionist'));
 
 router.post('/', requireShift, idempotent(), reservationController.createReservation);
-
+router.get('/:reservation_id/payments', paymentController.listReservationPayments);
 module.exports = router;
