@@ -141,7 +141,18 @@ async function listShiftPayments({ shiftId, page = 1, limit = 20 }) {
   return paginate(
     Payment,
     { shift_id: shiftId },
-    { page: Number(page), limit: Number(limit), sort: { payment_datetime: -1 } },
+    {
+      page: Number(page),
+      limit: Number(limit),
+      sort: { payment_datetime: -1 },
+      populate: {
+        path: 'reservation_id',
+        populate: [
+          { path: 'guest_id', select: 'name' },
+          { path: 'room_id', select: 'room_number' },
+        ],
+      },
+    },
     toPaymentDto
   );
 }

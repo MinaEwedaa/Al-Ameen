@@ -12,4 +12,8 @@ router.use(requireRole('receptionist'));
 
 router.post('/', requireShift, idempotent(), reservationController.createReservation);
 router.get('/:reservation_id/payments', paymentController.listReservationPayments);
+router.post('/:reservation_id/check-in', requireShift, idempotent(), reservationController.checkIn);
+router.post('/:reservation_id/extend', requireShift, idempotent(), reservationController.extendStay);
+router.post('/:reservation_id/check-out', requireShift, idempotent(), reservationController.checkOut);
+
 module.exports = router;

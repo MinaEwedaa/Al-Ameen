@@ -37,6 +37,10 @@ const maintenanceIssueSchema = new Schema(
       default: '',
       trim: true,
     },
+    created_at: {
+      type: Date,
+      default: Date.now,
+    },
     resolved_at: {
       type: Date,
       default: null,

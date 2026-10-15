@@ -1,0 +1,504 @@
+{
+  "info": {
+    "_postman_id": "a91b32d0-5678-4321-9876-0123456789de",
+    "name": "Al-Amin Hotel Management System - E2E API Collection",
+    "description": "Complete Feature 14 End-to-End API collection for frontend integration and staging verification.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "0. System Health & Docs",
+      "item": [
+        {
+          "name": "Health Check",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:3000/health",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "3000",
+              "path": ["health"]
+            }
+          }
+        },
+        {
+          "name": "Swagger UI Docs",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:3000/docs/",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "3000",
+              "path": ["docs", ""]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "1. Authentication & Shift",
+      "item": [
+        {
+          "name": "Receptionist Login",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const res = pm.response.json();",
+                  "if (res.access_token) {",
+                  "  pm.environment.set('token', res.access_token);",
+                  "}",
+                  "if (res.shift && res.shift.shift_id) {",
+                  "  pm.environment.set('shiftId', res.shift.shift_id);",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"sec_receptionist\",\n  \"password\": \"Password123\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/auth/login",
+              "host": ["{{baseUrl}}"],
+              "path": ["auth", "login"]
+            }
+          }
+        },
+        {
+          "name": "Get Current Active Shift",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/shifts/current",
+              "host": ["{{baseUrl}}"],
+              "path": ["shifts", "current"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "2. Rooms & Availability",
+      "item": [
+        {
+          "name": "List All Rooms",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const res = pm.response.json();",
+                  "if (res.data && res.data.length > 0) {",
+                  "  pm.environment.set('roomId', res.data[0].room_id);",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/rooms",
+              "host": ["{{baseUrl}}"],
+              "path": ["rooms"]
+            }
+          }
+        },
+        {
+          "name": "Check Availability",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/rooms/availability?check_in=2026-10-18T12:00:00.000Z&check_out=2026-10-20T12:00:00.000Z",
+              "host": ["{{baseUrl}}"],
+              "path": ["rooms", "availability"],
+              "query": [
+                { "key": "check_in", "value": "2026-10-18T12:00:00.000Z" },
+                { "key": "check_out", "value": "2026-10-20T12:00:00.000Z" }
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "3. Guest Profile & Reservations",
+      "item": [
+        {
+          "name": "Create Guest (Arabic Name)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const res = pm.response.json();",
+                  "if (res.guest_id) {",
+                  "  pm.environment.set('guestId', res.guest_id);",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"عبد الرحمن بن خلدون المصري\",\n  \"phone\": \"+201099887766\",\n  \"id_number\": \"29510101234567\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/guests",
+              "host": ["{{baseUrl}}"],
+              "path": ["guests"]
+            }
+          }
+        },
+        {
+          "name": "Create Reservation",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const res = pm.response.json();",
+                  "if (res.reservation_id) {",
+                  "  pm.environment.set('reservationId', res.reservation_id);",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" },
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Idempotency-Key", "value": "{{$guid}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"guest_id\": \"{{guestId}}\",\n  \"room_id\": \"{{roomId}}\",\n  \"check_in\": \"2026-10-18T12:00:00.000Z\",\n  \"check_out\": \"2026-10-20T12:00:00.000Z\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/reservations",
+              "host": ["{{baseUrl}}"],
+              "path": ["reservations"]
+            }
+          }
+        },
+        {
+          "name": "Deposit Payment (Cash)",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" },
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Idempotency-Key", "value": "{{$guid}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"reservation_id\": \"{{reservationId}}\",\n  \"amount\": 1000,\n  \"payment_method\": \"cash\",\n  \"notes\": \"عربون حجز\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/payments",
+              "host": ["{{baseUrl}}"],
+              "path": ["payments"]
+            }
+          }
+        },
+        {
+          "name": "Check-in Reservation",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" },
+              { "key": "Idempotency-Key", "value": "{{$guid}}" }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/reservations/{{reservationId}}/check-in",
+              "host": ["{{baseUrl}}"],
+              "path": ["reservations", "{{reservationId}}", "check-in"]
+            }
+          }
+        },
+        {
+          "name": "Extend Stay",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" },
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Idempotency-Key", "value": "{{$guid}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/reservations/{{reservationId}}/extend",
+              "host": ["{{baseUrl}}"],
+              "path": ["reservations", "{{reservationId}}", "extend"]
+            }
+          }
+        },
+        {
+          "name": "Pay Remaining Balance (Instapay)",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" },
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Idempotency-Key", "value": "{{$guid}}" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"reservation_id\": \"{{reservationId}}\",\n  \"amount\": 2600,\n  \"payment_method\": \"instapay\",\n  \"notes\": \"سداد المتبقي إنستاباي\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/payments",
+              "host": ["{{baseUrl}}"],
+              "path": ["payments"]
+            }
+          }
+        },
+        {
+          "name": "Check-out Reservation",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" },
+              { "key": "Idempotency-Key", "value": "{{$guid}}" }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/reservations/{{reservationId}}/check-out",
+              "host": ["{{baseUrl}}"],
+              "path": ["reservations", "{{reservationId}}", "check-out"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "4. Housekeeping & Maintenance",
+      "item": [
+        {
+          "name": "List Cleaning Tasks",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const res = pm.response.json();",
+                  "if (res.data && res.data.length > 0) {",
+                  "  pm.environment.set('cleaningTaskId', res.data[0].task_id);",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/cleaning-tasks",
+              "host": ["{{baseUrl}}"],
+              "path": ["cleaning-tasks"]
+            }
+          }
+        },
+        {
+          "name": "Assign Cleaner",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"cleaner_name\": \"أمينة إبراهيم\",\n  \"notes\": \"تنظيف شامل\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/cleaning-tasks/{{cleaningTaskId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["cleaning-tasks", "{{cleaningTaskId}}"]
+            }
+          }
+        },
+        {
+          "name": "Mark Cleaning Done",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"status\": \"done\",\n  \"notes\": \"تم الانتهاء\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/cleaning-tasks/{{cleaningTaskId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["cleaning-tasks", "{{cleaningTaskId}}"]
+            }
+          }
+        },
+        {
+          "name": "Reset Room Status to Available",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"status\": \"available\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/rooms/{{roomId}}/status",
+              "host": ["{{baseUrl}}"],
+              "path": ["rooms", "{{roomId}}", "status"]
+            }
+          }
+        },
+        {
+          "name": "Report Maintenance Issue",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const res = pm.response.json();",
+                  "if (res.issue_id) {",
+                  "  pm.environment.set('maintenanceIssueId', res.issue_id);",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"room_id\": \"{{roomId}}\",\n  \"problem\": \"عطل في مفتاح مكيف الهواء\",\n  \"priority\": \"medium\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/maintenance-issues",
+              "host": ["{{baseUrl}}"],
+              "path": ["maintenance-issues"]
+            }
+          }
+        },
+        {
+          "name": "Resolve Maintenance Issue",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"status\": \"resolved\",\n  \"notes\": \"تم الاستبدال بنجاح\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/maintenance-issues/{{maintenanceIssueId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["maintenance-issues", "{{maintenanceIssueId}}"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "5. Shift Summary & Handover",
+      "item": [
+        {
+          "name": "Current Shift Summary",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/shifts/current/summary",
+              "host": ["{{baseUrl}}"],
+              "path": ["shifts", "current", "summary"]
+            }
+          }
+        },
+        {
+          "name": "Shift Handover",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"shift_notes\": \"تسليم الوردية بكافة السجلات والحسابات\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/shifts/current/handover",
+              "host": ["{{baseUrl}}"],
+              "path": ["shifts", "current", "handover"]
+            }
+          }
+        },
+        {
+          "name": "Download Shift Report PDF",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/shifts/{{shiftId}}/report",
+              "host": ["{{baseUrl}}"],
+              "path": ["shifts", "{{shiftId}}", "report"]
+            }
+          }
+        }
+      ]
+    }
+  ]
+}

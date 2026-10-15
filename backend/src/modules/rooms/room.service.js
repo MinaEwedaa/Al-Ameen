@@ -37,14 +37,14 @@ async function findRoomOrThrow(roomId) {
 // الحالة الفعلية: reserved بتتحسب لو الغرفة available وعليها حجز confirmed ليوم الإقامة الحالي
 async function deriveStatuses(rooms, now) {
   const day = stayDay(now);
-  const nights = await RoomNight.find({ room_id: { $in: rooms.map((r) => r._id) }, day })
+  const nights = await RoomNight.find({ room_id: rooms.map((r) => r._id), day })
     .select('room_id reservation_id')
     .lean();
 
   const reservedRooms = new Set();
   if (nights.length) {
     const confirmed = await Reservation.find({
-      _id: { $in: nights.map((n) => n.reservation_id) },
+      _id: nights.map((n) => n.reservation_id),
       status: 'confirmed',
     })
       .select('_id')
@@ -70,10 +70,10 @@ async function currentGuestNames(rooms, statusMap) {
     .map((r) => r._id);
   if (!occupiedIds.length) return names;
 
-  const resv = await Reservation.find({ room_id: { $in: occupiedIds }, status: 'checked_in' })
+  const resv = await Reservation.find({ room_id: occupiedIds, status: 'checked_in' })
     .select('room_id guest_id')
     .lean();
-  const guests = await Guest.find({ _id: { $in: resv.map((r) => r.guest_id) } })
+  const guests = await Guest.find({ _id: resv.map((r) => r.guest_id) })
     .select('name')
     .lean();
   const nameById = new Map(guests.map((g) => [String(g._id), g.name]));

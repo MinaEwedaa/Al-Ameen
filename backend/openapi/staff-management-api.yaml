@@ -83,12 +83,12 @@ paths:
                     access_token: eyJhbGciOiJIUzI1NiIs...
                     expires_in: 900
                     staff:
-                      staff_id: 1
+                      staff_id: '1'
                       name: Ahmed
                       default_shift_type: morning
                     shift:
-                      shift_id: 41
-                      staff_id: 1
+                      shift_id: '41'
+                      staff_id: '1'
                       shift_date: '2026-10-08'
                       shift_type: morning
                       start_time: '07:00'
@@ -103,7 +103,7 @@ paths:
                     access_token: eyJhbGciOiJIUzI1NiIs...
                     expires_in: 900
                     staff:
-                      staff_id: 1
+                      staff_id: '1'
                       name: Ahmed
                       default_shift_type: morning
                     shift: null
@@ -196,7 +196,7 @@ paths:
                 $ref: '#/components/schemas/Me'
               example:
                 staff:
-                  staff_id: 1
+                  staff_id: '1'
                   name: Ahmed
                   default_shift_type: morning
                 shift: null
@@ -505,8 +505,8 @@ paths:
             schema:
               $ref: '#/components/schemas/ReservationCreate'
             example:
-              guest_id: 7
-              room_id: 101
+              guest_id: '7'
+              room_id: '101'
               check_in: '2026-10-10T12:00:00+03:00'
               check_out: '2026-10-13T12:00:00+03:00'
       responses:
@@ -671,6 +671,8 @@ paths:
       parameters:
         - $ref: '#/components/parameters/ReservationId'
         - $ref: '#/components/parameters/IdempotencyKey'
+        - $ref: '#/components/parameters/AuthorizationHeader'
+        - $ref: '#/components/parameters/TestTimeHeader'
       requestBody:
         required: false
         content:
@@ -712,6 +714,8 @@ paths:
       parameters:
         - $ref: '#/components/parameters/ReservationId'
         - $ref: '#/components/parameters/IdempotencyKey'
+        - $ref: '#/components/parameters/AuthorizationHeader'
+        - $ref: '#/components/parameters/TestTimeHeader'
       responses:
         '200':
           description: Extension added
@@ -720,9 +724,9 @@ paths:
               schema:
                 $ref: '#/components/schemas/Reservation'
               example:
-                reservation_id: 55
-                guest_id: 7
-                room_id: 101
+                reservation_id: '55'
+                guest_id: '7'
+                room_id: '101'
                 check_in: '2026-10-10T12:00:00+03:00'
                 check_out: '2026-10-13T12:00:00+03:00'
                 status: checked_in
@@ -803,6 +807,9 @@ paths:
       operationId: createCleaningTask
       summary: Record a room that needs cleaning
       description: The receptionist assigns the cleaner because housekeeping has no system access, so `cleaner_name` is free text. The server sets `status=pending`, `assigned_date`, the shift and the staff member.
+      parameters:
+        - $ref: '#/components/parameters/AuthorizationHeader'
+        - $ref: '#/components/parameters/TestTimeHeader'
       requestBody:
         required: true
         content:
@@ -810,7 +817,7 @@ paths:
             schema:
               $ref: '#/components/schemas/CleaningTaskCreate'
             example:
-              room_id: 205
+              room_id: '205'
               cleaner_name: Mona
               priority: high
               notes: Guest checked out
@@ -851,6 +858,8 @@ paths:
             type: string
         - $ref: '#/components/parameters/Page'
         - $ref: '#/components/parameters/Limit'
+        - $ref: '#/components/parameters/AuthorizationHeader'
+        - $ref: '#/components/parameters/TestTimeHeader'
       responses:
         '200':
           description: Cleaning tasks
@@ -875,6 +884,8 @@ paths:
       summary: Get one cleaning task
       parameters:
         - $ref: '#/components/parameters/TaskId'
+        - $ref: '#/components/parameters/AuthorizationHeader'
+        - $ref: '#/components/parameters/TestTimeHeader'
       responses:
         '200':
           description: Task
@@ -893,6 +904,8 @@ paths:
       description: Setting `status` to `done` makes the server fill `finished_date`. A task created at check-out has no cleaner name and shows as pending until one is assigned. A `done` task cannot go back to `pending`.
       parameters:
         - $ref: '#/components/parameters/TaskId'
+        - $ref: '#/components/parameters/AuthorizationHeader'
+        - $ref: '#/components/parameters/TestTimeHeader'
       requestBody:
         required: true
         content:
@@ -924,6 +937,9 @@ paths:
       operationId: createMaintenanceIssue
       summary: Report a maintenance problem
       description: The server sets `status=open`, `created_date`, the shift and the reporting staff member.
+      parameters:
+        - $ref: '#/components/parameters/AuthorizationHeader'
+        - $ref: '#/components/parameters/TestTimeHeader'
       requestBody:
         required: true
         content:
@@ -931,7 +947,7 @@ paths:
             schema:
               $ref: '#/components/schemas/MaintenanceIssueCreate'
             example:
-              room_id: 205
+              room_id: '205'
               problem: Water leak
               priority: urgent
               notes: Bathroom ceiling
@@ -972,6 +988,8 @@ paths:
             type: string
         - $ref: '#/components/parameters/Page'
         - $ref: '#/components/parameters/Limit'
+        - $ref: '#/components/parameters/AuthorizationHeader'
+        - $ref: '#/components/parameters/TestTimeHeader'
       responses:
         '200':
           description: Issues
@@ -996,6 +1014,8 @@ paths:
       summary: Get one issue
       parameters:
         - $ref: '#/components/parameters/IssueId'
+        - $ref: '#/components/parameters/AuthorizationHeader'
+        - $ref: '#/components/parameters/TestTimeHeader'
       responses:
         '200':
           description: Issue
@@ -1015,6 +1035,8 @@ paths:
         Resolving is a PATCH with `{ "status": "resolved" }`. The server fills `resolved_date`. A `resolved` issue cannot be reopened by the receptionist.
       parameters:
         - $ref: '#/components/parameters/IssueId'
+        - $ref: '#/components/parameters/AuthorizationHeader'
+        - $ref: '#/components/parameters/TestTimeHeader'
       requestBody:
         required: true
         content:
@@ -1067,14 +1089,14 @@ paths:
               by_reservation:
                 summary: Deposit for a reservation
                 value:
-                  reservation_id: 55
+                  reservation_id: '55'
                   amount: 1500.00
                   payment_method: cash
                   notes: Deposit
               by_room:
                 summary: Payment by room number
                 value:
-                  room_id: 101
+                  room_id: '101'
                   amount: 3000.00
                   payment_method: instapay
       responses:
@@ -1086,10 +1108,10 @@ paths:
                 $ref: '#/components/schemas/PaymentResult'
               example:
                 payment:
-                  payment_id: 900
-                  reservation_id: 55
-                  staff_id: 1
-                  shift_id: 41
+                  payment_id: '900'
+                  reservation_id: '55'
+                  staff_id: '1'
+                  shift_id: '41'
                   amount: 1500.00
                   payment_method: cash
                   notes: Deposit
@@ -1138,6 +1160,9 @@ paths:
       tags: [Shifts]
       operationId: getCurrentShift
       summary: The caller's active shift
+      parameters:
+        - $ref: '#/components/parameters/AuthorizationHeader'
+        - $ref: '#/components/parameters/TestTimeHeader'
       responses:
         '200':
           description: Active shift
@@ -1164,6 +1189,9 @@ paths:
       summary: Live summary before handover
       description: |
         Rooms handled, payments (total per method), check-ins and check-outs, cleaning tasks, maintenance issues and pending items. Pending is computed, not stored: cleaning tasks still `pending`, issues not `resolved`, and unverified payments.
+      parameters:
+        - $ref: '#/components/parameters/AuthorizationHeader'
+        - $ref: '#/components/parameters/TestTimeHeader'
       responses:
         '200':
           description: Summary
@@ -1191,6 +1219,9 @@ paths:
         - Open tasks and issues can still be updated by the next shift; those updates are logged under the next shift.
         - The PDF report is generated once, at handover, and stored as a fixed copy. Reopening a shift is a Manager system action.
         This is allowed even after the scheduled end, as long as the shift is still `active`. Attendance check-out is recorded at this moment.
+      parameters:
+        - $ref: '#/components/parameters/AuthorizationHeader'
+        - $ref: '#/components/parameters/TestTimeHeader'
       requestBody:
         required: false
         content:
@@ -1223,6 +1254,8 @@ paths:
         Returns the PDF that was generated at handover. Only the receptionist's own shifts are available; another shift returns 404. The report contains the receptionist's data, the shift time, rooms, cleaning, maintenance, payments and notes.
       parameters:
         - $ref: '#/components/parameters/ShiftId'
+        - $ref: '#/components/parameters/AuthorizationHeader'
+        - $ref: '#/components/parameters/TestTimeHeader'
       responses:
         '200':
           description: PDF report
@@ -1828,9 +1861,9 @@ components:
           type: string
           nullable: true
       example:
-        reservation_id: 55
-        guest_id: 7
-        room_id: 101
+        reservation_id: '55'
+        guest_id: '7'
+        room_id: '101'
         check_in: '2026-10-10T12:00:00+03:00'
         check_out: '2026-10-13T12:00:00+03:00'
         reservation_date: '2026-10-08T14:30:00+03:00'
@@ -1979,6 +2012,7 @@ components:
           nullable: true
         shift_id:
           type: string
+          nullable: true
           description: The shift in which the task was created.
         assigned_by_staff_id:
           type: string

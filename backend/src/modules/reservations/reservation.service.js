@@ -1,8 +1,16 @@
 const mongoose = require('mongoose');
-const { Room, RoomNight, Reservation, Guest } = require('../../db/models');
+const {
+  Room,
+  RoomNight,
+  Reservation,
+  Guest,
+  RoomStatusHistory,
+  CleaningTask,
+} = require('../../db/models');
 const { E } = require('../../utils/errors');
 const { isObjectId } = require('../../utils/ids');
 const { cairoDate, stayDay, noonCairo, nightsBetween, stayDays } = require('../../utils/time');
+const { toEgp } = require('../../utils/money');
 const { audit } = require('../audit/audit.service');
 const { AUDIT } = require('../audit/audit.actions');
 const { computeTotal } = require('./reservation.calc');
@@ -96,4 +104,274 @@ async function createReservation({ guest_id, room_id, check_in, check_out, staff
   return toReservationDto(reservation.toObject());
 }
 
-module.exports = { createReservation };
+async function checkIn({ reservation_id, early_arrival, staff, shift, ip, now }) {
+  if (!isObjectId(reservation_id)) throw E.notFound('Reservation not found');
+  const reservation = await Reservation.findById(reservation_id);
+  if (!reservation) throw E.notFound('Reservation not found');
+
+  if (reservation.status !== 'confirmed') {
+    throw E.conflict('Reservation is not confirmed');
+  }
+
+  const room = await Room.findById(reservation.room_id);
+  if (!room) throw E.notFound('Room not found');
+  if (room.status !== 'available') {
+    throw E.conflict(`Room is not available (current status: ${room.status}). Finish cleaning first.`);
+  }
+
+  const cNow = cairoDate(now);
+  const cCheckIn = cairoDate(reservation.check_in_at);
+
+  let isEarly = false;
+  if (now >= reservation.check_in_at) {
+    if (early_arrival === true) {
+      throw E.conflict('Arrival is not early; do not send early_arrival: true');
+    }
+    isEarly = false;
+  } else {
+    // now < check_in_at
+    if (cNow === cCheckIn) {
+      if (!early_arrival) {
+        throw E.conflict('Guest arrived before scheduled time. Confirm early arrival to proceed.');
+      }
+      isEarly = true;
+    } else {
+      throw E.conflict('Too early: change the reservation dates first');
+    }
+  }
+
+  const newTotal = computeTotal({
+    ...reservation.toObject(),
+    early_arrival: isEarly,
+  });
+
+  if ((reservation.paid_cache || 0) <= 0) {
+    throw E.conflict('Record at least one payment before check-in.', 'PAYMENT_REQUIRED');
+  }
+
+  let updatedReservation;
+  const session = await mongoose.startSession();
+  try {
+    await session.withTransaction(async () => {
+      const resUpd = await Reservation.updateOne(
+        { _id: reservation._id, status: 'confirmed' },
+        {
+          status: 'checked_in',
+          check_in_staff_id: staff._id,
+          check_in_shift_id: shift._id,
+          early_arrival: isEarly,
+          total_amount: newTotal,
+        },
+        { session }
+      );
+      if (resUpd.modifiedCount !== 1) {
+        throw E.conflict('Reservation is no longer confirmed');
+      }
+
+      const roomUpd = await Room.updateOne(
+        { _id: room._id, status: 'available' },
+        { status: 'occupied' },
+        { session }
+      );
+      if (roomUpd.modifiedCount !== 1) {
+        throw E.conflict('Room is no longer available');
+      }
+
+      await RoomStatusHistory.create(
+        [
+          {
+            room_id: room._id,
+            shift_id: shift._id,
+            staff_id: staff._id,
+            status: 'occupied',
+            notes: isEarly ? 'Early check-in' : 'Check-in',
+            changed_at: now,
+          },
+        ],
+        { session }
+      );
+
+      await audit(
+        {
+          action: AUDIT.CHECK_IN,
+          actorStaffId: staff._id,
+          entity: 'Reservation',
+          entityId: String(reservation._id),
+          details: { room_id: String(room._id), early_arrival: isEarly },
+          ip,
+        },
+        { session }
+      );
+
+      updatedReservation = await Reservation.findById(reservation._id).session(session);
+    });
+  } finally {
+    await session.endSession();
+  }
+
+  return toReservationDto(updatedReservation.toObject());
+}
+
+async function extendStay({ reservation_id, staff, shift, ip, now }) {
+  if (!isObjectId(reservation_id)) throw E.notFound('Reservation not found');
+  const reservation = await Reservation.findById(reservation_id);
+  if (!reservation) throw E.notFound('Reservation not found');
+
+  if (reservation.status !== 'checked_in') {
+    throw E.conflict('Reservation is not checked in');
+  }
+
+  // تحقق لو فيه حجز تاني بيبدأ يوم الخروج
+  const checkoutDay = cairoDate(reservation.check_out_at);
+  const conflict = await RoomNight.exists({ room_id: reservation.room_id, day: checkoutDay });
+  if (conflict) {
+    throw E.conflict('Another booking starts that day');
+  }
+
+  const newExtensions = (reservation.half_day_extensions || 0) + 1;
+  const newTotal = computeTotal({
+    ...reservation.toObject(),
+    half_day_extensions: newExtensions,
+  });
+
+  let updatedReservation;
+  const session = await mongoose.startSession();
+  try {
+    await session.withTransaction(async () => {
+      const resUpd = await Reservation.updateOne(
+        { _id: reservation._id, status: 'checked_in' },
+        {
+          $inc: { half_day_extensions: 1 },
+          total_amount: newTotal,
+        },
+        { session }
+      );
+      if (resUpd.modifiedCount !== 1) {
+        throw E.conflict('Reservation is no longer checked in');
+      }
+
+      await audit(
+        {
+          action: AUDIT.EXTEND,
+          actorStaffId: staff._id,
+          entity: 'Reservation',
+          entityId: String(reservation._id),
+          details: { half_day_extensions: newExtensions },
+          ip,
+        },
+        { session }
+      );
+
+      updatedReservation = await Reservation.findById(reservation._id).session(session);
+    });
+  } finally {
+    await session.endSession();
+  }
+
+  return toReservationDto(updatedReservation.toObject());
+}
+
+async function checkOut({ reservation_id, staff, shift, ip, now }) {
+  if (!isObjectId(reservation_id)) throw E.notFound('Reservation not found');
+  const reservation = await Reservation.findById(reservation_id);
+  if (!reservation) throw E.notFound('Reservation not found');
+
+  if (reservation.status !== 'checked_in') {
+    throw E.conflict('Reservation is not checked in');
+  }
+
+  let updatedReservation;
+  const session = await mongoose.startSession();
+  try {
+    await session.withTransaction(async () => {
+      const resUpd = await Reservation.updateOne(
+        {
+          _id: reservation._id,
+          status: 'checked_in',
+          $expr: { $lte: ['$total_amount', '$paid_cache'] },
+        },
+        {
+          status: 'checked_out',
+          check_out_staff_id: staff._id,
+          check_out_shift_id: shift._id,
+        },
+        { session }
+      );
+
+      if (resUpd.modifiedCount !== 1) {
+        const fresh = await Reservation.findById(reservation._id).session(session);
+        if (fresh.status !== 'checked_in') {
+          throw E.conflict('Reservation is not checked in');
+        }
+        const remaining = fresh.total_amount - fresh.paid_cache;
+        throw E.conflict(
+          `Check-out is blocked: ${toEgp(remaining).toFixed(2)} EGP remaining`,
+          'BALANCE_DUE'
+        );
+      }
+
+      const roomUpd = await Room.updateOne(
+        { _id: reservation.room_id, status: 'occupied' },
+        { status: 'cleaning' },
+        { session }
+      );
+      if (roomUpd.modifiedCount !== 1) {
+        throw E.conflict('Room is not occupied');
+      }
+
+      await RoomStatusHistory.create(
+        [
+          {
+            room_id: reservation.room_id,
+            shift_id: shift._id,
+            staff_id: staff._id,
+            status: 'cleaning',
+            notes: 'Check-out cleaning',
+            changed_at: now,
+          },
+        ],
+        { session }
+      );
+
+      await CleaningTask.create(
+        [
+          {
+            room_id: reservation.room_id,
+            shift_id: shift._id,
+            priority: 'medium',
+            status: 'pending',
+            cleaner_name: null,
+            assigned_by_staff_id: null,
+            assigned_at: now,
+          },
+        ],
+        { session }
+      );
+
+      await audit(
+        {
+          action: AUDIT.CHECK_OUT,
+          actorStaffId: staff._id,
+          entity: 'Reservation',
+          entityId: String(reservation._id),
+          details: { room_id: String(reservation.room_id) },
+          ip,
+        },
+        { session }
+      );
+
+      updatedReservation = await Reservation.findById(reservation._id).session(session);
+    });
+  } finally {
+    await session.endSession();
+  }
+
+  return toReservationDto(updatedReservation.toObject());
+}
+
+module.exports = {
+  createReservation,
+  checkIn,
+  extendStay,
+  checkOut,
+};

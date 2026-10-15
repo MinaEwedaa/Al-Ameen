@@ -16,4 +16,17 @@ const loginRateLimiter = rateLimit({
   },
 });
 
-module.exports = { loginRateLimiter };
+const generalTestMax = Number(process.env.GENERAL_RATE_LIMIT_MAX);
+const GENERAL_MAX = process.env.NODE_ENV === 'test' && generalTestMax > 0 ? generalTestMax : 300;
+
+const generalRateLimiter = rateLimit({
+  windowMs: 60 * 1000,
+  max: GENERAL_MAX,
+  standardHeaders: true,
+  legacyHeaders: false,
+  handler: (req, res, next) => {
+    next(E.tooMany('Too many requests', 60));
+  },
+});
+
+module.exports = { loginRateLimiter, generalRateLimiter };

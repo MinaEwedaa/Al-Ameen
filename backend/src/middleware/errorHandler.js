@@ -3,6 +3,12 @@ module.exports = (err, req, res, next) => {
     err = { status: 400, errors: [{ path: 'body', message: 'invalid JSON' }] };
   }
 
+  if (err.type === 'entity.too.large' || err.status === 413 || err.statusCode === 413) {
+    return res.status(413).json({
+      error: { code: 'PAYLOAD_TOO_LARGE', message: 'Payload too large' },
+    });
+  }
+
   if (err.status === 400 && err.errors) {
     const msg = err.errors.map((e) => e.path + ' ' + e.message).join('; ');
     return res.status(400).json({

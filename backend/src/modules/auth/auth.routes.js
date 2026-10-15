@@ -8,7 +8,7 @@ const router = express.Router();
 
 router.post('/login', loginRateLimiter, authController.login);
 router.post('/refresh', authController.refresh);
-router.post('/logout', authController.logout);
+router.post('/logout', authenticate, authController.logout);
 router.get('/me', authenticate, requireRole('receptionist'), authController.me);
 
 module.exports = router;

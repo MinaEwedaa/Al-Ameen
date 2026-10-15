@@ -12,6 +12,7 @@ process.env.LATE_GRACE_MINUTES = '15';
 // supertest بيعمل كل الطلبات من نفس الـ IP، فنرفع حد الـ login limiter في الاختبارات بس.
 // rateLimit.js بيقرا القيمة دي فقط لما NODE_ENV === 'test'.
 process.env.LOGIN_RATE_LIMIT_MAX = '1000';
+process.env.GENERAL_RATE_LIMIT_MAX = '5000';
 // قيمة مؤقتة عشان env.js ما يرميش خطأ وقت الـ require (الـ URI الحقيقي بيتحط تحت في beforeAll)
 process.env.MONGODB_URI = process.env.MONGODB_URI || 'mongodb://127.0.0.1:27017/test_placeholder';
 
@@ -20,16 +21,14 @@ const { MongoMemoryReplSet } = require('mongodb-memory-server');
 
 // نسخة MongoDB اللي بتشتغل في الاختبارات. لو عايزة تجربي نسخة تانية:
 // $env:MONGOMS_VERSION="6.0.19"; npx jest ...   (في PowerShell)
-const MONGO_VERSION = process.env.MONGOMS_VERSION || '7.0.14';
-
 let repl;
 
-// المهلة كبيرة (5 دقايق) لأن أول مرة بعد تغيير النسخة بيتنزّل ملف MongoDB (ممكن ياخد دقيقتين)
 beforeAll(async () => {
-  repl = await MongoMemoryReplSet.create({
-    binary: { version: MONGO_VERSION },
-    replSet: { count: 1 },
-  });
+  const replOpts = { replSet: { count: 1 } };
+  if (process.env.MONGOMS_VERSION) {
+    replOpts.binary = { version: process.env.MONGOMS_VERSION };
+  }
+  repl = await MongoMemoryReplSet.create(replOpts);
   process.env.MONGODB_URI = repl.getUri();
   await mongoose.connect(repl.getUri());
 }, 300000);

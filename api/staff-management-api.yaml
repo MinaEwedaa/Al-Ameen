@@ -83,12 +83,12 @@ paths:
                     access_token: eyJhbGciOiJIUzI1NiIs...
                     expires_in: 900
                     staff:
-                      staff_id: 1
+                      staff_id: '1'
                       name: Ahmed
                       default_shift_type: morning
                     shift:
-                      shift_id: 41
-                      staff_id: 1
+                      shift_id: '41'
+                      staff_id: '1'
                       shift_date: '2026-10-08'
                       shift_type: morning
                       start_time: '07:00'
@@ -103,7 +103,7 @@ paths:
                     access_token: eyJhbGciOiJIUzI1NiIs...
                     expires_in: 900
                     staff:
-                      staff_id: 1
+                      staff_id: '1'
                       name: Ahmed
                       default_shift_type: morning
                     shift: null
@@ -166,6 +166,8 @@ paths:
                     example: 900
         '401':
           $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
         '429':
           $ref: '#/components/responses/TooManyRequests'
   /auth/logout:
@@ -194,7 +196,7 @@ paths:
                 $ref: '#/components/schemas/Me'
               example:
                 staff:
-                  staff_id: 1
+                  staff_id: '1'
                   name: Ahmed
                   default_shift_type: morning
                 shift: null
@@ -442,14 +444,18 @@ paths:
             application/json:
               schema:
                 type: object
-                required: [data, meta]
+                required: [guests, page, limit, total]
                 properties:
-                  data:
+                  guests:
                     type: array
                     items:
                       $ref: '#/components/schemas/Guest'
-                  meta:
-                    $ref: '#/components/schemas/Meta'
+                  page:
+                    type: integer
+                  limit:
+                    type: integer
+                  total:
+                    type: integer
         '400':
           $ref: '#/components/responses/BadRequest'
         '401':
@@ -482,6 +488,16 @@ paths:
         Returns `409 CONFLICT` if the room is already booked for an overlapping period (compared by date and time).
       parameters:
         - $ref: '#/components/parameters/IdempotencyKey'
+        - name: Authorization
+          in: header
+          required: false
+          schema:
+            type: string
+        - name: x-test-time
+          in: header
+          required: false
+          schema:
+            type: string
       requestBody:
         required: true
         content:
@@ -489,8 +505,8 @@ paths:
             schema:
               $ref: '#/components/schemas/ReservationCreate'
             example:
-              guest_id: 7
-              room_id: 101
+              guest_id: '7'
+              room_id: '101'
               check_in: '2026-10-10T12:00:00+03:00'
               check_out: '2026-10-13T12:00:00+03:00'
       responses:
@@ -522,11 +538,11 @@ paths:
         - name: room_id
           in: query
           schema:
-            type: integer
+            type: string
         - name: guest_id
           in: query
           schema:
-            type: integer
+            type: string
         - name: check_in_from
           in: query
           schema:
@@ -655,6 +671,8 @@ paths:
       parameters:
         - $ref: '#/components/parameters/ReservationId'
         - $ref: '#/components/parameters/IdempotencyKey'
+        - $ref: '#/components/parameters/AuthorizationHeader'
+        - $ref: '#/components/parameters/TestTimeHeader'
       requestBody:
         required: false
         content:
@@ -696,6 +714,8 @@ paths:
       parameters:
         - $ref: '#/components/parameters/ReservationId'
         - $ref: '#/components/parameters/IdempotencyKey'
+        - $ref: '#/components/parameters/AuthorizationHeader'
+        - $ref: '#/components/parameters/TestTimeHeader'
       responses:
         '200':
           description: Extension added
@@ -704,9 +724,9 @@ paths:
               schema:
                 $ref: '#/components/schemas/Reservation'
               example:
-                reservation_id: 55
-                guest_id: 7
-                room_id: 101
+                reservation_id: '55'
+                guest_id: '7'
+                room_id: '101'
                 check_in: '2026-10-10T12:00:00+03:00'
                 check_out: '2026-10-13T12:00:00+03:00'
                 status: checked_in
@@ -733,6 +753,8 @@ paths:
       parameters:
         - $ref: '#/components/parameters/ReservationId'
         - $ref: '#/components/parameters/IdempotencyKey'
+        - $ref: '#/components/parameters/AuthorizationHeader'
+        - $ref: '#/components/parameters/TestTimeHeader'
       responses:
         '200':
           description: Guest checked out
@@ -785,6 +807,9 @@ paths:
       operationId: createCleaningTask
       summary: Record a room that needs cleaning
       description: The receptionist assigns the cleaner because housekeeping has no system access, so `cleaner_name` is free text. The server sets `status=pending`, `assigned_date`, the shift and the staff member.
+      parameters:
+        - $ref: '#/components/parameters/AuthorizationHeader'
+        - $ref: '#/components/parameters/TestTimeHeader'
       requestBody:
         required: true
         content:
@@ -792,7 +817,7 @@ paths:
             schema:
               $ref: '#/components/schemas/CleaningTaskCreate'
             example:
-              room_id: 205
+              room_id: '205'
               cleaner_name: Mona
               priority: high
               notes: Guest checked out
@@ -830,9 +855,11 @@ paths:
         - name: room_id
           in: query
           schema:
-            type: integer
+            type: string
         - $ref: '#/components/parameters/Page'
         - $ref: '#/components/parameters/Limit'
+        - $ref: '#/components/parameters/AuthorizationHeader'
+        - $ref: '#/components/parameters/TestTimeHeader'
       responses:
         '200':
           description: Cleaning tasks
@@ -857,6 +884,8 @@ paths:
       summary: Get one cleaning task
       parameters:
         - $ref: '#/components/parameters/TaskId'
+        - $ref: '#/components/parameters/AuthorizationHeader'
+        - $ref: '#/components/parameters/TestTimeHeader'
       responses:
         '200':
           description: Task
@@ -875,6 +904,8 @@ paths:
       description: Setting `status` to `done` makes the server fill `finished_date`. A task created at check-out has no cleaner name and shows as pending until one is assigned. A `done` task cannot go back to `pending`.
       parameters:
         - $ref: '#/components/parameters/TaskId'
+        - $ref: '#/components/parameters/AuthorizationHeader'
+        - $ref: '#/components/parameters/TestTimeHeader'
       requestBody:
         required: true
         content:
@@ -906,6 +937,9 @@ paths:
       operationId: createMaintenanceIssue
       summary: Report a maintenance problem
       description: The server sets `status=open`, `created_date`, the shift and the reporting staff member.
+      parameters:
+        - $ref: '#/components/parameters/AuthorizationHeader'
+        - $ref: '#/components/parameters/TestTimeHeader'
       requestBody:
         required: true
         content:
@@ -913,7 +947,7 @@ paths:
             schema:
               $ref: '#/components/schemas/MaintenanceIssueCreate'
             example:
-              room_id: 205
+              room_id: '205'
               problem: Water leak
               priority: urgent
               notes: Bathroom ceiling
@@ -951,9 +985,11 @@ paths:
         - name: room_id
           in: query
           schema:
-            type: integer
+            type: string
         - $ref: '#/components/parameters/Page'
         - $ref: '#/components/parameters/Limit'
+        - $ref: '#/components/parameters/AuthorizationHeader'
+        - $ref: '#/components/parameters/TestTimeHeader'
       responses:
         '200':
           description: Issues
@@ -978,6 +1014,8 @@ paths:
       summary: Get one issue
       parameters:
         - $ref: '#/components/parameters/IssueId'
+        - $ref: '#/components/parameters/AuthorizationHeader'
+        - $ref: '#/components/parameters/TestTimeHeader'
       responses:
         '200':
           description: Issue
@@ -997,6 +1035,8 @@ paths:
         Resolving is a PATCH with `{ "status": "resolved" }`. The server fills `resolved_date`. A `resolved` issue cannot be reopened by the receptionist.
       parameters:
         - $ref: '#/components/parameters/IssueId'
+        - $ref: '#/components/parameters/AuthorizationHeader'
+        - $ref: '#/components/parameters/TestTimeHeader'
       requestBody:
         required: true
         content:
@@ -1037,6 +1077,8 @@ paths:
         Payments are append-only: there is no update or delete. A mistake is corrected from the Manager system with a reversing record, and `payment_verified` is set only there.
       parameters:
         - $ref: '#/components/parameters/IdempotencyKey'
+        - $ref: '#/components/parameters/AuthorizationHeader'
+        - $ref: '#/components/parameters/TestTimeHeader'
       requestBody:
         required: true
         content:
@@ -1047,14 +1089,14 @@ paths:
               by_reservation:
                 summary: Deposit for a reservation
                 value:
-                  reservation_id: 55
+                  reservation_id: '55'
                   amount: 1500.00
                   payment_method: cash
                   notes: Deposit
               by_room:
                 summary: Payment by room number
                 value:
-                  room_id: 101
+                  room_id: '101'
                   amount: 3000.00
                   payment_method: instapay
       responses:
@@ -1066,10 +1108,10 @@ paths:
                 $ref: '#/components/schemas/PaymentResult'
               example:
                 payment:
-                  payment_id: 900
-                  reservation_id: 55
-                  staff_id: 1
-                  shift_id: 41
+                  payment_id: '900'
+                  reservation_id: '55'
+                  staff_id: '1'
+                  shift_id: '41'
                   amount: 1500.00
                   payment_method: cash
                   notes: Deposit
@@ -1118,6 +1160,9 @@ paths:
       tags: [Shifts]
       operationId: getCurrentShift
       summary: The caller's active shift
+      parameters:
+        - $ref: '#/components/parameters/AuthorizationHeader'
+        - $ref: '#/components/parameters/TestTimeHeader'
       responses:
         '200':
           description: Active shift
@@ -1144,6 +1189,9 @@ paths:
       summary: Live summary before handover
       description: |
         Rooms handled, payments (total per method), check-ins and check-outs, cleaning tasks, maintenance issues and pending items. Pending is computed, not stored: cleaning tasks still `pending`, issues not `resolved`, and unverified payments.
+      parameters:
+        - $ref: '#/components/parameters/AuthorizationHeader'
+        - $ref: '#/components/parameters/TestTimeHeader'
       responses:
         '200':
           description: Summary
@@ -1171,6 +1219,9 @@ paths:
         - Open tasks and issues can still be updated by the next shift; those updates are logged under the next shift.
         - The PDF report is generated once, at handover, and stored as a fixed copy. Reopening a shift is a Manager system action.
         This is allowed even after the scheduled end, as long as the shift is still `active`. Attendance check-out is recorded at this moment.
+      parameters:
+        - $ref: '#/components/parameters/AuthorizationHeader'
+        - $ref: '#/components/parameters/TestTimeHeader'
       requestBody:
         required: false
         content:
@@ -1203,6 +1254,8 @@ paths:
         Returns the PDF that was generated at handover. Only the receptionist's own shifts are available; another shift returns 404. The report contains the receptionist's data, the shift time, rooms, cleaning, maintenance, payments and notes.
       parameters:
         - $ref: '#/components/parameters/ShiftId'
+        - $ref: '#/components/parameters/AuthorizationHeader'
+        - $ref: '#/components/parameters/TestTimeHeader'
       responses:
         '200':
           description: PDF report
@@ -1252,42 +1305,54 @@ components:
         type: string
         format: uuid
       example: 3f2b8c5e-7d1a-4c0e-9b6a-2e8f4d1c7a90
+    AuthorizationHeader:
+      name: Authorization
+      in: header
+      required: false
+      schema:
+        type: string
+    TestTimeHeader:
+      name: x-test-time
+      in: header
+      required: false
+      schema:
+        type: string
     RoomId:
       name: room_id
       in: path
       required: true
       schema:
-        type: integer
+        type: string
     GuestId:
       name: guest_id
       in: path
       required: true
       schema:
-        type: integer
+        type: string
     ReservationId:
       name: reservation_id
       in: path
       required: true
       schema:
-        type: integer
+        type: string
     TaskId:
       name: task_id
       in: path
       required: true
       schema:
-        type: integer
+        type: string
     IssueId:
       name: issue_id
       in: path
       required: true
       schema:
-        type: integer
+        type: string
     ShiftId:
       name: shift_id
       in: path
       required: true
       schema:
-        type: integer
+        type: string
   responses:
     BadRequest:
       description: Invalid body or query (also a payment amount that is zero, negative or above the remaining amount)
@@ -1371,7 +1436,7 @@ components:
         Retry-After:
           description: Seconds to wait before trying again.
           schema:
-            type: integer
+            type: string
       content:
         application/json:
           schema:
@@ -1471,7 +1536,7 @@ components:
       required: [staff_id, name, default_shift_type]
       properties:
         staff_id:
-          type: integer
+          type: string
         name:
           type: string
         default_shift_type:
@@ -1481,9 +1546,42 @@ components:
       required: [shift_id, staff_id, shift_date, shift_type, start_time, end_time, status]
       properties:
         shift_id:
-          type: integer
+          type: string
         staff_id:
-          type: integer
+          type: string
+        shift_date:
+          type: string
+          format: date
+          description: The date the shift started (Cairo). A night shift keeps the date it started.
+        shift_type:
+          $ref: '#/components/schemas/ShiftType'
+        start_time:
+          type: string
+          description: Scheduled start, `HH:MM` Cairo time.
+          example: '07:00'
+        end_time:
+          type: string
+          description: Scheduled end, `HH:MM` Cairo time. For a night shift it is on the next day.
+          example: '16:00'
+        status:
+          $ref: '#/components/schemas/ShiftStatus'
+        handed_over_at:
+          type: string
+          format: date-time
+          nullable: true
+          description: Actual handover time (server time). May differ from the scheduled end.
+        shift_notes:
+          type: string
+          nullable: true
+    NullableShift:
+      type: object
+      nullable: true
+      required: [shift_id, staff_id, shift_date, shift_type, start_time, end_time, status]
+      properties:
+        shift_id:
+          type: string
+        staff_id:
+          type: string
         shift_date:
           type: string
           format: date
@@ -1521,9 +1619,7 @@ components:
         staff:
           $ref: '#/components/schemas/Staff'
         shift:
-          allOf:
-            - $ref: '#/components/schemas/Shift'
-          nullable: true
+          $ref: '#/components/schemas/NullableShift'
           description: '`null` while the session is read-only (before the scheduled start).'
         read_only:
           type: boolean
@@ -1535,9 +1631,7 @@ components:
         staff:
           $ref: '#/components/schemas/Staff'
         shift:
-          allOf:
-            - $ref: '#/components/schemas/Shift'
-          nullable: true
+          $ref: '#/components/schemas/NullableShift'
         read_only:
           type: boolean
     PaymentTotals:
@@ -1579,11 +1673,18 @@ components:
           $ref: '#/components/schemas/PaymentTotals'
     Room:
       type: object
-      required: [room_id, room_type, status, description, price_per_night, half_day_price]
+      required: [room_id, room_number, room_type, status, description, price_per_night, half_day_price]
       properties:
         room_id:
+          type: string
+          example: '6acdc9c681d42a01709fcb7a'
+        room_number:
+          type: string
+          example: '101'
+        floor:
           type: integer
-          example: 101
+          nullable: true
+          example: 1
         room_type:
           type: string
           example: double
@@ -1598,6 +1699,19 @@ components:
           allOf:
             - $ref: '#/components/schemas/Money'
           description: Price of a half-day extension after check-out, or of an early arrival before 12:00.
+        current_guest_name:
+          type: string
+          nullable: true
+          description: Name of the checked-in guest. Filled only when the room is occupied.
+        view:
+          type: string
+          nullable: true
+          enum: [nile, garden, city, null]
+          description: Room view. Null when not set.     
+        updated_at:
+          type: string
+          format: date-time
+          nullable: true
     RoomStatusChange:
       type: object
       required: [status]
@@ -1613,9 +1727,9 @@ components:
       required: [history_id, room_id, status, changed_at, shift_id]
       properties:
         history_id:
-          type: integer
+          type: string
         room_id:
-          type: integer
+          type: string
         status:
           $ref: '#/components/schemas/RoomStatus'
         notes:
@@ -1625,7 +1739,8 @@ components:
           type: string
           format: date-time
         shift_id:
-          type: integer
+          type: string
+          nullable: true
     GuestCreate:
       type: object
       required: [name, phone, id_number]
@@ -1645,7 +1760,8 @@ components:
       required: [guest_id, name, phone, id_number]
       properties:
         guest_id:
-          type: integer
+          type: string
+          example: '6acdc9c681d42a01709fcb7a'
         name:
           type: string
         phone:
@@ -1659,9 +1775,9 @@ components:
       required: [guest_id, room_id, check_in, check_out]
       properties:
         guest_id:
-          type: integer
+          type: string
         room_id:
-          type: integer
+          type: string
         check_in:
           type: string
           format: date-time
@@ -1675,7 +1791,7 @@ components:
       minProperties: 1
       properties:
         room_id:
-          type: integer
+          type: string
         check_in:
           type: string
           format: date-time
@@ -1694,11 +1810,11 @@ components:
       required: [reservation_id, guest_id, room_id, check_in, check_out, status, half_day_extensions, early_arrival, total_amount, paid_amount, remaining_amount]
       properties:
         reservation_id:
-          type: integer
+          type: string
         guest_id:
-          type: integer
+          type: string
         room_id:
-          type: integer
+          type: string
         check_in:
           type: string
           format: date-time
@@ -1733,21 +1849,21 @@ components:
           type: boolean
           description: Only on a cancelled reservation that has payments. The manager handles the refund.
         check_in_staff_id:
-          type: integer
+          type: string
           nullable: true
         check_in_shift_id:
-          type: integer
+          type: string
           nullable: true
         check_out_staff_id:
-          type: integer
+          type: string
           nullable: true
         check_out_shift_id:
-          type: integer
+          type: string
           nullable: true
       example:
-        reservation_id: 55
-        guest_id: 7
-        room_id: 101
+        reservation_id: '55'
+        guest_id: '7'
+        room_id: '101'
         check_in: '2026-10-10T12:00:00+03:00'
         check_out: '2026-10-13T12:00:00+03:00'
         reservation_date: '2026-10-08T14:30:00+03:00'
@@ -1782,10 +1898,10 @@ components:
         - required: [room_id]
       properties:
         reservation_id:
-          type: integer
+          type: string
           description: Preferred. Picked from a search by guest name, phone or room.
         room_id:
-          type: integer
+          type: string
           description: Used only when `reservation_id` is not sent.
         amount:
           type: number
@@ -1803,13 +1919,13 @@ components:
       required: [payment_id, reservation_id, staff_id, shift_id, amount, payment_method, payment_datetime, payment_verified]
       properties:
         payment_id:
-          type: integer
+          type: string
         reservation_id:
-          type: integer
+          type: string
         staff_id:
-          type: integer
+          type: string
         shift_id:
-          type: integer
+          type: string
         amount:
           $ref: '#/components/schemas/Money'
         payment_method:
@@ -1824,7 +1940,7 @@ components:
           type: boolean
           description: Set to true only from the Manager system.
         reversal_of_payment_id:
-          type: integer
+          type: string
           nullable: true
           description: Set on a correction record created by the manager.
     PaymentResult:
@@ -1842,7 +1958,7 @@ components:
       required: [room_id, priority]
       properties:
         room_id:
-          type: integer
+          type: string
         cleaner_name:
           type: string
           maxLength: 200
@@ -1873,9 +1989,9 @@ components:
       required: [task_id, room_id, priority, status, assigned_date, shift_id]
       properties:
         task_id:
-          type: integer
+          type: string
         room_id:
-          type: integer
+          type: string
         priority:
           $ref: '#/components/schemas/Priority'
         status:
@@ -1895,10 +2011,11 @@ components:
           format: date-time
           nullable: true
         shift_id:
-          type: integer
+          type: string
+          nullable: true
           description: The shift in which the task was created.
         assigned_by_staff_id:
-          type: integer
+          type: string
           nullable: true
           description: The receptionist who assigned the cleaner.
     MaintenanceIssueCreate:
@@ -1906,7 +2023,7 @@ components:
       required: [room_id, problem, priority]
       properties:
         room_id:
-          type: integer
+          type: string
         problem:
           type: string
           maxLength: 300
@@ -1932,9 +2049,9 @@ components:
       required: [issue_id, room_id, problem, priority, status, created_date, shift_id, staff_id]
       properties:
         issue_id:
-          type: integer
+          type: string
         room_id:
-          type: integer
+          type: string
         problem:
           type: string
         priority:
@@ -1952,10 +2069,10 @@ components:
           format: date-time
           nullable: true
         shift_id:
-          type: integer
+          type: string
           description: The shift in which the issue was reported.
         staff_id:
-          type: integer
+          type: string
           description: The receptionist who reported it.
     HandoverRequest:
       type: object
@@ -1981,7 +2098,7 @@ components:
           type: array
           description: Room ids the receptionist worked on in this shift.
           items:
-            type: integer
+            type: string
         cleaning_tasks:
           type: array
           description: Cleaning tasks created in this shift.
