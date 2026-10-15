@@ -147,11 +147,12 @@ async function resolveLoginShift(staff, now = new Date(), reqTime = null) {
   const existingShift = await Shift.findOne({ staff_id: staff._id, status: 'active' });
   if (existingShift) {
     const win = shiftWindow(existingShift.shift_date, existingShift.shift_type);
-    const refreshExpiresAt = new Date(win.endAt.getTime() + 60 * 60 * 1000);
+    const endCutoff = new Date(win.endAt.getTime() + 60 * 60 * 1000);
+    const refreshExpiresAt = new Date(Math.max(endCutoff.getTime(), now.getTime() + 24 * 60 * 60 * 1000, Date.now() + 24 * 60 * 60 * 1000));
     return {
       read_only: false,
       shift: existingShift,
-      refreshExpiresAt: refreshExpiresAt > now ? refreshExpiresAt : new Date(now.getTime() + 60 * 60 * 1000),
+      refreshExpiresAt,
     };
   }
 
@@ -176,7 +177,7 @@ async function resolveLoginShift(staff, now = new Date(), reqTime = null) {
           read_only: true,
           shift: null,
           scheduled_shift: `${dateStr}_${sType}`,
-          refreshExpiresAt: endCutoff,
+          refreshExpiresAt: new Date(Math.max(endCutoff.getTime(), now.getTime() + 24 * 60 * 60 * 1000, Date.now() + 24 * 60 * 60 * 1000)),
         };
       }
 
@@ -215,7 +216,7 @@ async function resolveLoginShift(staff, now = new Date(), reqTime = null) {
         return {
           read_only: false,
           shift,
-          refreshExpiresAt: endCutoff,
+          refreshExpiresAt: new Date(Math.max(endCutoff.getTime(), now.getTime() + 24 * 60 * 60 * 1000, Date.now() + 24 * 60 * 60 * 1000)),
         };
       }
     }
