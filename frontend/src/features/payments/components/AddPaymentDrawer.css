@@ -73,6 +73,18 @@
   font-size: var(--font-size-xs);
 }
 
+.payment-form__balance-card {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.payment-form__guest-name {
+  color: var(--color-ink);
+  font-weight: var(--font-weight-medium);
+  font-size: var(--font-size-xs);
+}
+
 .payment-form__info {
   display: flex;
   align-items: center;

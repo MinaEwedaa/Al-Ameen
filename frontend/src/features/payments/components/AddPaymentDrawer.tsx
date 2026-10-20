@@ -1,6 +1,6 @@
 import { useId, useState } from 'react';
 import type { FormEvent } from 'react';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { Wallet } from 'lucide-react';
 import { useToast } from '../../../components/common/toast.context';
 import { Button } from '../../../components/ui/Button';
@@ -8,7 +8,8 @@ import { Drawer } from '../../../components/ui/Drawer';
 import { Select } from '../../../components/ui/Select';
 import { getErrorMessage } from '../../../core/errors/getErrorMessage';
 import { getTranslation, type Language } from '../../../core/i18n';
-import { createPayment, getReservationBalance } from '../services/payments.api';
+import { getRooms } from '../../rooms/services/rooms.api';
+import { createPayment, getRoomBalance } from '../services/payments.api';
 import type { ApiPaymentMethod } from '../types/payment.types';
 import { formatAmount, formatPaymentTime } from '../utils/paymentsFormat';
 import './AddPaymentDrawer.css';
@@ -21,7 +22,7 @@ const METHODS: Array<{ value: ApiPaymentMethod; labelKey: string }> = [
   { value: 'vodafone_cash', labelKey: 'paymentsPage.method.vodafone' },
 ];
 
-type Field = 'reservation' | 'amount' | 'method';
+type Field = 'room' | 'amount' | 'method';
 
 /** Accept Arabic-Indic digits (٠-٩) and the Arabic decimal mark as well as plain digits */
 function toLatinDigits(value: string): string {
@@ -29,10 +30,19 @@ function toLatinDigits(value: string): string {
     .replace(/[٠-٩]/g, (digit) => String('٠١٢٣٤٥٦٧٨٩'.indexOf(digit)))
     .replace(/٫/g, '.');
 }
+
 type Balance =
   | { state: 'idle' }
   | { state: 'checking' }
-  | { state: 'found'; remaining: number }
+  | {
+      state: 'found';
+      remaining: number;
+      guestName?: string;
+      totalAmount?: number;
+      paidAmount?: number;
+      roomId?: string;
+      reservationId?: string;
+    }
   | { state: 'notFound' };
 
 interface AddPaymentDrawerProps {
@@ -49,13 +59,35 @@ export function AddPaymentDrawer({ open, language, onClose }: AddPaymentDrawerPr
   const baseId = useId();
   const fieldId = (field: string) => `${baseId}-${field}`;
 
-  const [reservation, setReservation] = useState('');
+  const [room, setRoom] = useState('');
   const [amount, setAmount] = useState('');
   const [method, setMethod] = useState<ApiPaymentMethod | ''>('');
   const [notes, setNotes] = useState('');
   const [balance, setBalance] = useState<Balance>({ state: 'idle' });
   const [errors, setErrors] = useState<Partial<Record<Field, string>>>({});
   const [openedAt] = useState(() => new Date().toISOString());
+
+  const { data: rooms = [] } = useQuery({
+    queryKey: ['rooms'],
+    queryFn: getRooms,
+  });
+
+  // Sort: occupied and reserved rooms first, then by room number
+  const sortedRooms = [...rooms].sort((a, b) => {
+    const activeA = a.status === 'occupied' || a.status === 'reserved' ? 0 : 1;
+    const activeB = b.status === 'occupied' || b.status === 'reserved' ? 0 : 1;
+    if (activeA !== activeB) return activeA - activeB;
+    return a.number.localeCompare(b.number, undefined, { numeric: true });
+  });
+
+  const roomOptions = sortedRooms.map((r) => {
+    const guest = r.guestName ? ` · ${r.guestName}` : '';
+    const statusLabel = t(`rooms.status.${r.status}`);
+    return {
+      value: r.number,
+      label: `${r.number}${guest} (${statusLabel})`,
+    };
+  });
 
   const mutation = useMutation({
     mutationFn: createPayment,
@@ -68,28 +100,39 @@ export function AddPaymentDrawer({ open, language, onClose }: AddPaymentDrawerPr
   });
   const saving = mutation.isPending;
 
-  const reservationId = Number(reservation);
-  const validReservation = /^\d+$/.test(reservation.trim()) && reservationId > 0;
-
-  async function checkReservation() {
-    if (!validReservation) {
+  async function checkRoomBalance(roomNumber: string) {
+    if (!roomNumber) {
       setBalance({ state: 'idle' });
       return;
     }
     setBalance({ state: 'checking' });
     try {
-      const result = await getReservationBalance(reservationId);
-      setBalance({ state: 'found', remaining: result.remainingAmount });
+      const result = await getRoomBalance(roomNumber);
+      setBalance({
+        state: 'found',
+        remaining: result.remainingAmount,
+        guestName: result.guestName,
+        totalAmount: result.totalAmount,
+        paidAmount: result.paidAmount,
+        roomId: result.roomId,
+        reservationId: result.reservationId,
+      });
     } catch {
       setBalance({ state: 'notFound' });
     }
   }
 
+  function handleRoomSelect(value: string) {
+    setRoom(value);
+    clearError('room');
+    void checkRoomBalance(value);
+  }
+
   function validate(): Partial<Record<Field, string>> {
     const next: Partial<Record<Field, string>> = {};
     const value = Number(amount);
-    if (!validReservation) next.reservation = t('paymentsPage.addForm.errors.reservation');
-    else if (balance.state === 'notFound') next.reservation = t('paymentsPage.addForm.notFound');
+    if (!room) next.room = t('paymentsPage.addForm.errors.room');
+    else if (balance.state === 'notFound') next.room = t('paymentsPage.addForm.notFound');
     if (!amount.trim() || !Number.isFinite(value) || value <= 0) next.amount = t('paymentsPage.addForm.errors.amount');
     else if (balance.state === 'found' && value > balance.remaining) {
       next.amount = t('paymentsPage.addForm.errors.amountTooHigh').replace('{amount}', formatAmount(balance.remaining, language));
@@ -103,14 +146,17 @@ export function AddPaymentDrawer({ open, language, onClose }: AddPaymentDrawerPr
     if (saving) return;
     const nextErrors = validate();
     setErrors(nextErrors);
-    const firstInvalid = (['reservation', 'amount', 'method'] as Field[]).find((field) => nextErrors[field]);
+    const firstInvalid = (['room', 'amount', 'method'] as Field[]).find((field) => nextErrors[field]);
     if (firstInvalid) {
       document.getElementById(fieldId(firstInvalid))?.focus();
       return;
     }
     try {
+      const targetRoomId = balance.state === 'found' && balance.roomId ? balance.roomId : room;
+      const targetReservationId = balance.state === 'found' && balance.reservationId ? balance.reservationId : undefined;
       const result = await mutation.mutateAsync({
-        reservation_id: reservationId,
+        room_id: targetRoomId,
+        reservation_id: targetReservationId,
         amount: Number(amount),
         payment_method: method as ApiPaymentMethod,
         notes: notes.trim() || undefined,
@@ -127,9 +173,11 @@ export function AddPaymentDrawer({ open, language, onClose }: AddPaymentDrawerPr
 
   const clearError = (field: Field) => setErrors((current) => ({ ...current, [field]: undefined }));
 
-  const reservationHint =
-    balance.state === 'checking' ? t('paymentsPage.addForm.checking')
-      : balance.state === 'found' ? t('paymentsPage.addForm.remaining').replace('{amount}', formatAmount(balance.remaining, language))
+  const remainingHint =
+    balance.state === 'checking'
+      ? t('paymentsPage.addForm.checking')
+      : balance.state === 'found'
+        ? t('paymentsPage.addForm.remaining').replace('{amount}', formatAmount(balance.remaining, language))
         : undefined;
 
   return (
@@ -149,26 +197,31 @@ export function AddPaymentDrawer({ open, language, onClose }: AddPaymentDrawerPr
     >
       <form id={FORM_ID} className="payment-form" onSubmit={(event) => { void handleSubmit(event); }} noValidate>
         <div className="payment-form__row">
-          <label className="payment-form__field">
-            <span>{t('paymentsPage.addForm.reservation')}</span>
-            <input
-              id={fieldId('reservation')}
-              inputMode="numeric"
-              dir="ltr"
-              placeholder={t('paymentsPage.addForm.reservationPlaceholder')}
-              value={reservation}
+          <div className="payment-form__field">
+            <Select
+              id={fieldId('room')}
+              label={t('paymentsPage.addForm.room')}
+              value={room}
+              placeholder={t('paymentsPage.addForm.roomPlaceholder')}
+              options={roomOptions}
+              onChange={handleRoomSelect}
+              error={errors.room || (balance.state === 'notFound' ? t('paymentsPage.addForm.notFound') : undefined)}
               disabled={saving}
-              aria-invalid={errors.reservation ? true : undefined}
-              className={errors.reservation ? 'payment-form__control--error' : undefined}
-              onChange={(event) => { setReservation(toLatinDigits(event.target.value)); setBalance({ state: 'idle' }); clearError('reservation'); }}
-              onBlur={() => { void checkReservation(); }}
             />
-            {errors.reservation
-              ? <small className="payment-form__error">{errors.reservation}</small>
-              : balance.state === 'notFound'
-                ? <small className="payment-form__error">{t('paymentsPage.addForm.notFound')}</small>
-                : reservationHint && <small className="payment-form__hint-text">{reservationHint}</small>}
-          </label>
+            {balance.state === 'checking' && (
+              <small className="payment-form__hint-text">{t('paymentsPage.addForm.checking')}</small>
+            )}
+            {balance.state === 'found' && (
+              <div className="payment-form__balance-card">
+                {balance.guestName && (
+                  <small className="payment-form__guest-name">
+                    {t('paymentsPage.addForm.guest').replace('{name}', balance.guestName)}
+                  </small>
+                )}
+                {remainingHint && <small className="payment-form__hint-text">{remainingHint}</small>}
+              </div>
+            )}
+          </div>
 
           <label className="payment-form__field">
             <span>{t('paymentsPage.addForm.amount')}</span>

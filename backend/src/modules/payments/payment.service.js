@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-const { Payment, Reservation, RoomNight } = require('../../db/models');
+const { Payment, Reservation, RoomNight, Room, Guest } = require('../../db/models');
 const { E } = require('../../utils/errors');
 const { isObjectId } = require('../../utils/ids');
 const { toPiastres, toEgp } = require('../../utils/money');
@@ -34,13 +34,20 @@ async function resolveReservation({ reservation_id, room_id, now }, session) {
     return r;
   }
 
-  if (!isObjectId(room_id)) throw E.notFound('Reservation not found');
+  if (!room_id) throw E.notFound('Reservation not found');
 
-  const checkedIn = await Reservation.find({ room_id, status: 'checked_in' }).session(session);
-  const nights = await RoomNight.find({ room_id, day: stayDay(now) }).session(session).lean();
+  let targetRoomId = isObjectId(room_id) ? room_id : null;
+  if (!targetRoomId) {
+    const roomDoc = await Room.findOne({ room_number: String(room_id) }).session(session);
+    if (!roomDoc) throw E.notFound('Reservation not found');
+    targetRoomId = roomDoc._id;
+  }
+
+  const checkedIn = await Reservation.find({ room_id: targetRoomId, status: 'checked_in' }).session(session);
+  const nights = await RoomNight.find({ room_id: targetRoomId, day: stayDay(now) }).session(session).lean();
   const confirmed = nights.length
     ? await Reservation.find({
-        _id: { $in: nights.map((n) => n.reservation_id) },
+        _id: mongoose.trusted({ $in: nights.map((n) => n.reservation_id) }),
         status: 'confirmed',
       }).session(session)
     : [];
@@ -74,8 +81,8 @@ async function createPayment({
       const upd = await Reservation.updateOne(
         {
           _id: r._id,
-          status: { $in: OPEN },
-          $expr: { $lte: [{ $add: ['$paid_cache', amount] }, '$total_amount'] },
+          status: mongoose.trusted({ $in: OPEN }),
+          $expr: mongoose.trusted({ $lte: [{ $add: ['$paid_cache', amount] }, '$total_amount'] }),
         },
         { $inc: { paid_cache: amount } },
         { session }
@@ -157,14 +164,42 @@ async function listShiftPayments({ shiftId, page = 1, limit = 20 }) {
   );
 }
 
-// كل دفعات الحجز من أي وردية
-async function listReservationPayments(reservationId) {
-  const r = isObjectId(reservationId) ? await Reservation.findById(reservationId).lean() : null;
+// كل دفعات الحجز من أي وردية (ويدعم الاستعلام برقم أو معرف الغرفة)
+async function listReservationPayments(identifier, now = new Date()) {
+  let r = isObjectId(identifier) ? await Reservation.findById(identifier).lean() : null;
+
+  if (!r) {
+    let roomId = isObjectId(identifier) ? identifier : null;
+    if (!roomId) {
+      const roomDoc = await Room.findOne({ room_number: String(identifier) }).lean();
+      if (roomDoc) roomId = roomDoc._id;
+    }
+    if (roomId) {
+      r = await Reservation.findOne({ room_id: roomId, status: 'checked_in' }).lean();
+      if (!r) {
+        const nights = await RoomNight.find({ room_id: roomId, day: stayDay(now) }).lean();
+        if (nights.length) {
+          r = await Reservation.findOne({
+            _id: mongoose.trusted({ $in: nights.map((n) => n.reservation_id) }),
+            status: 'confirmed',
+          }).lean();
+        }
+      }
+    }
+  }
+
   if (!r) throw E.notFound('Reservation not found');
 
   const payments = await Payment.find({ reservation_id: r._id }).sort({ payment_datetime: -1 }).lean();
+  const guest = await Guest.findById(r.guest_id).select('name').lean();
+  const room = await Room.findById(r.room_id).select('room_number').lean();
+
   return {
     data: payments.map(toPaymentDto),
+    reservation_id: String(r._id),
+    room_id: String(r.room_id),
+    room_number: room?.room_number || '',
+    guest_name: guest?.name || '',
     total_amount: toEgp(r.total_amount),
     paid_amount: toEgp(r.paid_cache || 0),
     remaining_amount: toEgp(r.total_amount - (r.paid_cache || 0)),

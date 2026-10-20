@@ -1,3 +1,4 @@
+// Hotel Management Server
 const app = require('./app');
 const env = require('./config/env');
 const connectDB = require('./db/connect');
@@ -7,3 +8,4 @@ connectDB().then(() => {
     console.log(`Server listening on port ${env.port}`);
   });
 });
+

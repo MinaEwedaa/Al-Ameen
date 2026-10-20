@@ -40,7 +40,7 @@ async function listShiftPayments(req, res, next) {
 
 async function listReservationPayments(req, res, next) {
   try {
-    const result = await paymentService.listReservationPayments(req.params.reservation_id);
+    const result = await paymentService.listReservationPayments(req.params.reservation_id, getNow(req));
     res.json(result);
   } catch (err) {
     next(err);

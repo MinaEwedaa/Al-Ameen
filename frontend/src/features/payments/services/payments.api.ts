@@ -90,6 +90,38 @@ export interface ReservationBalance {
   remainingAmount: number;
 }
 
+export interface RoomBalance {
+  reservationId: string;
+  roomId: string;
+  roomNumber: string;
+  guestName: string;
+  totalAmount: number;
+  paidAmount: number;
+  remainingAmount: number;
+}
+
+/** GET /reservations/{roomIdOrNumber}/payments — used to fetch the room's active reservation balance */
+export async function getRoomBalance(roomIdOrNumber: string): Promise<RoomBalance> {
+  const response = await request<{
+    reservation_id: string;
+    room_id: string;
+    room_number: string;
+    guest_name: string;
+    total_amount: number;
+    paid_amount: number;
+    remaining_amount: number;
+  }>(`/reservations/${roomIdOrNumber}/payments`);
+  return {
+    reservationId: response.reservation_id,
+    roomId: response.room_id,
+    roomNumber: response.room_number,
+    guestName: response.guest_name,
+    totalAmount: response.total_amount,
+    paidAmount: response.paid_amount,
+    remainingAmount: response.remaining_amount,
+  };
+}
+
 /** GET /reservations/{id}/payments — used by the add-payment form to show what is left to pay */
 export async function getReservationBalance(reservationId: number): Promise<ReservationBalance> {
   const response = await request<{ total_amount: number; paid_amount: number; remaining_amount: number }>(

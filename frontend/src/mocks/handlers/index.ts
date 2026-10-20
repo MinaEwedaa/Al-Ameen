@@ -552,6 +552,19 @@ const writeHandlers = [
     });
   }),
 
+  http.get(`${API}/payments/room-balance/:room_id`, ({ params }) => {
+    const roomParam = String(params.room_id);
+    const room = rooms.find((r) => r.id === roomParam || r.room_number === roomParam);
+    const totals = reservationTotals(55);
+    return HttpResponse.json({
+      reservation_id: '55',
+      room_id: room?.id ?? '102',
+      room_number: room?.room_number ?? '102',
+      guest_name: room?.current_guest_name ?? 'محمود حسن',
+      ...(totals || { total_amount: 4500, paid_amount: 1500, remaining_amount: 3000 }),
+    });
+  }),
+
   http.post(`${API}/payments`, async ({ request }) => {
     const blocked = guardWrite();
     if (blocked) return blocked;
@@ -588,14 +601,15 @@ const writeHandlers = [
       return errorResponse('VALIDATION_ERROR', 'Invalid JSON body.', 400);
     }
 
-    if (!body.reservation_id) {
+    if (!body.reservation_id && !body.room_id) {
       return errorResponse(
         'VALIDATION_ERROR',
-        'reservation_id is required in the mock.',
+        'reservation_id or room_id is required in the mock.',
         400,
       );
     }
-    const totals = reservationTotals(body.reservation_id);
+    const resId = body.reservation_id ?? 55;
+    const totals = reservationTotals(resId);
     if (!totals) return errorResponse('NOT_FOUND', 'Reservation not found.', 404);
 
     if (

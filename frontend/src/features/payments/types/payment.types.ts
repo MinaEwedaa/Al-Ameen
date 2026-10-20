@@ -16,7 +16,8 @@ export interface ApiPayment {
 }
 
 export interface CreatePaymentInput {
-  reservation_id: number;
+  reservation_id?: number | string;
+  room_id?: string;
   amount: number;
   payment_method: ApiPaymentMethod;
   notes?: string;
