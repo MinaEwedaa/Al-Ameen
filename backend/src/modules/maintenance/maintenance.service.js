@@ -132,7 +132,7 @@ async function updateMaintenanceIssue({ issueId, priority, notes, status, staff,
       if (!['open', 'in_progress'].includes(issue.status)) {
         throw E.conflict('Issue can only transition to resolved from open or in_progress');
       }
-      condition.status = { $in: ['open', 'in_progress'] };
+      condition.status = issue.status;
       updates.status = 'resolved';
       updates.resolved_at = now || new Date();
       details.status = 'resolved';
@@ -141,7 +141,7 @@ async function updateMaintenanceIssue({ issueId, priority, notes, status, staff,
       throw E.validation(`Invalid status: ${status}`);
     }
   } else {
-    condition.status = { $ne: 'resolved' };
+    condition.status = issue.status;
   }
 
   const res = await MaintenanceIssue.updateOne(condition, { $set: updates });

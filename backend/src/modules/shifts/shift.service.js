@@ -143,17 +143,19 @@ async function resolveLoginShift(staff, now = new Date(), reqTime = null) {
     };
   }
 
-  // 1. Resuming existing active shift
+  // 1. Resuming existing active shift (only if current time is within shift window + grace cutoff)
   const existingShift = await Shift.findOne({ staff_id: staff._id, status: 'active' });
   if (existingShift) {
     const win = shiftWindow(existingShift.shift_date, existingShift.shift_type);
     const endCutoff = new Date(win.endAt.getTime() + 60 * 60 * 1000);
-    const refreshExpiresAt = new Date(Math.max(endCutoff.getTime(), now.getTime() + 24 * 60 * 60 * 1000, Date.now() + 24 * 60 * 60 * 1000));
-    return {
-      read_only: false,
-      shift: existingShift,
-      refreshExpiresAt,
-    };
+    if (now <= endCutoff) {
+      const refreshExpiresAt = new Date(Math.max(endCutoff.getTime(), now.getTime() + 24 * 60 * 60 * 1000, Date.now() + 24 * 60 * 60 * 1000));
+      return {
+        read_only: false,
+        shift: existingShift,
+        refreshExpiresAt,
+      };
+    }
   }
 
   // 2. Search candidate shifts around current Cairo date
