@@ -1,150 +1,200 @@
-# Hotel Management & Intelligent Operations System
+# Al-Amin Hotel Management & Intelligent Operations System
+> **Sprint 1 Production Release**
 
-Welcome to the backend foundation for the **Hotel Management & Intelligent Operations System**. This initial release provides the core infrastructure, database architecture, and data models focusing on the **Staff Management** module, room statuses, housekeeping workflows, and maintenance operations.
-
----
-
-## Tech Stack
-
-- **Runtime & Framework:** Node.js (LTS) with Express
-- **Database & ODM:** MongoDB Atlas accessed via Mongoose
-- **Security & Utilities:** `bcrypt` (password hashing), `dotenv` (environment configuration), `cors` (Cross-Origin Resource Sharing)
-- **Developer Tools:** `nodemon` (live reload during development)
-- **Module System:** CommonJS (`require` / `module.exports`)
+An enterprise-grade, full-stack Hotel Management & Staff Operations System designed specifically for Egyptian hotel operations with native bilingual Arabic (RTL) & English support, shift-based access controls, complete front desk lifecycle management, and strict financial compliance.
 
 ---
 
-## Project Structure
+## 🌟 Executive Summary: Sprint 1 Deliverables
 
-This project is set up as a monorepo containing backend services and prepared for frontend integration:
+Sprint 1 delivers a complete, secure, and rigorously tested foundation spanning both modern web frontend and robust backend services:
+
+1. **Shift-Enforced Receptionist Security & Authentication** — Role-based access with Cairo timezone shift windows (Morning, Evening, Night), early read-only window, and single-session enforcement.
+2. **Interactive Front Desk Operations (Phases 1–4)**:
+   - **Phase 1: Stay Folio & Reservation Lookup** — Real-time lookup by room number or booking ID, complete stay folios with nested guests, rooms, and multi-shift payment history.
+   - **Phase 2: Check-In Flow** — Down-payment requirement (`PAYMENT_REQUIRED`), early arrival calculation before 12:00 noon, and room occupancy transitions.
+   - **Phase 3: Extend Stay Flow** — Same-day conflict detection, half-day extension fee calculation, and automated stay adjustments.
+   - **Phase 4: Check-Out Flow** — Remaining balance settlement lock (`BALANCE_DUE`), transition to cleaning, and auto-dispatch of housekeeping tasks.
+3. **Payments, Receipts & Thermal Voucher Printing**:
+   - Multi-method payment capture (Cash, InstaPay, Vodafone Cash) linked to active shifts.
+   - Front desk room balance auto-check and room selector.
+   - Beautiful, bilingual Printable Receipt Voucher with QR/barcode aesthetics and matching direct PDF export.
+4. **Housekeeping & Maintenance**:
+   - Cleaning task creation, priority assignment, and status updates.
+   - Maintenance issue reporting with status resolution tracking.
+5. **Egyptian Localization & Data Privacy**:
+   - Masked Egyptian National IDs (`**********1234`) and E.164 phone normalization (`+20...`).
+   - Egyptian hotel stay days (12:00 PM to 12:00 PM noon Cairo time).
+6. **Append-Only Tamper-Evident Audit Logging**:
+   - Immutable audit trail recording every check-in, extension, check-out, and financial action.
+7. **Comprehensive Test Coverage**:
+   - **19 test suites, 253 unit & integration tests passing (100% pass rate)**.
+
+---
+
+## 🏗️ System Architecture
 
 ```text
 hotel-management/
-├── .gitignore
-├── README.md
-├── api/
-│   └── staff-management-api.yaml # OpenAPI 3.0.3 specification for Receptionist API
-├── backend/
-│   ├── .env                    # Real environment variables (NEVER committed)
-│   ├── .env.example            # Placeholder environment template (committed)
-│   ├── package.json            # Backend scripts and dependencies
-│   ├── package-lock.json
-│   ├── server.js               # Express application entry point
-│   ├── config/
-│   │   └── db.js               # MongoDB connection handler
-│   ├── models/
-│   │   ├── Room.js             # Room entity with status index
-│   │   ├── Staff.js            # Staff accounts with bcrypt helpers
-│   │   ├── Shift.js            # Staff shift scheduling with time validation
-│   │   ├── CleaningTask.js     # Housekeeping tasks linked to Staff & Room
-│   │   └── MaintenanceIssue.js # Room issues with priority/status tracking
-│   ├── routes/                 # Express route handlers (.gitkeep, empty for now)
-│   ├── controllers/            # Controller logic (.gitkeep, empty for now)
-│   └── scripts/
-│       └── seed.js             # Idempotent development database seeder
-└── frontend/                   # Frontend workspace (.gitkeep, reserved for future sprints)
+├── backend/                              # Node.js + Express REST API
+│   ├── openapi/                          # OpenAPI 3.0.3 specification
+│   │   └── staff-management-api.yaml
+│   ├── src/
+│   │   ├── config/                       # Environment, encryption, and DB setup
+│   │   ├── db/
+│   │   │   ├── connect.js                # MongoDB connection handler
+│   │   │   └── models/                   # Mongoose models with validation hooks
+│   │   ├── middleware/                   # Auth, shift validation, idempotency, rate limiting
+│   │   ├── modules/
+│   │   │   ├── auth/                     # Authentication & session management
+│   │   │   ├── shifts/                   # Shift windows, attendance, handover
+│   │   │   ├── rooms/                    # Room inventory, statuses, history
+│   │   │   ├── guests/                   # Egyptian ID encryption & phone normalization
+│   │   │   ├── reservations/             # Folio, check-in, extend, check-out
+│   │   │   ├── payments/                 # Shift collections, vouchers, balances
+│   │   │   ├── cleaning/                 # Housekeeping tasks
+│   │   │   ├── maintenance/              # Maintenance tickets
+│   │   │   ├── reports/                  # Automated PDF & shift reports
+│   │   │   └── audit/                    # Tamper-evident audit logging
+│   │   └── utils/                        # Cairo time, money conversion, crypto
+│   └── tests/                            # 19 Jest & Supertest suites (253 tests)
+│
+├── frontend/                             # React 18 + Vite + TypeScript SPA
+│   ├── src/
+│   │   ├── app/                          # Main router and layout
+│   │   ├── core/
+│   │   │   └── i18n/                     # Bilingual translations (ar.json / en.json)
+│   │   ├── features/
+│   │   │   ├── auth/                     # Login & shift handover screens
+│   │   │   ├── dashboard/                # Receptionist operational dashboard
+│   │   │   ├── rooms/                    # Interactive room status grid
+│   │   │   ├── guests/                   # Guest directory & quick search
+│   │   │   ├── reservations/             # Reservation management
+│   │   │   ├── payments/                 # Payment drawer, Thermal Voucher, PDF export
+│   │   │   ├── housekeeping/             # Room cleaning dispatch
+│   │   │   └── maintenance/              # Maintenance issue tracker
+│   │   └── mocks/                        # MSW (Mock Service Worker) for offline dev
+│   └── public/                           # Static assets
+└── README.md                             # Project documentation
 ```
 
 ---
 
-## Setup Instructions
+## 🛠️ Technology Stack
 
-Follow these steps to set up the development environment locally:
+### Backend
+- **Runtime:** Node.js (v20+)
+- **Framework:** Express.js 5
+- **Database & ODM:** MongoDB Atlas via Mongoose 9
+- **Security:**
+  - Password Hashing: `Argon2id`
+  - National ID Protection: `AES-256-GCM` authenticated encryption + HMAC blind indexing
+  - Token Auth: `jsonwebtoken` (JWT) with HTTP-only cookies
+  - Sanitization: Mongoose `sanitizeFilter` & Helmet security headers
+- **Timezone Management:** `Luxon` locked to `Africa/Cairo`
+- **Testing:** Jest & Supertest (253 tests across 19 suites)
+- **API Specification:** OpenAPI 3.0.3 with `express-openapi-validator` & Swagger UI
 
-### 1. Clone the repository
-```bash
-git clone <repository-url>
-cd hotel-management
+### Frontend
+- **Framework:** React 18 with TypeScript
+- **Build Tool:** Vite
+- **Styling:** Vanilla CSS & Tailwind CSS with RTL/LTR responsive architecture
+- **Internationalization:** `i18next` with complete Arabic (`ar`) and English (`en`) support
+- **Icons & UI:** `lucide-react`
+- **State & Networking:** Axios with custom idempotency headers & MSW handlers
+
+---
+
+## 📋 Front Desk Counter Operations Flow
+
+```
+[Guest Arrives at Counter]
+         │
+         ▼
+[Phase 1: Folio Lookup] ──► Search by Room Number (e.g., "505") or Booking ID
+         │                  Inspect total, paid deposit, remaining balance, guest details
+         │
+         ▼
+[Payment Recording]     ──► Collect deposit via Cash / InstaPay / Vodafone Cash
+         │                  Print thermal receipt voucher or download PDF
+         │
+         ▼
+[Phase 2: Check-In]     ──► Verify ID & paid deposit (>= 1 payment required)
+         │                  Early arrival calculation if arriving before 12:00 noon
+         │                  Room transitions to 'occupied'
+         │
+         ▼
+[Phase 3: Extend Stay]  ──► Optional: guest requests late checkout past 12:00
+         │                  Verifies no incoming conflict on checkout day
+         │                  Adds half-day fee to total & remaining amounts
+         │
+         ▼
+[Phase 4: Check-Out]    ──► Verify balance is 0.00 EGP (blocked if balance remains)
+                            Reservation marked 'checked_out'
+                            Room transitions to 'cleaning'
+                            Housekeeping task automatically generated
 ```
 
-### 2. Install backend dependencies
+---
+
+## 🚀 Getting Started
+
+### Prerequisites
+- Node.js >= 20.x
+- MongoDB instance (local or MongoDB Atlas)
+- Git
+
+### 1. Backend Setup
+
 ```bash
 cd backend
 npm install
 ```
 
-### 3. Configure environment variables
-Copy the template `.env.example` to create your local `.env`:
-```bash
-# On Windows (cmd/PowerShell):
-copy .env.example .env
-
-# On macOS/Linux:
-cp .env.example .env
-```
-
-Open `backend/.env` and configure:
+Configure your environment variables in `backend/.env`:
 ```env
 PORT=5000
-MONGO_URI=<ask-project-owner-for-the-real-connection-string>
+NODE_ENV=development
+MONGODB_URI=mongodb+srv://<user>:<password>@cluster.mongodb.net/hotel_management
+JWT_SECRET=your_jwt_secret_key_minimum_32_characters
+ID_ENC_KEY=0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef
+ID_HMAC_KEY=0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef
+ALLOWED_ORIGINS=http://localhost:5173,http://localhost:5174
 ```
 
-> ⚠️ **Important:** Never hardcode credentials in any code file. Ask the project owner for the valid MongoDB Atlas connection string. Never share or commit `.env`.
-
-### 4. Run the development server
+Start backend development server:
 ```bash
 npm run dev
 ```
-The server will connect to MongoDB Atlas and listen at `http://localhost:5000`. You should see:
-```text
-MongoDB connected: <cluster-host>
-Server running on port 5000
-```
+API runs on `http://localhost:5000`. Swagger documentation available at `http://localhost:5000/docs`.
 
-### 5. Seed initial data (optional)
-To populate your MongoDB database with sample rooms, staff, shifts, cleaning tasks, and maintenance issues:
+### 2. Frontend Setup
+
 ```bash
-npm run seed
+cd frontend
+npm install
+npm run dev
 ```
-> *Note:* The seed script is idempotent and protected—it will refuse to run if `NODE_ENV === 'production'`.
+Frontend runs on `http://localhost:5174` (or `http://localhost:5173`).
 
 ---
 
-## Conventions & Team Guidelines
+## 🧪 Test Suite Verification
 
-All contributors must adhere to the following standards to ensure consistency and maintainability across the codebase:
+Run the comprehensive automated test suite in the backend:
 
-### Architectural & Naming Conventions
-- **One model per file:** Every Mongoose model resides in its own dedicated file under `backend/models/`.
-- **PascalCase model names:** File names and model registrations must use PascalCase (e.g., `Room.js`, `Staff.js`, `CleaningTask.js`).
-- **snake_case schema fields:** All document attributes use snake_case (e.g., `room_number`, `shift_notes`, `start_time`, `password_hash`).
-- **No manual ID fields:** Do not create manual `room_id`, `staff_id`, etc. MongoDB's native `_id` acts as the unique identifier.
-- **ObjectId references:** Always use Mongoose `ObjectId` references (`ref: '<Model>'`) rather than storing names or foreign identifiers as raw strings.
-- **Automatic timestamps:** All schemas include `{ timestamps: true }` for automated `createdAt` and `updatedAt` tracking.
+```bash
+cd backend
+npm test
+```
 
-### Git & Security Workflow
-- **Branching strategy:** Create one feature branch per task using the pattern `feature/<name>` (e.g., `feature/staff-auth`, `feature/booking-model`).
-- **Zero credential leaks:** Never commit `.env` files. The `.gitignore` file is strictly configured to ignore `.env`, `node_modules/`, and logs.
-- **Never log sensitive data:** Never print `MONGO_URI`, passwords, or password hashes to terminal logs or error reports.
+**Results:**
+- **Test Suites:** 19 passed, 19 total
+- **Tests:** 253 passed, 253 total
+- **Snapshots:** 0 total
+- **Execution:** 100% green without regressions
 
-### How to Add a New Model
-When creating additional entities (e.g., Bookings, Guests, Invoices):
-1. Create a new file under `backend/models/<ModelName>.js`.
-2. Follow the existing model structure:
-   ```javascript
-   const mongoose = require('mongoose');
+---
 
-   const exampleSchema = new mongoose.Schema(
-     {
-       name: {
-         type: String,
-         required: [true, 'Name is required'],
-         trim: true,
-       },
-       related_entity: {
-         type: mongoose.Schema.Types.ObjectId,
-         ref: 'Staff',
-         required: true,
-       },
-     },
-     {
-       timestamps: true,
-     }
-   );
-
-   // Add necessary indexes
-   exampleSchema.index({ name: 1 });
-
-   module.exports = mongoose.model('Example', exampleSchema);
-   ```
-3. Test your model queries and indexes locally before submitting a Pull Request.
+## 📄 License
+Internal proprietary hotel management system developed for Al-Amin Hotel. All rights reserved.

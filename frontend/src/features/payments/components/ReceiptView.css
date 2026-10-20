@@ -1,0 +1,317 @@
+/* ==========================================================================
+   Receipt / Voucher Component Styles
+   Official Hotel Payment Voucher (سند قبض مالي فندقي)
+   ========================================================================== */
+
+.receipt-voucher {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  padding: 1.75rem;
+  border: 2px solid var(--color-border, #cbd5e1);
+  border-radius: 16px;
+  background: #ffffff;
+  color: #0f172a;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+  font-family: inherit;
+  direction: inherit;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Subtle decorative inner frame */
+.receipt-voucher::before {
+  content: '';
+  position: absolute;
+  inset: 6px;
+  border: 1px solid rgba(203, 213, 225, 0.6);
+  border-radius: 10px;
+  pointer-events: none;
+}
+
+/* ---------------- Header ---------------- */
+.receipt-voucher__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  padding-bottom: 1rem;
+  border-bottom: 2px solid #0f2c33;
+}
+
+.receipt-voucher__brand {
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+}
+
+.receipt-voucher__logo {
+  width: 52px;
+  height: 52px;
+  object-fit: contain;
+  border-radius: 8px;
+}
+
+.receipt-voucher__hotel-titles {
+  display: flex;
+  flex-direction: column;
+}
+
+.receipt-voucher__hotel-name-ar {
+  font-size: 1.2rem;
+  font-weight: 800;
+  color: #0f2c33;
+  line-height: 1.2;
+}
+
+.receipt-voucher__hotel-name-en {
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  color: #64748b;
+  text-transform: uppercase;
+}
+
+.receipt-voucher__title-block {
+  text-align: end;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+}
+
+.receipt-voucher__doc-title {
+  font-size: 1.15rem;
+  font-weight: 800;
+  color: #0f2c33;
+  margin: 0;
+}
+
+.receipt-voucher__doc-sub {
+  font-size: 0.75rem;
+  color: #64748b;
+  font-weight: 500;
+}
+
+.receipt-voucher__serial-badge {
+  display: inline-block;
+  margin-top: 4px;
+  padding: 2px 10px;
+  border-radius: 6px;
+  background: #f1f5f9;
+  border: 1px solid #cbd5e1;
+  font-family: monospace;
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: #0f2c33;
+  direction: ltr;
+}
+
+/* ---------------- Details Grid ---------------- */
+.receipt-voucher__grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 0.85rem 1.5rem;
+  padding: 0.5rem 0;
+}
+
+.receipt-voucher__item {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.receipt-voucher__label {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: #64748b;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+}
+
+.receipt-voucher__value {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: #0f172a;
+}
+
+/* ---------------- Amount Card ---------------- */
+.receipt-voucher__amount-box {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 1.25rem;
+  border-radius: 12px;
+  background: #f8fafc;
+  border: 1.5px solid #0f2c33;
+}
+
+.receipt-voucher__amount-details {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.receipt-voucher__amount-label {
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: #0f2c33;
+}
+
+.receipt-voucher__amount-value {
+  font-size: 1.45rem;
+  font-weight: 800;
+  color: #0f2c33;
+  direction: ltr;
+  display: inline-block;
+}
+
+.receipt-voucher__status-badge {
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  font-weight: 700;
+  background: #dcfce7;
+  color: #15803d;
+  border: 1px solid #bbf7d0;
+}
+
+/* ---------------- Notes ---------------- */
+.receipt-voucher__notes {
+  padding: 0.65rem 0.85rem;
+  border-radius: 8px;
+  background: #f8fafc;
+  border: 1px dashed #cbd5e1;
+  font-size: 0.85rem;
+  color: #334155;
+  display: flex;
+  gap: 8px;
+}
+
+.receipt-voucher__notes-label {
+  font-weight: 700;
+  color: #0f2c33;
+  white-space: nowrap;
+}
+
+/* ---------------- Signatures & Stamp ---------------- */
+.receipt-voucher__signatures {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1.5rem;
+  padding-top: 1.25rem;
+  margin-top: 0.5rem;
+  border-top: 1px dashed #cbd5e1;
+}
+
+.receipt-voucher__signature-col {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 0.5rem;
+}
+
+.receipt-voucher__sig-label {
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: #0f2c33;
+}
+
+.receipt-voucher__sig-line {
+  width: 80%;
+  height: 48px;
+  border-bottom: 1.5px dashed #94a3b8;
+}
+
+.receipt-voucher__stamp-box {
+  width: 90px;
+  height: 64px;
+  border: 2px dashed #94a3b8;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #94a3b8;
+  font-size: 0.7rem;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+/* ---------------- Footer ---------------- */
+.receipt-voucher__footer {
+  text-align: center;
+  padding-top: 0.75rem;
+  border-top: 1px solid #f1f5f9;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.receipt-voucher__thank-you {
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: #0f2c33;
+}
+
+.receipt-voucher__legal {
+  font-size: 0.7rem;
+  color: #94a3b8;
+}
+
+/* ---------------- Print Styles (@media print) ---------------- */
+@media print {
+  @page {
+    size: A4 portrait;
+    margin: 12mm 15mm;
+  }
+
+  /* Hide entire page except receipt-voucher */
+  body * {
+    visibility: hidden !important;
+  }
+
+  .receipt-voucher,
+  .receipt-voucher * {
+    visibility: visible !important;
+  }
+
+  .receipt-voucher {
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    width: 100% !important;
+    max-width: 180mm !important;
+    margin: 0 auto !important;
+    padding: 24px 28px !important;
+    border: 2px solid #0f2c33 !important;
+    box-shadow: none !important;
+    background: #ffffff !important;
+    color: #0f172a !important;
+    page-break-inside: avoid !important;
+    break-inside: avoid !important;
+  }
+
+  .receipt-voucher::before {
+    border-color: #cbd5e1 !important;
+  }
+
+  .receipt-voucher__header {
+    border-bottom-color: #0f2c33 !important;
+  }
+
+  .receipt-voucher__amount-box {
+    border: 1.5px solid #0f2c33 !important;
+    background: #f8fafc !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+
+  .receipt-voucher__status-badge {
+    background: #dcfce7 !important;
+    color: #15803d !important;
+    border: 1px solid #bbf7d0 !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+}

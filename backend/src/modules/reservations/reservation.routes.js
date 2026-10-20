@@ -10,8 +10,10 @@ const router = express.Router();
 router.use(authenticate);
 router.use(requireRole('receptionist'));
 
-router.post('/', requireShift, idempotent(), reservationController.createReservation);
+router.get('/', reservationController.listReservations);
+router.get('/:reservation_id', reservationController.getReservation);
 router.get('/:reservation_id/payments', paymentController.listReservationPayments);
+router.post('/', requireShift, idempotent(), reservationController.createReservation);
 router.post('/:reservation_id/check-in', requireShift, idempotent(), reservationController.checkIn);
 router.post('/:reservation_id/extend', requireShift, idempotent(), reservationController.extendStay);
 router.post('/:reservation_id/check-out', requireShift, idempotent(), reservationController.checkOut);

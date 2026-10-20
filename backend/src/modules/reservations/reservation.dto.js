@@ -1,6 +1,9 @@
 const { DateTime } = require('luxon');
 const { toEgp } = require('../../utils/money');
 const { ZONE } = require('../../utils/time');
+const { toGuestDto } = require('../guests/guest.service');
+const { toRoomDto } = require('../rooms/room.dto');
+const { toPaymentDto } = require('../payments/payment.dto');
 
 // التواريخ بتتبعت بتوقيت القاهرة مع الـ offset (مثلاً +03:00)
 const cairoIso = (d) => (d ? DateTime.fromJSDate(new Date(d)).setZone(ZONE).toISO() : null);
@@ -12,8 +15,8 @@ function toReservationDto(r) {
 
   const dto = {
     reservation_id: String(r._id),
-    guest_id: String(r.guest_id),
-    room_id: String(r.room_id),
+    guest_id: String(r.guest_id?._id || r.guest_id),
+    room_id: String(r.room_id?._id || r.room_id),
     check_in: cairoIso(r.check_in_at),
     check_out: cairoIso(r.check_out_at),
     reservation_date: cairoIso(r.createdAt),
@@ -35,4 +38,14 @@ function toReservationDto(r) {
   return dto;
 }
 
-module.exports = { toReservationDto };
+function toReservationDetailDto(r, { guest, room, payments = [] } = {}) {
+  const base = toReservationDto(r);
+  return {
+    ...base,
+    guest: guest ? toGuestDto(guest) : null,
+    room: room ? toRoomDto(room) : null,
+    payments: payments.map(toPaymentDto),
+  };
+}
+
+module.exports = { toReservationDto, toReservationDetailDto };

@@ -166,4 +166,4 @@ async function getGuestById(id) {
   return toGuestDto(guest);
 }
 
-module.exports = { createGuest, searchGuests, getGuestById };
+module.exports = { createGuest, searchGuests, getGuestById, toGuestDto };

@@ -6,6 +6,7 @@ const {
   Guest,
   RoomStatusHistory,
   CleaningTask,
+  Payment,
 } = require('../../db/models');
 const { E } = require('../../utils/errors');
 const { isObjectId } = require('../../utils/ids');
@@ -14,7 +15,8 @@ const { toEgp } = require('../../utils/money');
 const { audit } = require('../audit/audit.service');
 const { AUDIT } = require('../audit/audit.actions');
 const { computeTotal } = require('./reservation.calc');
-const { toReservationDto } = require('./reservation.dto');
+const { toReservationDto, toReservationDetailDto } = require('./reservation.dto');
+const { paginate } = require('../../utils/paginate');
 
 const isDuplicateKey = (err) => err && err.code === 11000;
 
@@ -104,10 +106,45 @@ async function createReservation({ guest_id, room_id, check_in, check_out, staff
   return toReservationDto(reservation.toObject());
 }
 
+async function resolveReservationForCheckIn(identifier, now = new Date()) {
+  if (isObjectId(identifier)) {
+    const r = await Reservation.findById(identifier);
+    if (r) return r;
+  }
+
+  let roomId = isObjectId(identifier) ? identifier : null;
+  if (!roomId) {
+    const roomDoc = await Room.findOne({ room_number: String(identifier) });
+    if (roomDoc) roomId = roomDoc._id;
+  }
+
+  if (roomId) {
+    const currentStayDay = stayDay(now);
+    const todayDate = cairoDate(now);
+    const nights = await RoomNight.find({
+      room_id: roomId,
+      day: { $in: [currentStayDay, todayDate] },
+    }).lean();
+    if (nights.length) {
+      const confirmed = await Reservation.find({
+        _id: mongoose.trusted({ $in: nights.map((n) => n.reservation_id) }),
+        status: 'confirmed',
+      });
+      if (confirmed.length === 1) return confirmed[0];
+      if (confirmed.length > 1) {
+        throw E.conflict(
+          'More than one confirmed reservation for this room today. Send reservation_id.',
+          'AMBIGUOUS_RESERVATION'
+        );
+      }
+    }
+  }
+
+  throw E.notFound('Reservation not found');
+}
+
 async function checkIn({ reservation_id, early_arrival, staff, shift, ip, now }) {
-  if (!isObjectId(reservation_id)) throw E.notFound('Reservation not found');
-  const reservation = await Reservation.findById(reservation_id);
-  if (!reservation) throw E.notFound('Reservation not found');
+  const reservation = await resolveReservationForCheckIn(reservation_id, now);
 
   if (reservation.status !== 'confirmed') {
     throw E.conflict('Reservation is not confirmed');
@@ -212,10 +249,28 @@ async function checkIn({ reservation_id, early_arrival, staff, shift, ip, now })
   return toReservationDto(updatedReservation.toObject());
 }
 
+async function resolveReservationForActiveStay(identifier) {
+  if (isObjectId(identifier)) {
+    const r = await Reservation.findById(identifier);
+    if (r) return r;
+  }
+
+  let roomId = isObjectId(identifier) ? identifier : null;
+  if (!roomId) {
+    const roomDoc = await Room.findOne({ room_number: String(identifier) });
+    if (roomDoc) roomId = roomDoc._id;
+  }
+
+  if (roomId) {
+    const checkedIn = await Reservation.findOne({ room_id: roomId, status: 'checked_in' });
+    if (checkedIn) return checkedIn;
+  }
+
+  throw E.notFound('Reservation not found');
+}
+
 async function extendStay({ reservation_id, staff, shift, ip, now }) {
-  if (!isObjectId(reservation_id)) throw E.notFound('Reservation not found');
-  const reservation = await Reservation.findById(reservation_id);
-  if (!reservation) throw E.notFound('Reservation not found');
+  const reservation = await resolveReservationForActiveStay(reservation_id);
 
   if (reservation.status !== 'checked_in') {
     throw E.conflict('Reservation is not checked in');
@@ -272,9 +327,7 @@ async function extendStay({ reservation_id, staff, shift, ip, now }) {
 }
 
 async function checkOut({ reservation_id, staff, shift, ip, now }) {
-  if (!isObjectId(reservation_id)) throw E.notFound('Reservation not found');
-  const reservation = await Reservation.findById(reservation_id);
-  if (!reservation) throw E.notFound('Reservation not found');
+  const reservation = await resolveReservationForActiveStay(reservation_id);
 
   if (reservation.status !== 'checked_in') {
     throw E.conflict('Reservation is not checked in');
@@ -369,9 +422,112 @@ async function checkOut({ reservation_id, staff, shift, ip, now }) {
   return toReservationDto(updatedReservation.toObject());
 }
 
+async function resolveReservationByIdentifier(identifier, now = new Date()) {
+  if (isObjectId(identifier)) {
+    const r = await Reservation.findById(identifier);
+    if (r) return r;
+  }
+
+  let roomId = isObjectId(identifier) ? identifier : null;
+  if (!roomId) {
+    const roomDoc = await Room.findOne({ room_number: String(identifier) });
+    if (roomDoc) roomId = roomDoc._id;
+  }
+
+  if (roomId) {
+    // 1. Look for checked-in reservation first
+    let r = await Reservation.findOne({ room_id: roomId, status: 'checked_in' });
+    if (r) return r;
+
+    // 2. Look for confirmed reservation for current stay day or early arrival today
+    const currentStayDay = stayDay(now);
+    const todayDate = cairoDate(now);
+    const nights = await RoomNight.find({
+      room_id: roomId,
+      day: { $in: [currentStayDay, todayDate] },
+    }).lean();
+    if (nights.length) {
+      r = await Reservation.findOne({
+        _id: mongoose.trusted({ $in: nights.map((n) => n.reservation_id) }),
+        status: 'confirmed',
+      });
+      if (r) return r;
+    }
+  }
+
+  throw E.notFound('Reservation not found');
+}
+
+async function getReservation({ reservation_id, now = new Date() }) {
+  const reservation = await resolveReservationByIdentifier(reservation_id, now);
+  const [guest, room, payments] = await Promise.all([
+    Guest.findById(reservation.guest_id),
+    Room.findById(reservation.room_id),
+    Payment.find({ reservation_id: reservation._id }).sort({ payment_datetime: -1 }),
+  ]);
+
+  return toReservationDetailDto(reservation, { guest, room, payments });
+}
+
+async function listReservations({
+  status,
+  room_id,
+  guest_id,
+  check_in_from,
+  check_in_to,
+  page = 1,
+  limit = 20,
+}) {
+  const filter = {};
+  if (status) {
+    filter.status = status;
+  }
+  if (guest_id) {
+    if (!isObjectId(guest_id)) throw E.validation('Invalid guest_id');
+    filter.guest_id = guest_id;
+  }
+  if (room_id) {
+    let targetRoomId = isObjectId(room_id) ? room_id : null;
+    if (!targetRoomId) {
+      const roomDoc = await Room.findOne({ room_number: String(room_id) });
+      if (roomDoc) targetRoomId = roomDoc._id;
+      else {
+        return {
+          data: [],
+          meta: { page: Number(page) || 1, limit: Number(limit) || 20, total: 0 },
+        };
+      }
+    }
+    filter.room_id = targetRoomId;
+  }
+  if (check_in_from || check_in_to) {
+    filter.check_in_at = {};
+    if (check_in_from) {
+      filter.check_in_at.$gte = new Date(check_in_from);
+    }
+    if (check_in_to) {
+      filter.check_in_at.$lte = new Date(check_in_to);
+    }
+  }
+
+  return paginate(
+    Reservation,
+    filter,
+    {
+      page: Number(page) || 1,
+      limit: Number(limit) || 20,
+      sort: { createdAt: -1 },
+    },
+    toReservationDto
+  );
+}
+
 module.exports = {
   createReservation,
   checkIn,
   extendStay,
   checkOut,
+  getReservation,
+  listReservations,
+  resolveReservationByIdentifier,
 };

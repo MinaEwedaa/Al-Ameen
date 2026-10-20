@@ -19,6 +19,37 @@ async function createReservation(req, res, next) {
   }
 }
 
+async function listReservations(req, res, next) {
+  try {
+    const { status, room_id, guest_id, check_in_from, check_in_to, page, limit } = req.query;
+    const result = await reservationService.listReservations({
+      status,
+      room_id,
+      guest_id,
+      check_in_from,
+      check_in_to,
+      page,
+      limit,
+    });
+    res.status(200).json(result);
+  } catch (err) {
+    next(err);
+  }
+}
+
+async function getReservation(req, res, next) {
+  try {
+    const { reservation_id } = req.params;
+    const result = await reservationService.getReservation({
+      reservation_id,
+      now: getNow(req),
+    });
+    res.status(200).json(result);
+  } catch (err) {
+    next(err);
+  }
+}
+
 async function checkIn(req, res, next) {
   try {
     const { reservation_id } = req.params;
@@ -71,6 +102,8 @@ async function checkOut(req, res, next) {
 
 module.exports = {
   createReservation,
+  listReservations,
+  getReservation,
   checkIn,
   extendStay,
   checkOut,

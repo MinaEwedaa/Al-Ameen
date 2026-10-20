@@ -254,6 +254,7 @@ const idempotencyStore = new Map<
 
 type PaymentBody = {
   reservation_id?: number;
+  room_id?: string | number;
   amount?: number;
   payment_method?: string;
   notes?: string;
@@ -554,13 +555,13 @@ const writeHandlers = [
 
   http.get(`${API}/payments/room-balance/:room_id`, ({ params }) => {
     const roomParam = String(params.room_id);
-    const room = rooms.find((r) => r.id === roomParam || r.room_number === roomParam);
+    const room = rooms.find((r) => String(r.room_id) === roomParam);
     const totals = reservationTotals(55);
     return HttpResponse.json({
       reservation_id: '55',
-      room_id: room?.id ?? '102',
-      room_number: room?.room_number ?? '102',
-      guest_name: room?.current_guest_name ?? 'محمود حسن',
+      room_id: String(room?.room_id ?? '102'),
+      room_number: String(room?.room_id ?? '102'),
+      guest_name: 'محمود حسن',
       ...(totals || { total_amount: 4500, paid_amount: 1500, remaining_amount: 3000 }),
     });
   }),
@@ -630,9 +631,10 @@ const writeHandlers = [
       );
     }
 
+    const resolvedResId = body.reservation_id ?? 55;
     const payment: Payment = {
       payment_id: newId(),
-      reservation_id: body.reservation_id,
+      reservation_id: resolvedResId,
       staff_id: 1,
       shift_id: mockShift.shift_id,
       amount: body.amount,
@@ -644,7 +646,7 @@ const writeHandlers = [
     };
     payments.push(payment);
 
-    const after = reservationTotals(body.reservation_id);
+    const after = reservationTotals(resolvedResId);
     const payload = {
       payment,
       paid_amount: after?.paid_amount ?? 0,
