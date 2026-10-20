@@ -1,0 +1,8 @@
+.rooms-page {
+  min-width: 0;
+}
+
+.rooms-page__state-action {
+  justify-self: center;
+  margin-block-start: var(--space-2);
+}

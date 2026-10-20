@@ -1,0 +1,54 @@
+.filter-bar { display: flex; align-items: center; gap: var(--space-3); }
+.filter-bar .ui-input { flex: 1; }
+
+/* Shared filters grid: search + selects share the width equally, reset sits at the end */
+.filter-bar--grid {
+  display: grid;
+  grid-template-columns: repeat(var(--filter-columns, 4), minmax(0, 1fr)) auto;
+  align-items: end;
+  gap: var(--space-4);
+  width: 100%;
+}
+
+.filter-bar--grid > .common-search,
+.filter-bar--grid .ui-select__trigger {
+  min-height: 2.875rem;
+  border-radius: var(--radius-card);
+}
+
+.filter-bar__reset {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-1);
+  min-height: 2.875rem;
+  padding-inline: var(--space-3);
+  border: 0;
+  color: var(--color-primary-dark);
+  background: transparent;
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  white-space: nowrap;
+}
+
+.filter-bar__reset:hover { color: var(--color-primary); }
+
+@media (max-width: 64rem) {
+  .filter-bar--grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .filter-bar__reset { justify-self: start; }
+}
+
+@media (max-width: 36rem) {
+  .filter-bar--grid { grid-template-columns: 1fr; }
+}
+
+/* The white card that holds a filter bar */
+.filters-card {
+  overflow: visible;
+  padding: var(--space-4);
+  border-radius: var(--radius-panel);
+}
+
+@media (max-width: 52rem) {
+  .filters-card { padding: var(--space-3); }
+}

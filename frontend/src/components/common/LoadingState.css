@@ -1,0 +1,11 @@
+.ui-loading-state {
+  display: grid;
+  min-height: 11rem;
+  place-content: center;
+  justify-items: center;
+  gap: var(--space-3);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-card);
+  color: var(--color-text-muted);
+  background: var(--color-surface);
+}

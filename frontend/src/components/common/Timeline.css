@@ -1,0 +1,84 @@
+.timeline {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.timeline__item {
+  position: relative;
+  display: grid;
+  grid-template-columns: 18px 1fr auto;
+  gap: 12px;
+  padding-bottom: 26px;
+}
+
+.timeline__item:last-child {
+  padding-bottom: 0;
+}
+
+/* الخط الرأسي اللي بيوصل بين النقط */
+.timeline__item:not(:last-child)::before {
+  content: '';
+  position: absolute;
+  inset-inline-start: 8px;
+  top: 17px;
+  bottom: -5px;
+  width: 2px;
+  background: var(--color-border);
+}
+
+.timeline__marker {
+  position: relative;
+  z-index: 1;
+  width: 10px;
+  height: 10px;
+  margin-top: 5px;
+  margin-inline-start: 4px;
+  border-radius: 50%;
+  background: var(--color-gold);
+  box-shadow: 0 0 0 4px var(--color-gold-softer);
+}
+
+.timeline__marker--gold {
+  background: var(--color-gold);
+  box-shadow: 0 0 0 4px var(--color-gold-softer);
+}
+
+.timeline__marker--primary {
+  background: var(--color-primary);
+  box-shadow: 0 0 0 4px var(--color-primary-soft);
+}
+
+.timeline__title {
+  display: block;
+  font-size: 0.9rem;
+}
+
+.timeline__description {
+  margin: 4px 0 0;
+  color: var(--color-text-muted);
+  font-size: 0.8rem;
+}
+
+.timeline__time {
+  color: var(--color-text-muted);
+  font-size: 0.78rem;
+  white-space: nowrap;
+}
+
+[data-theme="dark"] .timeline__item:not(:last-child)::before {
+  background: #2a3441;
+}
+
+[data-theme="dark"] .timeline__marker {
+  box-shadow: 0 0 0 4px rgba(201, 167, 104, 0.2);
+}
+
+[data-theme="dark"] .timeline__marker--primary {
+  box-shadow: 0 0 0 4px rgba(255, 255, 255, 0.12);
+}
+
+[data-theme="dark"] .timeline__description,
+[data-theme="dark"] .timeline__time {
+  color: #94a3b8;
+}

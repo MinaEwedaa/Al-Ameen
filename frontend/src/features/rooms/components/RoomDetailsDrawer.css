@@ -1,0 +1,82 @@
+.room-details-drawer .drawer__content {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-5);
+}
+
+.room-details-drawer__summary {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-4);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-card);
+  background: var(--color-surface);
+}
+
+.room-details-drawer__bed-icon {
+  display: grid;
+  flex: 0 0 3.5rem;
+  width: 3.5rem;
+  aspect-ratio: 1;
+  place-items: center;
+  border-radius: var(--radius-control);
+  color: var(--color-primary);
+  background: var(--color-primary-soft);
+}
+
+.room-details-drawer__bed-icon svg { width: 1.5rem; height: 1.5rem; }
+.room-details-drawer__summary > div { display: grid; flex: 1; min-width: 0; gap: var(--space-1); }
+.room-details-drawer__summary > div strong { font-size: var(--font-size-md); }
+.room-details-drawer__summary > div span { color: var(--color-text-muted); font-size: var(--font-size-xs); }
+
+.room-details-drawer__info-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--space-3);
+}
+
+.room-details-drawer__info-grid > div {
+  display: grid;
+  align-content: center;
+  gap: var(--space-2);
+  min-height: 4.5rem;
+  padding: var(--space-3);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-card);
+  background: var(--color-surface);
+}
+
+.room-details-drawer__info-grid > div > span:first-child {
+  color: var(--color-text-muted);
+  font-size: var(--font-size-xs);
+}
+
+.room-details-drawer__info-grid strong { font-size: var(--font-size-sm); font-weight: var(--font-weight-medium); }
+.room-details-drawer__section { display: grid; gap: var(--space-3); }
+.room-details-drawer__section h3 { margin: 0; font-size: var(--font-size-md); }
+.room-details-drawer__section-label { font-size: var(--font-size-sm); font-weight: var(--font-weight-semibold); }
+.room-details-drawer__notes {
+  min-height: 4rem;
+  padding: var(--space-4);
+  border-radius: var(--radius-card);
+  background: var(--color-surface);
+  font-size: var(--font-size-sm);
+  line-height: 1.7;
+  resize: none;
+}
+.room-details-drawer__empty-log { margin: 0; color: var(--color-text-muted); font-size: var(--font-size-sm); }
+.room-details-drawer__status-select { padding-block-end: var(--space-2); }
+
+.drawer__footer .room-details-drawer__footer {
+  display: flex;
+  flex: 1;
+  gap: var(--space-3);
+}
+
+.room-details-drawer__footer .ui-button { flex: 1; }
+
+@media (max-width: 30rem) {
+  .room-details-drawer .drawer__content { padding: var(--space-4); }
+  .room-details-drawer__info-grid { gap: var(--space-2); }
+}

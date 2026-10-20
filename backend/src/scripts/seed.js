@@ -43,7 +43,7 @@ async function seed() {
     Guest.deleteMany({}),
     Reservation.deleteMany({}),
     RoomNight.deleteMany({}),
-    Payment.deleteMany({}),
+    Payment.collection.deleteMany({}),
     IdempotencyKey.deleteMany({}),
     Session.deleteMany({}),
   ]);

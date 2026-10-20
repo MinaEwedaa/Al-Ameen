@@ -1,0 +1,4 @@
+.page-header { display: flex; align-items: flex-end; justify-content: space-between; gap: var(--space-4); }
+.page-header__eyebrow { color: var(--color-primary-dark); font-size: var(--font-size-xs); font-weight: var(--font-weight-semibold); }
+.page-header h1 { margin: var(--space-1) 0 0; font-size: var(--font-size-xl); }
+.page-header p { margin: var(--space-2) 0 0; color: var(--color-text-muted); font-size: var(--font-size-sm); }

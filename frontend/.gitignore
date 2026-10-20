@@ -1,0 +1,29 @@
+# Dependencies
+node_modules/
+
+# Vite cache
+.vite/
+
+# Build output
+dist/
+
+# Environment variables and secrets
+.env
+.env.*
+!.env.example
+
+# Local logs
+*.log
+verification.txt
+
+# Operating system files
+.DS_Store
+Thumbs.db
+
+# Local editor settings
+.vscode/
+.idea/
+
+# Local development preview
+dashboard-preview.html
+src/dev-preview/

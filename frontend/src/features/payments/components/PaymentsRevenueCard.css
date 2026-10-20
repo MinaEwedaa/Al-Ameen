@@ -1,0 +1,90 @@
+.payments-revenue {
+  display: grid;
+  grid-template-columns: minmax(14rem, 0.9fr) minmax(0, 2fr);
+  align-items: center;
+  gap: var(--space-6);
+  padding: var(--space-6);
+  border-radius: var(--radius-panel);
+}
+
+.payments-revenue__panel {
+  display: grid;
+  gap: var(--space-2);
+  padding-inline-end: var(--space-6);
+  border-inline-end: 1px solid var(--color-table-divider);
+}
+
+.payments-revenue__label {
+  color: var(--color-gold);
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-semibold);
+}
+
+.payments-revenue__total {
+  color: var(--color-ink);
+  font-size: var(--font-size-display);
+  font-weight: var(--font-weight-bold);
+  line-height: 1.2;
+}
+
+.payments-revenue__hint {
+  margin: 0;
+  color: var(--color-text-muted);
+  font-size: var(--font-size-xs);
+  line-height: 1.6;
+}
+
+.payments-revenue__legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  margin-block-start: var(--space-2);
+}
+
+.payments-revenue__legend span {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-1) var(--space-3);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-pill);
+  color: var(--color-text-muted);
+  background: var(--color-surface-muted);
+  font-size: var(--font-size-xs);
+}
+
+.payments-revenue__dot {
+  width: 0.5rem;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: var(--color-primary);
+}
+
+.payments-revenue__dot--gold { background: var(--color-gold); }
+
+.payments-revenue__chart { min-width: 0; }
+
+.payments-revenue__chart svg {
+  display: block;
+  width: 100%;
+  height: 9.5rem;
+  border-radius: var(--radius-control);
+  background:
+    repeating-linear-gradient(to bottom, transparent 0, transparent calc(25% - 1px), var(--color-table-divider) calc(25% - 1px), var(--color-table-divider) 25%);
+}
+
+.payments-revenue__axis {
+  display: flex;
+  justify-content: space-between;
+  margin-block-start: var(--space-2);
+  color: var(--color-text-muted);
+  font-size: var(--font-size-xs);
+}
+
+@media (max-width: 60rem) {
+  .payments-revenue { grid-template-columns: 1fr; }
+  .payments-revenue__panel { padding-inline-end: 0; border-inline-end: 0; }
+}
+
+/* Time runs from the start side to the end side, like the axis labels under it */
+[dir='rtl'] .payments-revenue__chart svg { transform: scaleX(-1); }

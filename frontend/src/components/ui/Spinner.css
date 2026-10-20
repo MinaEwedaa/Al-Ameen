@@ -1,0 +1,10 @@
+.ui-spinner {
+  width: 1.375rem;
+  aspect-ratio: 1;
+  border: 2px solid var(--color-primary-soft);
+  border-block-start-color: var(--color-primary);
+  border-radius: 50%;
+  animation: ui-spinner-rotate 800ms linear infinite;
+}
+
+@keyframes ui-spinner-rotate { to { transform: rotate(1turn); } }

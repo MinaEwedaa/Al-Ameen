@@ -1,0 +1,19 @@
+.maintenance-page {
+  min-width: 0;
+}
+
+/* Six cards in one row on wide screens, as in the prototype */
+.maintenance-page__stats {
+  grid-template-columns: repeat(auto-fit, minmax(10rem, 1fr));
+}
+
+/* Table cells specific to maintenance (the card itself is the shared TableCard) */
+.maintenance-table-card .ui-table { min-width: 58rem; }
+.maintenance-table__reference { color: var(--color-ink); font-weight: var(--font-weight-medium); direction: ltr; unicode-bidi: isolate; }
+.maintenance-table__issue {
+  display: inline-block;
+  max-width: 16rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  vertical-align: middle;
+}

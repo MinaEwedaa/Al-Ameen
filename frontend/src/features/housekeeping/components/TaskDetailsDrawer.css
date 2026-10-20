@@ -1,0 +1,130 @@
+.task-details {
+  display: grid;
+  gap: var(--space-6);
+}
+
+.task-details__summary {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-5);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-panel);
+  background: var(--color-surface);
+  box-shadow: var(--shadow-card);
+}
+
+.task-details__icon {
+  display: grid;
+  flex-shrink: 0;
+  width: 3.25rem;
+  aspect-ratio: 1;
+  place-items: center;
+  border-radius: var(--radius-card);
+  color: var(--color-primary);
+  background: var(--color-primary-soft);
+}
+
+.task-details__icon svg { width: 1.4rem; height: 1.4rem; }
+
+.task-details__summary-text {
+  display: grid;
+  flex: 1;
+  gap: var(--space-1);
+  min-width: 0;
+}
+
+.task-details__summary-text strong { color: var(--color-ink); font-size: var(--font-size-md); }
+
+.task-details__summary-text span {
+  color: var(--color-text-muted);
+  font-size: var(--font-size-sm);
+}
+
+.task-details__grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--space-3);
+}
+
+.task-details__info {
+  display: grid;
+  align-content: start;
+  gap: var(--space-2);
+  padding: var(--space-4) var(--space-5);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-card);
+  background: var(--color-surface);
+  transition: border-color 140ms ease;
+}
+
+.task-details__info > span {
+  color: var(--color-text-muted);
+  font-size: var(--font-size-sm);
+}
+
+.task-details__info strong { color: var(--color-ink); }
+
+.task-details__heading {
+  margin: 0 0 var(--space-3);
+  color: var(--color-ink);
+  font-size: var(--font-size-md);
+}
+
+.task-details__box {
+  margin: 0;
+  padding: var(--space-4) var(--space-5);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-card);
+  background: var(--color-surface);
+  color: var(--color-text-muted);
+  font-size: var(--font-size-sm);
+  line-height: 1.7;
+}
+
+.task-details__actions {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--space-3);
+}
+
+.task-details__action {
+  display: grid;
+  justify-items: center;
+  gap: var(--space-2);
+  padding: var(--space-5) var(--space-4);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-card);
+  color: var(--color-primary);
+  background: var(--color-surface);
+  font-size: var(--font-size-sm);
+}
+
+.task-details__action svg { width: 1.3rem; height: 1.3rem; }
+
+.task-details__action:hover {
+  border-color: var(--color-primary);
+  background: var(--color-primary-soft);
+}
+
+/* Confirm step: "cancel" on the start side, wider "confirm" on the end side, as in the prototype */
+.task-details__footer {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.4fr);
+  gap: var(--space-3);
+  width: 100%;
+}
+
+.task-details__footer .ui-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  min-height: 3.25rem;
+  border-radius: var(--radius-card);
+}
+
+.task-details__footer .ui-button svg { width: 1.1rem; height: 1.1rem; }
+
+/* A single "mark as cleaned" button takes the whole row */
+.task-details__footer--single { grid-template-columns: 1fr; }

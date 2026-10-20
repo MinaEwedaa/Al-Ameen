@@ -1,0 +1,252 @@
+/* =====================================================================
+   Al-Amin design tokens + base styles.
+   Loaded BEFORE every component stylesheet (see main.tsx), so shared
+   components and feature pages can rely on these tokens and override
+   base rules without fighting the cascade.
+   ===================================================================== */
+:root {
+  color-scheme: light;
+  font-family: 'IBM Plex Sans Arabic', 'Segoe UI', Tahoma, sans-serif;
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  color: var(--color-ink);
+  background: var(--color-bg);
+
+  /* brand */
+  --color-primary: #41C06A;
+  --color-primary-dark: #35A85A;
+  --color-primary-soft: #EAF8EF;
+  --color-primary-softer: #EDF8F0;
+  --color-chart-area: #F3FBF5;
+  --color-gold: #C9A768;
+  --color-gold-soft: #F7F1E9;
+  --color-gold-softer: #F8F0DF;
+  --color-gold-ink: #8A6D3B;
+  --color-amber: #E0A83A;
+  --color-amber-soft: #FFF5DC;
+  --color-amber-ink: #B7791F;
+  --color-danger: #D45C5C;
+  --color-danger-soft: #FBE9E9;
+  --color-info: #2A7F72;
+  --color-info-soft: #DEF3EF;
+  --color-purple: #6B64B8;
+  --color-purple-soft: #EEEDFA;
+  --color-dark-panel: #2F2F2F;
+
+  /* neutrals */
+  --color-ink: #2F2F2F;
+  --color-text-muted: #7D827E;
+  --color-bg: #F9F7F3;
+  --color-surface: #FFFFFF;
+  --color-surface-muted: #FAF8F4;
+  --color-border: #EBE8E0;
+  --color-table-header-bg: #FAF8F4;
+  --color-table-divider: #F1EEE8;
+  --color-glass: color-mix(in srgb, var(--color-surface) 18%, transparent);
+  --color-glass-border: color-mix(in srgb, var(--color-surface) 24%, transparent);
+  --color-sidebar-overlay: color-mix(in srgb, var(--color-surface) 12%, transparent);
+
+  /* controls */
+  --color-select-active: var(--color-primary);
+  --color-select-hover: var(--color-primary-soft);
+  --color-status-cleaning-soft: #E8F4F2;
+  --color-status-cleaning-text: var(--color-primary-dark);
+
+  /* legacy aliases (older pages still read these) */
+  --al-green: var(--color-primary);
+  --al-green-strong: var(--color-primary-dark);
+  --al-green-ink: #FFFFFF;
+
+  /* type */
+  --font-size-xs: 0.7rem;
+  --font-size-sm: 0.78rem;
+  --font-size-base: 0.9rem;
+  --font-size-md: 1rem;
+  --font-size-lg: 1.18rem;
+  --font-size-xl: 1.55rem;
+  --font-size-display: 2rem;
+  --font-weight-regular: 400;
+  --font-weight-medium: 500;
+  --font-weight-semibold: 600;
+  --font-weight-bold: 700;
+
+  /* spacing + shape */
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-5: 1.25rem;
+  --space-6: 1.5rem;
+  --space-8: 2rem;
+  --space-10: 2.5rem;
+  --radius-sm: 0.625rem;
+  --radius-control: 0.75rem;
+  --radius-card: 1.125rem;
+  --radius-panel: 1.375rem;
+  --radius-pill: 999px;
+  --shadow-card: 0 0.75rem 2rem color-mix(in srgb, var(--color-ink) 5%, transparent);
+  --shadow-float: 0 1.25rem 3rem color-mix(in srgb, var(--color-ink) 12%, transparent);
+}
+
+* { box-sizing: border-box; }
+body { margin: 0; min-width: 320px; min-height: 100vh; color: var(--color-ink); background: var(--color-bg); }
+button, input, select, textarea { font: inherit; }
+button { cursor: pointer; }
+button:disabled { cursor: not-allowed; opacity: .55; }
+
+/* Figma Auth Cards & Clean Layout */
+.figma-auth-container { width: 100%; display: flex; justify-content: center; align-items: center; }
+.figma-auth-card { width: min(440px, 100%); background: var(--color-surface); border-radius: 20px; padding: 32px; border: 1px solid var(--color-border); box-shadow: 0px 12px 35px rgba(65, 58, 43, 0.06); position: relative; }
+.figma-auth-top-bar { display: flex; justify-content: flex-end; margin-bottom: 8px; }
+.figma-lang-switcher { display: inline-flex; align-items: center; gap: 6px; border: 1px solid var(--color-border); background: var(--color-surface-muted); padding: 6px 12px; border-radius: 10px; font-size: 0.82rem; font-weight: 600; color: var(--color-ink); transition: all .2s; }
+.figma-lang-switcher:hover { background: var(--color-primary-soft); border-color: var(--color-primary); color: var(--color-primary-dark); }
+.figma-auth-header { text-align: center; margin-bottom: 24px; }
+.figma-auth-logo { width: 80px; height: 80px; margin: 0 auto 14px; border-radius: 20px; overflow: hidden; border: 1px solid var(--color-border); box-shadow: 0 4px 16px rgba(65, 58, 43, 0.08); background: var(--color-surface-muted); }
+.figma-auth-logo img { width: 100%; height: 100%; object-fit: cover; }
+.figma-auth-title { margin: 0 0 6px; font-size: 1.6rem; font-weight: 700; color: var(--color-ink); }
+.figma-auth-subtitle { margin: 0; font-size: 0.88rem; color: var(--color-text-muted); }
+.figma-alert { padding: 12px 14px; border-radius: 10px; font-size: 0.88rem; font-weight: 500; margin-bottom: 18px; }
+.figma-alert--error { background: #fef2f2; color: #b91c1c; border: 1px solid #fecaca; }
+.figma-alert--success { background: var(--color-primary-soft); color: var(--color-primary-dark); border: 1px solid var(--color-primary); }
+.figma-auth-form { display: grid; gap: 16px; }
+.figma-form-group { display: grid; gap: 6px; text-align: start; }
+.figma-form-group label { font-size: 0.85rem; font-weight: 600; color: var(--color-ink); }
+.figma-label-row { display: flex; justify-content: space-between; align-items: center; }
+.figma-link-btn { border: 0; background: transparent; padding: 0; color: var(--color-primary); font-size: 0.82rem; font-weight: 600; }
+.figma-link-btn:hover { text-decoration: underline; }
+.figma-input { width: 100%; border: 1px solid var(--color-border); border-radius: 10px; padding: 11px 14px; background: var(--color-surface); outline: none; font-size: 0.92rem; color: var(--color-ink); transition: border-color .2s, box-shadow .2s; }
+.figma-input:focus { border-color: var(--color-primary); box-shadow: 0 0 0 3px rgba(65, 192, 106, 0.12); }
+.figma-password-wrap { position: relative; display: flex; align-items: center; }
+.figma-password-wrap .figma-input { padding-inline-end: 40px; }
+.figma-eye-btn { position: absolute; inset-inline-end: 8px; border: 0; background: transparent; padding: 6px; display: inline-flex; align-items: center; justify-content: center; color: var(--color-text-muted); border-radius: 6px; transition: color .2s; }
+.figma-eye-btn:hover { color: var(--color-primary-dark); }
+.figma-field-error { font-size: 0.78rem; color: #dc2626; font-weight: 500; }
+.figma-btn-primary { width: 100%; background: var(--color-primary); color: var(--color-surface); border: 0; border-radius: 12px; padding: 12px; font-weight: 700; font-size: 0.95rem; margin-top: 8px; transition: background .2s; }
+.figma-btn-primary:hover { background: var(--color-primary-dark); }
+
+
+/* Modal used by the login "forgot password" and the profile "edit" dialogs */
+.figma-dialog { border-radius: var(--radius-panel) !important; border: 1px solid var(--color-border) !important; box-shadow: var(--shadow-float) !important; }
+
+/* Dark mode (login, topbar and dialogs) */
+[data-theme="dark"],
+[data-theme="dark"] body {
+  background-color: #12181f !important;
+  color: #e2e8f0 !important;
+}
+
+[data-theme="dark"] .app-shell {
+  background-color: #12181f !important;
+}
+
+[data-theme="dark"] .topbar {
+  background: rgba(24, 32, 42, 0.92) !important;
+  border-bottom-color: #2a3441 !important;
+}
+
+[data-theme="dark"] .topbar__search {
+  background: #1a222c !important;
+  border-color: #2a3441 !important;
+  color: #e2e8f0 !important;
+}
+
+[data-theme="dark"] .topbar__user strong {
+  color: #f8fafc !important;
+}
+
+[data-theme="dark"] .topbar__user span {
+  color: #94a3b8 !important;
+}
+
+[data-theme="dark"] .figma-auth-card {
+  background: #1a222c !important;
+  border-color: #2a3441 !important;
+  box-shadow: 0px 12px 35px rgba(0, 0, 0, 0.4) !important;
+}
+
+[data-theme="dark"] .figma-auth-title,
+[data-theme="dark"] .figma-form-group label {
+  color: #f8fafc !important;
+}
+
+[data-theme="dark"] .figma-auth-subtitle {
+  color: #94a3b8 !important;
+}
+
+[data-theme="dark"] .figma-input {
+  background: #12181f !important;
+  border-color: #2a3441 !important;
+  color: #f8fafc !important;
+}
+
+[data-theme="dark"] .figma-dialog {
+  background: #1a222c !important;
+  border-color: #2a3441 !important;
+}
+
+[data-theme="dark"] .figma-lang-switcher {
+  background: #12181f !important;
+  border-color: #2a3441 !important;
+  color: #e2e8f0 !important;
+}
+
+[data-theme="dark"] .figma-eye-btn {
+  color: #94a3b8 !important;
+}
+
+[data-theme="dark"] .figma-eye-btn:hover {
+  color: #41C06A !important;
+}
+
+
+/* ===== Member 4 — confirm dialog backdrop / danger button / toast stack ===== */
+.ui-button--danger { color: var(--color-surface); background: var(--color-danger); }
+.ui-dialog-backdrop,
+.ui-drawer-backdrop { position: fixed; inset: 0; z-index: 50; background: color-mix(in srgb, var(--color-ink) 40%, transparent); backdrop-filter: blur(4px); }
+.ui-toast-stack { position: fixed; inset-block-start: var(--space-4); inset-inline-end: var(--space-4); z-index: 1400; display: grid; gap: var(--space-2); width: min(24rem, calc(100% - var(--space-8))); }
+
+/* ===== Receipt + print ===== */
+.receipt { display: grid; gap: 14px; padding: 18px; border: 1px dashed #b9c8cc; border-radius: 14px; background: #fff; }
+.receipt__header { display: grid; gap: 4px; padding-bottom: 12px; border-bottom: 1px solid #e5ecee; text-align: center; }
+.receipt__header strong { font-size: 1.1rem; }
+.receipt__header span { color: #60747b; font-size: .8rem; letter-spacing: .04em; }
+.receipt__rows { display: grid; gap: 8px; margin: 0; }
+.receipt__rows > div { display: flex; justify-content: space-between; align-items: center; gap: 12px; }
+.receipt__rows dt { color: #60747b; }
+.receipt__rows dd { margin: 0; font-weight: 600; text-align: end; }
+.receipt__total { display: flex; justify-content: space-between; align-items: center; gap: 12px; margin: 0; padding-top: 12px; border-top: 1px dashed #b9c8cc; }
+.receipt__total strong { font-size: 1.15rem; }
+.receipt__footer { color: #60747b; font-size: .8rem; text-align: center; }
+
+
+@media print {
+  body * { visibility: hidden; }
+  .receipt-print, .receipt-print *,
+  .shift-report-page, .shift-report-page * { visibility: visible; }
+  .receipt-print { position: absolute; top: 0; left: 0; width: 100%; margin: 0; border: 0; box-shadow: none; }
+}
+
+/* ===== One focus style for every field in the app (green border + soft ring) ===== */
+.ui-input:focus,
+.ui-select__trigger:focus,
+.ui-select__trigger[aria-expanded='true'],
+.common-search:focus-within,
+.drawer__content input:focus,
+.drawer__content textarea:focus,
+.figma-input:focus,
+.figma-input-style:focus,
+textarea:focus {
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-primary) 12%, transparent);
+  outline: none;
+}
+
+/* A field with an error keeps its red border while focused */
+.drawer__content [aria-invalid='true'],
+.drawer__content [aria-invalid='true']:focus,
+.ui-select__trigger--error,
+.ui-select__trigger--error:focus,
+.ui-select__trigger--error[aria-expanded='true'] {
+  border-color: var(--color-danger);
+}
+.figma-lang-switcher svg { width: 1rem; height: 1rem; }

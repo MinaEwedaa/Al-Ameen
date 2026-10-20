@@ -1,0 +1,88 @@
+.task-form {
+  display: grid;
+  gap: var(--space-5);
+}
+
+/* Two equal columns; a row with one field (priority) keeps it at half width, as in the prototype */
+.task-form__row {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--space-4);
+}
+
+.task-form__field {
+  display: grid;
+  gap: var(--space-2);
+}
+
+.task-form__field > span:first-child {
+  color: var(--color-text-muted);
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-medium);
+}
+
+/* Same height and corners for every field (the room field gets them from the shared Combobox) */
+.task-form .ui-select__trigger,
+.task-form__field input {
+  min-height: 3.25rem;
+  border-radius: var(--radius-card);
+}
+
+.task-form__field input,
+.task-form__field textarea {
+  width: 100%;
+  padding: var(--space-3) var(--space-4);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-card);
+  color: var(--color-ink);
+  background: var(--color-surface);
+  font: inherit;
+  font-size: var(--font-size-sm);
+  outline: none;
+}
+
+.task-form__field input::placeholder,
+.task-form__field textarea::placeholder { color: var(--color-text-muted); }
+
+.task-form__field textarea {
+  min-height: 7rem;
+  line-height: 1.7;
+  resize: vertical;
+}
+
+.task-form__field .task-form__control--error { border-color: var(--color-danger); }
+.task-form__field input:disabled,
+.task-form__field textarea:disabled { opacity: 0.6; }
+
+.task-form__error {
+  color: var(--color-danger);
+  font-size: var(--font-size-xs);
+}
+
+.task-form__hint {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  margin: 0;
+  padding: var(--space-4);
+  border-radius: var(--radius-card);
+  color: var(--color-primary-dark);
+  background: var(--color-primary-soft);
+  font-size: var(--font-size-sm);
+}
+
+.task-form__hint svg { flex: 0 0 1.1rem; width: 1.1rem; height: 1.1rem; color: var(--color-primary); }
+
+/* Footer: "cancel" on the start side, wider "submit" on the end side */
+.task-form__footer {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.4fr);
+  gap: var(--space-3);
+  width: 100%;
+}
+
+.task-form__footer .ui-button { min-height: 3.25rem; border-radius: var(--radius-card); }
+
+@media (max-width: 30rem) {
+  .task-form__row { grid-template-columns: 1fr; }
+}

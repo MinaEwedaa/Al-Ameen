@@ -377,6 +377,40 @@ describe('Feature 3: Shift Engine & Attendance', () => {
     expect(postHandoverWrite.body.error.code).toBe('SHIFT_CLOSED');
   });
 
+  test('GET /shifts/:shift_id/report returns 404 for malformed ids, unknown ids and other staff shifts', async () => {
+    const morningTime = DateTime.fromISO(`${today}T08:00:00`, { zone: ZONE }).toISO();
+    const morningLogin = await request(app)
+      .post('/api/v1/auth/login')
+      .set('x-test-time', morningTime)
+      .send({ username: 'ahmed_morning', password });
+    const token = morningLogin.body.access_token;
+
+    const eveningTime = DateTime.fromISO(`${today}T17:00:00`, { zone: ZONE }).toISO();
+    const eveningLogin = await request(app)
+      .post('/api/v1/auth/login')
+      .set('x-test-time', eveningTime)
+      .send({ username: 'sarah_evening', password });
+    const eveningShiftId = eveningLogin.body.shift.shift_id;
+
+    const malformed = await request(app)
+      .get('/api/v1/shifts/not-an-id/report')
+      .set('Authorization', `Bearer ${token}`);
+    expect(malformed.status).toBe(404);
+    expect(malformed.body.error.code).toBe('NOT_FOUND');
+
+    const unknown = await request(app)
+      .get('/api/v1/shifts/000000000000000000000000/report')
+      .set('Authorization', `Bearer ${token}`);
+    expect(unknown.status).toBe(404);
+    expect(unknown.body.error.code).toBe('NOT_FOUND');
+
+    const otherStaff = await request(app)
+      .get(`/api/v1/shifts/${eveningShiftId}/report`)
+      .set('Authorization', `Bearer ${token}`);
+    expect(otherStaff.status).toBe(404);
+    expect(otherStaff.body.error.code).toBe('NOT_FOUND');
+  });
+
   test('write attempt returns 409 SHIFT_HANDOVER_ONLY when newer shift has opened', async () => {
     // 1. Morning staff logs in at 08:00
     const mTime = DateTime.fromISO(`${today}T08:00:00`, { zone: ZONE }).toISO();

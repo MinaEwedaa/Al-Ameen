@@ -1,0 +1,12 @@
+.ui-input {
+  width: 100%;
+  min-height: 2.625rem;
+  padding: var(--space-2) var(--space-3);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-control);
+  color: var(--color-ink);
+  background: var(--color-surface);
+}
+
+.ui-input::placeholder { color: var(--color-text-muted); }
+.ui-input:focus-visible { border-color: var(--color-primary); }

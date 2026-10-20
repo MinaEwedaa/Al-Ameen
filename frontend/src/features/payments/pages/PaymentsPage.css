@@ -1,0 +1,14 @@
+.payments-page { min-width: 0; }
+
+.payments-page__reference {
+  color: var(--color-ink);
+  font-weight: var(--font-weight-semibold);
+  direction: ltr;
+  unicode-bidi: isolate;
+}
+
+.payments-page__amount {
+  color: var(--color-primary-dark);
+  font-weight: var(--font-weight-semibold);
+  white-space: nowrap;
+}

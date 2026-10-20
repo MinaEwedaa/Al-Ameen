@@ -1,0 +1,45 @@
+.auth-layout {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  min-height: 100vh;
+  background: var(--color-bg);
+}
+
+.auth-layout__brand {
+  display: grid;
+  place-items: center;
+  padding: var(--space-8);
+  background: var(--color-primary-dark);
+}
+
+.auth-layout__logo {
+  width: min(70%, 22rem);
+  aspect-ratio: 1;
+  object-fit: contain;
+}
+
+.auth-form {
+  display: grid;
+  gap: var(--space-4);
+  width: min(25rem, calc(100% - var(--space-8)));
+  margin: auto;
+}
+
+.auth-form h1 {
+  margin: 0;
+  font-size: var(--font-size-xl);
+}
+
+@media (max-width: 50rem) {
+  .auth-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .auth-layout__brand {
+    min-height: 14rem;
+  }
+
+  .auth-layout__logo {
+    width: 9rem;
+  }
+}

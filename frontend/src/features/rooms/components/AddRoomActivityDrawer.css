@@ -1,0 +1,71 @@
+.add-room-activity-drawer .drawer__content {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-5);
+}
+
+.add-room-activity-drawer__form {
+  display: grid;
+  align-content: start;
+  gap: var(--space-5);
+}
+
+.add-room-activity-drawer__pair {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--space-3);
+}
+
+.add-room-activity-drawer__field {
+  display: grid;
+  gap: var(--space-2);
+  color: var(--color-ink);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+}
+
+.add-room-activity-drawer__field small {
+  color: var(--color-danger);
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-regular);
+}
+
+.add-room-activity-drawer__field [aria-invalid='true'] {
+  border-color: var(--color-danger);
+}
+
+.add-room-activity-drawer__notes {
+  min-height: 6rem;
+  resize: vertical;
+  font-weight: var(--font-weight-regular);
+}
+
+.add-room-activity-drawer__info {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-4);
+  border-radius: var(--radius-control);
+  color: var(--color-primary-dark);
+  background: var(--color-primary-soft);
+  font-size: var(--font-size-xs);
+  line-height: 1.65;
+}
+
+.add-room-activity-drawer__info svg {
+  flex: 0 0 1.25rem;
+  width: 1.25rem;
+  height: 1.25rem;
+}
+
+.add-room-activity-drawer__footer {
+  display: flex;
+  flex: 1;
+  gap: var(--space-3);
+}
+
+.add-room-activity-drawer__footer .ui-button { flex: 1; }
+
+@media (max-width: 32rem) {
+  .add-room-activity-drawer__pair { grid-template-columns: 1fr; }
+}

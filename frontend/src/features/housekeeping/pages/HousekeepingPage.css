@@ -1,0 +1,8 @@
+.housekeeping-page {
+  min-width: 0;
+}
+
+/* Four cards share the row evenly */
+.housekeeping-page__stats {
+  grid-template-columns: repeat(auto-fit, minmax(10rem, 1fr));
+}

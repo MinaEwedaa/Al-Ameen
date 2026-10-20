@@ -1,0 +1,108 @@
+.table-card {
+  overflow: visible;
+  padding: 0;
+  border-radius: var(--radius-panel);
+}
+
+.table-card__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-4);
+  padding: var(--space-5) var(--space-6);
+}
+
+.table-card__header h2 {
+  margin: 0;
+  color: var(--color-ink);
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-semibold);
+}
+
+.table-card__header p {
+  margin: var(--space-2) 0 0;
+  color: var(--color-text-muted);
+  font-size: var(--font-size-xs);
+}
+
+.table-card__count {
+  padding: var(--space-1) var(--space-3);
+  border-radius: var(--radius-pill);
+  color: var(--color-primary-dark);
+  background: var(--color-primary-soft);
+  font-size: var(--font-size-xs);
+  white-space: nowrap;
+}
+
+/* The card already has a border, so the table inside it needs none */
+.table-card .ui-table-wrap {
+  border: 0;
+  border-radius: 0;
+  box-shadow: none;
+}
+
+.table-card .ui-table { min-width: 48rem; }
+
+.table-card .ui-table th {
+  padding: var(--space-3) var(--space-4);
+  border-block: 1px solid var(--color-table-divider);
+  background: var(--color-table-header-bg);
+  white-space: nowrap;
+}
+
+.table-card .ui-table td {
+  height: 4.5rem;
+  padding: var(--space-3) var(--space-4);
+  border-block-end: 1px solid var(--color-table-divider);
+  color: var(--color-ink);
+  font-size: var(--font-size-xs);
+  white-space: nowrap;
+}
+
+.table-card .ui-table tbody tr:hover { background: var(--color-primary-softer); }
+
+/* Room number chip and the green open-arrow button, same on every list */
+.table-card__chip {
+  display: inline-grid;
+  min-width: 2.75rem;
+  min-height: 2.25rem;
+  place-items: center;
+  padding-inline: var(--space-2);
+  border-radius: var(--radius-sm);
+  color: var(--color-primary-dark);
+  background: var(--color-primary-soft);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-semibold);
+}
+
+.table-card__open {
+  display: grid;
+  width: 2.25rem;
+  aspect-ratio: 1;
+  place-items: center;
+  border: 0;
+  border-radius: var(--radius-sm);
+  color: var(--color-primary);
+  background: var(--color-primary-soft);
+}
+
+.table-card__open:hover { color: var(--color-surface); background: var(--color-primary); }
+.table-card__open svg { width: 1rem; height: 1rem; }
+
+.table-card__footer {
+  padding: var(--space-3) var(--space-5);
+  border-block-start: 1px solid var(--color-table-divider);
+  background: var(--color-table-header-bg);
+  border-end-start-radius: var(--radius-panel);
+  border-end-end-radius: var(--radius-panel);
+}
+
+.table-card__footer .ui-pagination__label {
+  color: var(--color-text-muted);
+  font-size: var(--font-size-xs);
+}
+
+@media (max-width: 42rem) {
+  .table-card__header { align-items: flex-start; flex-direction: column; padding: var(--space-4); }
+  .table-card__footer { padding: var(--space-3); }
+}

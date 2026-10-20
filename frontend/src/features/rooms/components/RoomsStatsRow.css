@@ -1,0 +1,13 @@
+.rooms-stats-row {
+  display: grid;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  gap: var(--space-3);
+}
+
+@media (max-width: 72rem) {
+  .rooms-stats-row { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+}
+
+@media (max-width: 36rem) {
+  .rooms-stats-row { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}

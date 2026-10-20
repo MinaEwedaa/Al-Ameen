@@ -1,0 +1,11 @@
+.room-status-badge {
+  justify-content: center;
+  min-width: 3.75rem;
+  padding-inline: var(--space-2);
+  font-weight: var(--font-weight-medium);
+}
+
+.room-status-badge--occupied { color: var(--color-primary-dark); background: var(--color-primary-soft); }
+.room-status-badge--cleaning { color: var(--color-status-cleaning-text); background: var(--color-status-cleaning-soft); }
+.room-status-badge--reserved { color: var(--color-gold); background: var(--color-gold-soft); }
+.room-status-badge--maintenance { color: var(--color-amber); background: var(--color-amber-soft); }

@@ -1,0 +1,72 @@
+.stat-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(12rem, 1fr));
+  gap: var(--space-3);
+}
+
+.ui-stat-card {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  min-height: 5.25rem;
+  padding: var(--space-4) var(--space-5);
+}
+
+.ui-stat-card__icon {
+  display: grid;
+  flex: 0 0 2.75rem;
+  width: 2.75rem;
+  aspect-ratio: 1;
+  place-items: center;
+  border-radius: var(--radius-control);
+  color: var(--color-primary-dark);
+  background: var(--color-primary-soft);
+}
+
+.ui-stat-card__icon svg {
+  width: 1.25rem;
+  height: 1.25rem;
+  stroke-width: 1.75;
+}
+
+.ui-stat-card__body {
+  display: grid;
+  gap: 0.15rem;
+  min-width: 0;
+}
+
+.ui-stat-card__label {
+  overflow: hidden;
+  color: var(--color-text-muted);
+  font-size: var(--font-size-xs);
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.ui-stat-card__value {
+  color: var(--color-ink);
+  font-size: var(--font-size-xl);
+  font-weight: var(--font-weight-bold);
+  line-height: 1.15;
+}
+
+.ui-stat-card__hint {
+  color: var(--color-text-muted);
+  font-size: var(--font-size-xs);
+}
+
+/* tones: green family vs gold family, the only two used in the prototype */
+.ui-stat-card--teal .ui-stat-card__icon,
+.ui-stat-card--blue .ui-stat-card__icon,
+.ui-stat-card--green .ui-stat-card__icon {
+  color: var(--color-primary-dark);
+  background: var(--color-primary-soft);
+}
+
+.ui-stat-card--amber .ui-stat-card__icon,
+.ui-stat-card--rose .ui-stat-card__icon,
+.ui-stat-card--neutral .ui-stat-card__icon,
+.ui-stat-card--gold .ui-stat-card__icon {
+  color: var(--color-gold);
+  background: var(--color-gold-soft);
+}
