@@ -115,7 +115,7 @@ async function searchGuests(filters, page = 1, limit = 20) {
     if (q.length < 2) {
       throw E.validation('Name search must contain at least 2 characters.');
     }
-    conditions.push({ name_search: { $regex: escapeRegex(q) } });
+    conditions.push({ name_search: new RegExp(escapeRegex(q)) });
   }
 
   if (phone !== undefined) {
@@ -124,7 +124,7 @@ async function searchGuests(filters, page = 1, limit = 20) {
     if (digits.length < 4) {
       throw E.validation('Phone search must contain at least 4 digits.');
     }
-    conditions.push({ phone: { $regex: escapeRegex(q) } });
+    conditions.push({ phone: new RegExp(escapeRegex(q)) });
   }
 
   if (id_number !== undefined) {
