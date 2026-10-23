@@ -128,15 +128,42 @@ button:disabled { cursor: not-allowed; opacity: .55; }
 /* Modal used by the login "forgot password" and the profile "edit" dialogs */
 .figma-dialog { border-radius: var(--radius-panel) !important; border: 1px solid var(--color-border) !important; box-shadow: var(--shadow-float) !important; }
 
-/* Dark mode (login, topbar and dialogs) */
+/* Dark mode (login, topbar, manager portal, and dialogs) */
+:root[data-theme="dark"],
+:root.dark {
+  color-scheme: dark;
+  --color-bg: #12181f;
+  --color-surface: #1a222c;
+  --color-surface-muted: #151c24;
+  --color-border: #2a3441;
+  --color-ink: #f8fafc;
+  --color-text-muted: #94a3b8;
+  --color-table-header-bg: #151c24;
+  --color-table-divider: #242e3a;
+  --color-gold-ink: #e0be75;
+  --color-gold-soft: rgba(201, 167, 104, 0.16);
+  --color-primary-soft: rgba(65, 192, 106, 0.16);
+  --color-primary-softer: rgba(65, 192, 106, 0.1);
+  --shadow-card: 0 0.75rem 2rem rgba(0, 0, 0, 0.4);
+  --shadow-float: 0 1.25rem 3rem rgba(0, 0, 0, 0.6);
+}
+
 [data-theme="dark"],
-[data-theme="dark"] body {
+[data-theme="dark"] body,
+.dark,
+.dark body {
   background-color: #12181f !important;
   color: #e2e8f0 !important;
 }
 
-[data-theme="dark"] .app-shell {
+[data-theme="dark"] .app-shell,
+.dark .app-shell {
   background-color: #12181f !important;
+}
+
+[data-theme="dark"] .ui-switch,
+.dark .ui-switch {
+  background: #2a3441;
 }
 
 [data-theme="dark"] .topbar {

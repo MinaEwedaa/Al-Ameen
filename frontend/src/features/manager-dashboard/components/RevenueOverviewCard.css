@@ -1,0 +1,131 @@
+/* Revenue Overview Card Styles - Manager Dashboard */
+.revenue-overview-card {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-card);
+  padding: var(--space-5);
+  box-shadow: var(--shadow-card);
+}
+
+.revenue-overview-card__header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--space-3);
+}
+
+.revenue-overview-card__title-group {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
+.revenue-overview-card__title {
+  margin: 0;
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-ink);
+}
+
+.revenue-overview-card__subtitle {
+  margin: 0;
+  font-size: var(--font-size-xs);
+  color: var(--color-text-muted);
+}
+
+.revenue-overview-card__badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 4px 12px;
+  background-color: var(--color-primary-soft);
+  color: var(--color-primary-dark);
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-semibold);
+  border-radius: var(--radius-pill);
+  white-space: nowrap;
+}
+
+.revenue-overview-card__tiles {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--space-3);
+}
+
+.revenue-overview-card__tile {
+  display: flex;
+  flex-direction: column;
+  padding: var(--space-2) var(--space-3);
+  background-color: var(--color-surface-muted);
+  border-radius: var(--radius-control);
+  gap: var(--space-1);
+}
+
+.revenue-overview-card__tile-label {
+  font-size: var(--font-size-xs);
+  color: var(--color-text-muted);
+}
+
+.revenue-overview-card__tile-value {
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-ink);
+}
+
+.revenue-overview-card__chart-wrapper {
+  width: 100%;
+}
+
+.revenue-overview-card__legend {
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  padding-top: var(--space-3);
+  border-top: 1px solid var(--color-table-divider);
+}
+
+.revenue-overview-card__legend-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-1);
+}
+
+.revenue-overview-card__legend-header {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-size: var(--font-size-xs);
+  color: var(--color-text-muted);
+}
+
+.revenue-overview-card__legend-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: var(--radius-pill);
+  flex-shrink: 0;
+}
+
+.revenue-overview-card__legend-dot--primary {
+  background-color: var(--color-primary);
+}
+
+.revenue-overview-card__legend-dot--gold {
+  background-color: var(--color-gold);
+}
+
+.revenue-overview-card__legend-dot--teal {
+  background-color: var(--color-info);
+}
+
+.revenue-overview-card__legend-name {
+  font-weight: var(--font-weight-regular);
+}
+
+.revenue-overview-card__legend-percent {
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-ink);
+}

@@ -1,0 +1,13 @@
+.employees-table__person {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-3);
+  color: var(--color-ink);
+  font-weight: var(--font-weight-medium);
+  white-space: nowrap;
+}
+
+.employees-table__muted { color: var(--color-text-muted); }
+
+.employees-table td,
+.employees-table th { white-space: nowrap; }

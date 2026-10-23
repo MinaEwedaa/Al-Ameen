@@ -1,0 +1,151 @@
+/* Critical Issues Card Styles - Manager Dashboard */
+.critical-issues-card {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-card);
+  padding: var(--space-5);
+  box-shadow: var(--shadow-card);
+}
+
+.critical-issues-card__header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--space-3);
+}
+
+.critical-issues-card__title-group {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
+.critical-issues-card__title {
+  margin: 0;
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-ink);
+}
+
+.critical-issues-card__subtitle {
+  margin: 0;
+  font-size: var(--font-size-xs);
+  color: var(--color-text-muted);
+}
+
+.critical-issues-card__badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 4px 12px;
+  background-color: var(--color-primary-soft);
+  color: var(--color-primary-dark);
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-semibold);
+  border-radius: var(--radius-pill);
+  white-space: nowrap;
+}
+
+.critical-issues-card__list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.critical-issues-card__item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+  padding: var(--space-3) var(--space-4);
+  background-color: var(--color-surface-muted);
+  border-radius: var(--radius-control);
+  transition: background-color 0.2s ease, transform 0.15s ease;
+  cursor: pointer;
+}
+
+.critical-issues-card__item:hover {
+  background-color: var(--color-table-divider);
+}
+
+.critical-issues-card__item-main {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  min-width: 0;
+}
+
+.critical-issues-card__icon-box {
+  width: 36px;
+  height: 36px;
+  border-radius: var(--radius-sm);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.critical-issues-card__icon-box--danger {
+  background-color: var(--color-danger-soft);
+  color: var(--color-danger);
+}
+
+.critical-issues-card__icon-box--amber {
+  background-color: var(--color-amber-soft);
+  color: var(--color-amber-ink);
+}
+
+.critical-issues-card__icon-box--gold {
+  background-color: var(--color-gold-soft);
+  color: var(--color-gold-ink);
+}
+
+.critical-issues-card__icon-box--neutral {
+  background-color: var(--color-table-divider);
+  color: var(--color-text-muted);
+}
+
+.critical-issues-card__item-title {
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  color: var(--color-ink);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.critical-issues-card__severity-pill {
+  display: inline-flex;
+  align-items: center;
+  padding: 3px 10px;
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-medium);
+  border-radius: var(--radius-pill);
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.critical-issues-card__severity-pill--critical {
+  background-color: var(--color-danger-soft);
+  color: var(--color-danger);
+}
+
+.critical-issues-card__severity-pill--high {
+  background-color: var(--color-amber-soft);
+  color: var(--color-amber-ink);
+}
+
+.critical-issues-card__severity-pill--followup {
+  background-color: var(--color-gold-soft);
+  color: var(--color-gold-ink);
+}
+
+.critical-issues-card__severity-pill--medium {
+  background-color: var(--color-table-divider);
+  color: var(--color-text-muted);
+}

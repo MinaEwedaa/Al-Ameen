@@ -1,0 +1,7 @@
+.handovers-table__shift {
+  color: var(--color-ink);
+  font-weight: var(--font-weight-semibold);
+}
+
+.handovers-table td,
+.handovers-table th { white-space: nowrap; }

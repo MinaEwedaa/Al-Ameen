@@ -1,0 +1,112 @@
+/* Staff Activity Card Styles - Manager Dashboard */
+.staff-activity-card {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-card);
+  padding: var(--space-5);
+  box-shadow: var(--shadow-card);
+}
+
+.staff-activity-card__header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--space-3);
+}
+
+.staff-activity-card__title-group {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
+.staff-activity-card__title {
+  margin: 0;
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-ink);
+}
+
+.staff-activity-card__subtitle {
+  margin: 0;
+  font-size: var(--font-size-xs);
+  color: var(--color-text-muted);
+}
+
+.staff-activity-card__badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 4px 12px;
+  background-color: var(--color-primary-soft);
+  color: var(--color-primary-dark);
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-semibold);
+  border-radius: var(--radius-pill);
+  white-space: nowrap;
+}
+
+.staff-activity-card__table-wrapper {
+  width: 100%;
+  overflow-x: auto;
+}
+
+.staff-activity-card .ui-table-wrap {
+  border: none;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+}
+
+.staff-activity-card .ui-table th {
+  background: var(--color-table-header-bg);
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text-muted);
+  padding: var(--space-3) var(--space-4);
+}
+
+.staff-activity-card .ui-table td {
+  padding: var(--space-3) var(--space-4);
+  font-size: var(--font-size-sm);
+  vertical-align: middle;
+}
+
+.staff-activity-card__employee-cell {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.staff-activity-card__employee-name {
+  font-weight: var(--font-weight-medium);
+  color: var(--color-ink);
+  white-space: nowrap;
+}
+
+.staff-activity-card__status-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 3px 12px;
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-semibold);
+  border-radius: var(--radius-pill);
+  white-space: nowrap;
+}
+
+.staff-activity-card__status-badge--on_shift {
+  background-color: var(--color-info-soft);
+  color: var(--color-info);
+}
+
+.staff-activity-card__status-badge--available {
+  background-color: var(--color-primary-soft);
+  color: var(--color-primary-dark);
+}
+
+.staff-activity-card__status-badge--on_break {
+  background-color: var(--color-amber-soft);
+  color: var(--color-amber-ink);
+}

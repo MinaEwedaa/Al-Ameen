@@ -1167,5 +1167,968 @@
       "change": "تغيير كلمة المرور",
       "soon": "تغيير كلمة المرور سيتاح عبر الخادم"
     }
+  },
+  "manager": {
+    "shell": {
+      "section": "مساحة عمل الإدارة",
+      "brand": "الأمين",
+      "location": "فندق · أسوان",
+      "nav": {
+        "dashboard": "لوحة التحكم",
+        "rooms": "الغرف",
+        "employees": "الموظفون",
+        "housekeeping": "التنظيف",
+        "maintenance": "الصيانة",
+        "finance": "الشؤون المالية",
+        "reports": "التقارير",
+        "refunds": "طلبات الاسترداد",
+        "passwordRequests": "طلبات إعادة تعيين كلمة المرور",
+        "shifts": "نظرة عامة على الورديات",
+        "roomTypes": "أنواع الغرف",
+        "profile": "الملف الشخصي",
+        "settings": "الإعدادات"
+      },
+      "statusCard": {
+        "title": "الفندق يعمل الآن",
+        "occupancy": "إشغال اليوم ٦٤%"
+      },
+      "logout": "تسجيل الخروج",
+      "topbar": {
+        "searchPlaceholder": "ابحث عن غرفة أو موظف أو تقرير",
+        "searchShortcut": "⌘ K",
+        "userName": "حساب المدير",
+        "userRole": "مدير الفندق",
+        "userAvatar": "م",
+        "languageToggle": "تبديل اللغة",
+        "notifications": "الإشعارات",
+        "themeToggle": "تبديل المظهر",
+        "themeLight": "الوضع الفاتح",
+        "themeDark": "الوضع الداكن"
+      },
+      "comingSoon": {
+        "title": "قريبًا",
+        "description": "هذه الصفحة قيد التطوير وستكون متاحة قريبًا ضمن مساحة عمل الإدارة."
+      }
+    },
+    "dashboard": {
+      "hero": {
+        "eyebrow": "مركز الإدارة",
+        "title": "لوحة تحكم المدير",
+        "description": "نظرة شاملة على تشغيل الفندق والإشغال والإيرادات ونشاط الموظفين والأداء الحالي.",
+        "export": "تصدير",
+        "createReport": "إنشاء تقرير"
+      },
+      "kpis": {
+        "totalRooms": "إجمالي الغرف",
+        "floorsSubtitle": "3 طوابق",
+        "occupiedRooms": "غرف مشغولة",
+        "hotelPercentSubtitle": "64% من الفندق",
+        "availableRooms": "غرف متاحة",
+        "readyForBooking": "جاهزة للحجز",
+        "underCleaning": "قيد التنظيف",
+        "priorityRooms": "غرفتان بأولوية",
+        "underMaintenance": "تحت الصيانة",
+        "criticalReport": "بلاغ حرج واحد",
+        "occupancyRate": "نسبة الإشغال",
+        "fromCurrentStock": "محسوبة من المخزون الحالي",
+        "todayRevenue": "إيراد اليوم",
+        "vsYesterday": "+12.4% عن الأمس",
+        "pendingTasks": "مهام معلقة",
+        "acrossDepartments": "عبر 3 أقسام"
+      },
+      "loading": "جاري تحميل لوحة تحكم المدير...",
+      "errorTitle": "تعذر تحميل لوحة تحكم المدير",
+      "retry": "إعادة المحاولة",
+      "revenueCard": {
+        "title": "نظرة على الإيرادات",
+        "subtitle": "أداء آخر سبعة أيام",
+        "changeBadge": "+12.4%",
+        "today": "اليوم",
+        "week": "الأسبوع",
+        "month": "الشهر",
+        "year": "العام",
+        "todayVal": "٢٤٫٨ ألف",
+        "weekVal": "١٦٨ ألف",
+        "monthVal": "٦٨٤ ألف",
+        "yearVal": "٧٫٨ مليون",
+        "cash": "نقدي",
+        "instapay": "إنستاباي",
+        "vodafoneCash": "فودافون كاش",
+        "chartAriaLabel": "مخطط أداء الإيرادات لآخر سبعة أيام"
+      },
+      "roomsOverviewCard": {
+        "title": "نظرة على الغرف",
+        "subtitle": "الحالة الحالية لجميع غرف الفندق",
+        "badge": "36 غرفة · 3 طوابق",
+        "standard": "عادية",
+        "vip": "VIP",
+        "occupancy": "الإشغال",
+        "occupied": "مشغولة",
+        "available": "متاحة",
+        "reserved": "محجوزة",
+        "cleaning": "تنظيف",
+        "maintenance": "صيانة",
+        "floor1": "الطابق الأول · 7 عادية / 5 VIP",
+        "floor2": "الطابق الثاني · 7 عادية / 5 VIP",
+        "floor3": "الطابق الثالث · 7 عادية / 5 VIP"
+      },
+      "criticalIssuesCard": {
+        "title": "قضايا مهمة",
+        "subtitle": "عناصر تتطلب متابعة الإدارة",
+        "countBadge": "{count} عناصر",
+        "severities": {
+          "critical": "حرج",
+          "high": "مرتفع",
+          "followup": "متابعة",
+          "medium": "متوسط"
+        }
+      },
+      "shiftsOverviewCard": {
+        "title": "نظرة الورديات",
+        "subtitle": "حالة الورديات الثلاث اليوم",
+        "viewDetails": "عرض التفاصيل",
+        "revenueLabel": "الإيراد",
+        "roomsLabel": "الغرف",
+        "egpSuffix": "ج.م",
+        "roomsSuffix": "غرفة",
+        "status": {
+          "active": "نشطة",
+          "upcoming": "قادمة",
+          "completed": "مكتملة"
+        }
+      },
+      "latestActivitiesCard": {
+        "title": "أحدث الأنشطة",
+        "subtitle": "تحديثات الفندق لحظة بلحظة"
+      },
+      "staffActivityCard": {
+        "title": "نشاط الموظفين",
+        "subtitle": "الموظفون العاملون والمهام الحالية",
+        "workingNowBadge": "{count} يعملون الآن",
+        "table": {
+          "employee": "الموظف",
+          "role": "الدور",
+          "shift": "الوردية",
+          "completed": "مكتملة",
+          "pending": "معلقة",
+          "status": "الحالة"
+        },
+        "status": {
+          "on_shift": "في الوردية",
+          "available": "متاح",
+          "on_break": "استراحة"
+        }
+      },
+      "reportDownloaded": "تم إنشاء وتحميل ملخص التقرير بنجاح",
+      "exportDownloaded": "تم تصدير نشاط الموظفين بنجاح",
+      "exportError": "تعذر تصدير البيانات",
+      "emptyTitle": "لا توجد بيانات متاحة",
+      "emptyDescription": "تعذر العثور على ملخص لوحة التحكم في الوقت الحالي",
+      "shiftNames": {
+        "MORNING": "الوردية الصباحية",
+        "EVENING": "الوردية المسائية",
+        "NIGHT": "الوردية الليلية"
+      },
+      "shiftShort": {
+        "MORNING": "الصباحية",
+        "EVENING": "المسائية",
+        "NIGHT": "الليلية"
+      },
+      "roles": {
+        "MANAGER": "مدير",
+        "RECEPTIONIST": "استقبال",
+        "HOUSEKEEPER": "تنظيف",
+        "TECHNICIAN": "صيانة",
+        "ADMIN": "إدارة"
+      }
+    },
+    "rooms": {
+      "hero": {
+        "eyebrow": "إدارة المخزون",
+        "title": "إدارة الغرف",
+        "description": "إدارة تكوين الغرف والأسعار والتفاصيل التشغيلية مع دعم توسعة الفندق مستقبلاً.",
+        "roomsReport": "تقرير الغرف",
+        "export": "تصدير"
+      },
+      "stats": {
+        "totalRooms": "إجمالي الغرف",
+        "floorsSubtitle": "3 طوابق",
+        "standardRooms": "غرف عادية",
+        "vipRooms": "غرف VIP",
+        "expandableSubtitle": "قابلة للتوسعة",
+        "floors": "الطوابق",
+        "approxPerFloorSubtitle": "12 غرفة تقريبًا لكل طابق"
+      },
+      "floorTabs": {
+        "floor1": "الطابق 1",
+        "floor2": "الطابق 2",
+        "floor3": "الطابق 3"
+      },
+      "floorCard": {
+        "title": "الطابق {floor}",
+        "subtitle": "تكوين حالي قابل للتعديل والتوسعة",
+        "occupancyBadge": "إشغال {percent}%"
+      },
+      "tile": {
+        "room": "غرفة",
+        "standard": "عادية",
+        "vip": "VIP",
+        "egp": "ج.م",
+        "currentGuest": "ضيف حالي",
+        "noGuest": "لا يوجد ضيف",
+        "status": {
+          "available": "متاحة",
+          "occupied": "مشغولة",
+          "reserved": "محجوزة",
+          "cleaning": "تنظيف",
+          "maintenance": "صيانة"
+        }
+      },
+      "loading": "جاري تحميل الغرف...",
+      "errorTitle": "تعذر تحميل الغرف",
+      "retry": "إعادة المحاولة",
+      "emptyTitle": "لا توجد غرف متاحة",
+      "emptyDescription": "لا توجد غرف مسجلة في هذا الطابق",
+      "reportDownloaded": "تم إنشاء وتحميل تقرير الغرف بنجاح",
+      "exportDownloaded": "تم تصدير قائمة الغرف بنجاح",
+      "exportError": "تعذر تصدير البيانات",
+      "allRoomsExported": "تم تصدير جميع الغرف (36 غرفة) بنجاح",
+      "floorRoomsExported": "تم تصدير غرف الطابق {floor} بنجاح",
+      "drawer": {
+        "eyebrow": "مراجعة الغرفة",
+        "title": "غرفة {number}",
+        "closeLabel": "إغلاق نافذة مراجعة الغرفة",
+        "info": {
+          "guest": "الضيف",
+          "type": "النوع",
+          "status": "الحالة",
+          "price": "السعر"
+        },
+        "operationsLog": "السجل التشغيلي",
+        "emptyLog": "لا توجد سجلات تشغيلية لهذه الغرفة",
+        "viewReport": "عرض التقرير",
+        "close": "إغلاق",
+        "logReportDownloaded": "تم تحميل تقرير السجل التشغيلي للغرفة {number} بنجاح"
+      }
+    },
+    "employees": {
+      "eyebrow": "إدارة الفريق",
+      "title": "إدارة الموظفين",
+      "description": "إدارة الموظفين والورديات والمسؤوليات التشغيلية.",
+      "export": "تصدير",
+      "addEmployee": "إضافة موظف",
+      "loading": "جاري تحميل الموظفين...",
+      "loadError": "تعذّر تحميل الموظفين",
+      "coverageError": "تعذّر تحميل الورديات",
+      "retry": "إعادة المحاولة",
+      "stats": {
+        "total": "إجمالي الموظفين",
+        "totalHint": "جميع الأقسام",
+        "reception": "موظفو الاستقبال",
+        "receptionCovered": "تغطية كاملة",
+        "receptionGap": "{count} ورديات بدون استقبال",
+        "receptionGapOne": "وردية واحدة بدون استقبال",
+        "housekeeping": "التدبير الفندقي",
+        "housekeepingHint": "{count} يعملون الآن",
+        "maintenance": "فريق الصيانة",
+        "maintenanceHint": "{count} متاحون الآن",
+        "working": "يعملون الآن",
+        "workingHint": {
+          "MORNING": "الوردية الصباحية",
+          "EVENING": "الوردية المسائية",
+          "NIGHT": "الوردية الليلية"
+        },
+        "offShift": "خارج الوردية",
+        "offShiftHint": "حسب الجدول",
+        "pendingAssignments": "تعيينات معلّقة",
+        "pendingHint": "تحتاج مراجعة",
+        "pendingNone": "لا توجد تعيينات معلّقة"
+      },
+      "coverageTitle": "تعيين الورديات",
+      "coverageSubtitle": "تغطية الورديات الثلاث",
+      "manageSchedule": "إدارة الجدول",
+      "noReceptionist": "بدون موظف استقبال",
+      "teamCount": {
+        "zero": "لا يوجد فريق",
+        "one": "موظف واحد",
+        "two": "موظفان",
+        "few": "{count} موظفين",
+        "many": "{count} موظفًا",
+        "other": "{count} موظف"
+      },
+      "noVacancies": "لا توجد وظائف شاغرة",
+      "vacancyReception": "وظيفة شاغرة: استقبال",
+      "directoryTitle": "دليل الموظفين",
+      "directorySubtitle": "المهام والحالة التشغيلية الحالية",
+      "employeesCount": {
+        "zero": "لا يوجد موظفون",
+        "one": "موظف واحد",
+        "two": "موظفان",
+        "few": "{count} موظفين",
+        "many": "{count} موظفًا",
+        "other": "{count} موظف"
+      },
+      "colEmployee": "الموظف",
+      "colRole": "الدور",
+      "colShift": "الوردية",
+      "colTasks": "المهام",
+      "colCompleted": "مكتملة",
+      "colPending": "معلّقة",
+      "colStatus": "الحالة",
+      "colActions": "الإجراءات",
+      "openEmployee": "عرض تفاصيل {name}",
+      "pageLabel": "صفحة {page} من {total}",
+      "previousPage": "الصفحة السابقة",
+      "nextPage": "الصفحة التالية",
+      "pagination": "صفحات الموظفين",
+      "searchPlaceholder": "ابحث بالاسم أو البريد أو الهاتف",
+      "filterRole": "الدور",
+      "filterShift": "الوردية",
+      "filterStatus": "الحالة",
+      "allRoles": "كل الأدوار",
+      "allShifts": "كل الورديات",
+      "allStatuses": "كل الحالات",
+      "reset": "إعادة ضبط",
+      "emptyTitle": "لا يوجد موظفون مطابقون",
+      "emptyDescription": "جرّب تغيير البحث أو الفلاتر.",
+      "emptyNoEmployees": "لا يوجد موظفون بعد",
+      "emptyNoEmployeesHint": "أضف أول موظف ليظهر هنا.",
+      "addEyebrow": "حساب جديد",
+      "addTitle": "إضافة موظف",
+      "saveEmployee": "حفظ الموظف",
+      "saving": "جاري الحفظ...",
+      "cancel": "إلغاء",
+      "close": "إغلاق",
+      "detailsEyebrow": "تفاصيل الموظف",
+      "editEyebrow": "تعديل البيانات",
+      "editDetails": "تعديل البيانات",
+      "saveChanges": "حفظ التعديلات",
+      "tilePhone": "الهاتف",
+      "tileEmail": "البريد",
+      "tileStatus": "الحالة",
+      "tileLastLogin": "آخر دخول",
+      "today": "اليوم",
+      "yesterday": "أمس",
+      "neverLoggedIn": "لم يسجّل الدخول بعد",
+      "toastCreated": "تمت إضافة {name} بنجاح",
+      "toastUpdated": "تم حفظ بيانات {name}",
+      "toastExported": {
+        "one": "تم تصدير بيانات موظف واحد",
+        "two": "تم تصدير بيانات موظفَين",
+        "few": "تم تصدير بيانات {count} موظفين",
+        "many": "تم تصدير بيانات {count} موظفًا",
+        "other": "تم تصدير بيانات {count} موظف"
+      },
+      "toastNothingToExport": "لا يوجد موظفون للتصدير",
+      "roles": {
+        "RECEPTIONIST": "موظف استقبال",
+        "HOUSEKEEPER": "تدبير فندقي",
+        "TECHNICIAN": "صيانة",
+        "MANAGER": "مدير",
+        "ADMIN": "مسؤول النظام"
+      },
+      "shifts": {
+        "MORNING": "الصباحية",
+        "EVENING": "المسائية",
+        "NIGHT": "الليلية",
+        "NONE": "بدون وردية اليوم"
+      },
+      "shiftStatus": {
+        "SCHEDULED": "قادمة",
+        "ACTIVE": "نشطة",
+        "COMPLETED": "انتهت",
+        "CANCELLED": "ملغاة"
+      },
+      "statuses": {
+        "ON_DUTY": "في الوردية",
+        "AVAILABLE": "متاح",
+        "ON_BREAK": "استراحة",
+        "OFF_SHIFT": "خارج الوردية",
+        "INACTIVE": "موقوف"
+      },
+      "fields": {
+        "fullName": "الاسم الكامل",
+        "nationalId": "الرقم القومي",
+        "phone": "رقم الهاتف",
+        "email": "البريد الإلكتروني",
+        "staffType": "الدور",
+        "hireDate": "تاريخ التعيين",
+        "shift": "وردية اليوم"
+      },
+      "placeholders": {
+        "fullName": "أدخل الاسم الكامل",
+        "nationalId": "أدخل الرقم القومي",
+        "phone": "+20",
+        "email": "name@alaminhotel.com",
+        "staffType": "اختر الدور",
+        "shift": "اختر الوردية"
+      },
+      "errors": {
+        "required": "هذا الحقل مطلوب",
+        "nameTooShort": "الاسم قصير جدًا",
+        "nameTooLong": "الاسم أطول من {max} حرفًا",
+        "nationalIdLength": "الرقم القومي يجب أن يكون 14 رقمًا",
+        "nationalIdInvalid": "الرقم القومي غير صحيح",
+        "nationalIdTaken": "هذا الرقم القومي مسجّل لموظف آخر",
+        "phoneInvalid": "أدخل رقم موبايل مصري صحيح مثل 01001234567",
+        "emailInvalid": "أدخل بريدًا إلكترونيًا صحيحًا",
+        "emailTaken": "هذا البريد مستخدم لموظف آخر",
+        "roleRequired": "اختر الدور",
+        "shiftRequired": "اختر الوردية أو \"بدون وردية اليوم\"",
+        "dateInvalid": "أدخل تاريخًا صحيحًا",
+        "dateTooFar": "تاريخ التعيين بعيد جدًا"
+      },
+      "apiErrors": {
+        "CONFLICT": "البيانات دي مستخدمة لموظف آخر",
+        "SHIFT_OVERLAP": "الموظف عنده وردية في نفس اليوم بالفعل",
+        "SHIFT_ALREADY_STARTED": "الوردية بدأت بالفعل ولا يمكن تعديلها",
+        "FORBIDDEN": "غير مسموح بهذا الإجراء",
+        "INVALID_STATUS_TRANSITION": "لا يمكن تنفيذ الإجراء على حالة الحساب الحالية"
+      },
+      "optional": "(اختياري)",
+      "passwordNote": "سيُنشئ النظام كلمة مرور مؤقتة تظهر لك مرة واحدة بعد الحفظ، ويغيّرها الموظف بعد أول دخول.",
+      "accountActive": "نشط",
+      "tileWorkload": "مهام اليوم",
+      "workloadValue": "{done} من {total} مكتملة",
+      "accountActions": "إجراءات الحساب",
+      "resetPassword": "إعادة تعيين كلمة المرور",
+      "deactivate": "إيقاف الحساب",
+      "reactivate": "إعادة تفعيل الحساب",
+      "resetConfirmTitle": "إعادة تعيين كلمة مرور {name}؟",
+      "resetConfirmText": "سيتم إنشاء كلمة مرور مؤقتة جديدة وإنهاء كل الجلسات المفتوحة لهذا الحساب.",
+      "deactivateConfirmTitle": "إيقاف حساب {name}؟",
+      "deactivateConfirmText": "لن يتمكن الموظف من تسجيل الدخول، وسيتم إنهاء جلساته المفتوحة. يمكنك إعادة تفعيل الحساب لاحقًا.",
+      "passwordDialogCreatedTitle": "تم إنشاء حساب {name}",
+      "passwordDialogResetTitle": "كلمة المرور الجديدة لـ {name}",
+      "passwordDialogText": "كلمة المرور المؤقتة: {password} — انسخها وسلّمها للموظف، لن تظهر مرة أخرى.",
+      "copyAndClose": "نسخ وإغلاق",
+      "passwordCopied": "تم نسخ كلمة المرور",
+      "passwordCopyFailed": "تعذّر النسخ، اكتبها يدويًا",
+      "toastShiftNotSet": "تم إنشاء الحساب لكن لم تُحدَّد الوردية: {reason}",
+      "toastDeactivated": "تم إيقاف حساب {name}",
+      "toastReactivated": "تمت إعادة تفعيل حساب {name}"
+    },
+    "shifts": {
+      "eyebrow": "الإشراف اليومي",
+      "title": "نظرة الورديات",
+      "description": "مراجعة أداء الورديات الثلاث وتسليماتها والعناصر المعلّقة.",
+      "export": "تصدير",
+      "manageAssignments": "إدارة التعيينات",
+      "loading": "جاري تحميل الورديات...",
+      "loadError": "تعذّر تحميل الورديات",
+      "loadingHandovers": "جاري تحميل التسليمات...",
+      "handoversError": "تعذّر تحميل تسليمات الوردية",
+      "retry": "إعادة المحاولة",
+      "emptyTitle": "لا توجد ورديات",
+      "emptyDescription": "لم يتم إعداد الورديات بعد.",
+      "shiftLabel": "وردية",
+      "names": {
+        "MORNING": "الصباحية",
+        "EVENING": "المسائية",
+        "NIGHT": "الليلية"
+      },
+      "runStatus": {
+        "SCHEDULED": "قادمة",
+        "ACTIVE": "نشطة",
+        "COMPLETED": "انتهت",
+        "CANCELLED": "ملغاة"
+      },
+      "handover": {
+        "PREPARING": "قيد الإعداد",
+        "WAITING": "بانتظار البدء",
+        "NOT_SUBMITTED": "لم يُقدَّم التقرير",
+        "CANCELLED": "ملغاة"
+      },
+      "handoverStatus": "حالة التسليم",
+      "noEmployee": "بدون موظف استقبال",
+      "unassigned": "بانتظار التعيين",
+      "tiles": {
+        "employee": "الموظف",
+        "rooms": "الغرف",
+        "revenue": "الإيراد",
+        "cleaning": "النظافة",
+        "maintenance": "الصيانة",
+        "pending": "المعلّقة",
+        "time": "التوقيت",
+        "runStatus": "حالة الوردية",
+        "team": "الفريق",
+        "handedBy": "الموظف المسلِّم",
+        "submittedAt": "وقت التقديم",
+        "gross": "الإجمالي",
+        "refunds": "المرتجعات",
+        "net": "الصافي",
+        "cash": "نقدي",
+        "instapay": "إنستاباي",
+        "vodafoneCash": "فودافون كاش",
+        "retained": "محتجز من الإلغاء"
+      },
+      "units": {
+        "rooms": {
+          "zero": "لا توجد غرف",
+          "one": "غرفة واحدة",
+          "two": "غرفتان",
+          "few": "{count} غرف",
+          "many": "{count} غرفة",
+          "other": "{count} غرفة"
+        },
+        "tasks": {
+          "zero": "لا توجد مهام",
+          "one": "مهمة واحدة",
+          "two": "مهمتان",
+          "few": "{count} مهام",
+          "many": "{count} مهمة",
+          "other": "{count} مهمة"
+        },
+        "reports": {
+          "zero": "لا توجد بلاغات",
+          "one": "بلاغ واحد",
+          "two": "بلاغان",
+          "few": "{count} بلاغات",
+          "many": "{count} بلاغًا",
+          "other": "{count} بلاغ"
+        },
+        "people": {
+          "zero": "لا يوجد موظفون",
+          "one": "موظف واحد",
+          "two": "موظفان",
+          "few": "{count} موظفين",
+          "many": "{count} موظفًا",
+          "other": "{count} موظف"
+        },
+        "reportsCount": {
+          "zero": "لا توجد تقارير",
+          "one": "تقرير واحد",
+          "two": "تقريران",
+          "few": "{count} تقارير",
+          "many": "{count} تقريرًا",
+          "other": "{count} تقرير"
+        }
+      },
+      "viewReport": "عرض التقرير",
+      "viewDetails": "عرض التفاصيل",
+      "reviewHandover": "مراجعة التسليم",
+      "handoversTitle": "تسليمات الوردية",
+      "handoversSubtitle": "آخر التقارير المقدمة للمراجعة",
+      "handoversEmpty": "لا توجد تسليمات مقدمة بعد",
+      "cols": {
+        "shift": "الوردية",
+        "employee": "الموظف",
+        "date": "التاريخ",
+        "rooms": "الغرف",
+        "payments": "المدفوعات",
+        "maintenance": "الصيانة",
+        "cleaning": "النظافة",
+        "pending": "المعلّقة",
+        "status": "الحالة",
+        "actions": "الإجراءات"
+      },
+      "roles": {
+        "RECEPTIONIST": "موظف استقبال",
+        "HOUSEKEEPER": "تدبير فندقي",
+        "TECHNICIAN": "صيانة",
+        "MANAGER": "مدير",
+        "ADMIN": "مسؤول النظام"
+      },
+      "close": "إغلاق",
+      "cancel": "إلغاء",
+      "saving": "جاري الحفظ...",
+      "reportEyebrow": "تقرير الوردية",
+      "reportTitle": "تقرير الوردية {shift}",
+      "reportTeam": "فريق الوردية",
+      "reportTeamMember": "عضو الفريق",
+      "reportField": "البند",
+      "reportValue": "القيمة",
+      "downloadReport": "تنزيل التقرير",
+      "loadingTeam": "جاري تحميل الفريق...",
+      "teamLoadError": "تعذّر تحميل الفريق",
+      "teamEmpty": "لا يوجد موظفون في هذه الوردية",
+      "reviewEyebrow": "مراجعة التسليم",
+      "reviewTitle": "تسليم الوردية {shift}",
+      "handoverNotes": "ملاحظات التسليم",
+      "noNotes": "لا توجد ملاحظات",
+      "approveHandover": "اعتماد التسليم",
+      "approveConfirmTitle": "اعتماد تسليم الوردية؟",
+      "approvedAt": "تم الاعتماد {time}",
+      "assignEyebrow": "إدارة التعيينات",
+      "assignTitle": "تعيين الموظفين على الورديات",
+      "assignEmployee": "الموظف",
+      "assignEmployeePlaceholder": "اختر الموظف",
+      "assignCurrent": "الوردية الحالية",
+      "assignTarget": "نقل إلى وردية",
+      "assignTargetPlaceholder": "اختر الوردية",
+      "assignTeams": "فرق الورديات",
+      "assignSave": "حفظ التعيين",
+      "errors": {
+        "employeeRequired": "اختر الموظف",
+        "employeeNotFound": "الموظف غير موجود",
+        "shiftStarted": "وردية الموظف بدأت بالفعل ولا يمكن نقله",
+        "shiftRequired": "اختر الوردية",
+        "sameShift": "الموظف في هذه الوردية بالفعل",
+        "commentRequired": "اكتب ما يحتاج للمراجعة",
+        "commentTooLong": "التعليق أطول من {max} حرفًا"
+      },
+      "toastApproved": "تم اعتماد تسليم الوردية",
+      "toastMoved": "تم نقل {name} إلى الوردية {shift}",
+      "toastExported": "تم تصدير بيانات الورديات",
+      "toastNothingToExport": "لا توجد ورديات للتصدير",
+      "toastReportDownloaded": "تم تنزيل تقرير الوردية {shift}",
+      "review": {
+        "PENDING_REVIEW": "قيد المراجعة",
+        "APPROVED": "معتمد",
+        "NEEDS_REVIEW": "يحتاج مراجعة"
+      },
+      "apiErrors": {
+        "SHIFT_OVERLAP": "الموظف عنده وردية في نفس اليوم بالفعل",
+        "SHIFT_ALREADY_STARTED": "الوردية بدأت بالفعل ولا يمكن تعديلها",
+        "RECORD_ALREADY_DECIDED": "تم اتخاذ قرار في هذا التقرير بالفعل",
+        "NO_OPEN_BUSINESS_DAY": "لا يوجد يوم عمل مفتوح حاليًا"
+      },
+      "approveConfirmText": "سيتم اعتماد تقرير الوردية {shift} المقدم من {employee}، ولا يمكن التراجع عن الاعتماد.",
+      "openReport": "مراجعة تقرير {date}",
+      "reportFinancials": "ملخص التقرير",
+      "loadingReport": "جاري تحميل التقرير...",
+      "reportLoadError": "تعذّر تحميل التقرير",
+      "activitiesTitle": "سجل العمليات",
+      "activitiesEmpty": "لا توجد عمليات مسجلة",
+      "detailsEyebrow": "تفاصيل الوردية",
+      "detailsTitle": "الوردية {shift}",
+      "cancelShift": "إلغاء الوردية",
+      "cancelShiftAria": "إلغاء وردية {name}",
+      "cancelShiftTitle": "إلغاء وردية {name}؟",
+      "cancelShiftText": "سيتم إلغاء وردية {shift} لهذا الموظف اليوم. يمكنك تعيينه مرة أخرى من إدارة التعيينات.",
+      "managerComment": "تعليق المدير",
+      "managerCommentPlaceholder": "مطلوب عند اختيار \"يحتاج مراجعة\"",
+      "previousComment": "التعليق السابق: {comment}",
+      "needsReview": "يحتاج مراجعة",
+      "openPdf": "فتح تقرير PDF",
+      "assignHint": "تعيين موظف على وردية اليوم أو نقله لوردية أخرى. اللي ورديته بدأت مش بيظهر في قائمة النقل.",
+      "chipOnShift": "في الوردية",
+      "chipShiftEnded": "انتهت ورديته",
+      "toastNeedsReview": "تم إرجاع التقرير للمراجعة",
+      "toastShiftCancelled": "تم إلغاء وردية {name}"
+    },
+    "passwordRequests": {
+      "hero": {
+        "eyebrow": "أمان الحسابات",
+        "title": "طلبات إعادة تعيين كلمة المرور",
+        "subtitle": "مراجعة طلبات المساعدة وإنشاء كلمات مرور مؤقتة.",
+        "export": "تصدير",
+        "pendingFilter": "الطلبات الجديدة"
+      },
+      "list": {
+        "empty": "لا توجد طلبات إعادة تعيين كلمة المرور حاليًا"
+      },
+      "status": {
+        "pending": "طلب جديد",
+        "in_review": "قيد المراجعة",
+        "approved": "تم الاعتماد",
+        "rejected": "مرفوض"
+      },
+      "roles": {
+        "receptionist": "موظف استقبال",
+        "maintenance": "فني صيانة",
+        "MANAGER": "مدير",
+        "RECEPTIONIST": "موظف استقبال",
+        "HOUSEKEEPER": "تدبير فندقي",
+        "TECHNICIAN": "فني صيانة",
+        "ADMIN": "مسؤول النظام"
+      },
+      "employees": {
+        "pr-1": "موظف استقبال أ",
+        "pr-2": "موظف استقبال ب",
+        "pr-3": "موظف صيانة ج"
+      },
+      "reasons": {
+        "pr-1": "تعذر الدخول إلى الحاسوب ويحتاج الموظف إلى كلمة مرور مؤقتة",
+        "pr-2": "نسيان كلمة المرور بعد الإجازة السنوية",
+        "pr-3": "إعادة تعيين روتينية للحساب"
+      },
+      "drawer": {
+        "eyebrow": "طلب مساعدة",
+        "role": "الدور",
+        "username": "اسم المستخدم",
+        "status": "الحالة",
+        "date": "تاريخ الطلب",
+        "reason": "سبب الطلب",
+        "tempPassword": "كلمة المرور المؤقتة",
+        "generate": "توليد كلمة مرور",
+        "copy": "نسخ",
+        "copiedToast": "تم نسخ كلمة المرور المؤقتة",
+        "copyFailed": "تعذر نسخ كلمة المرور",
+        "approve": "اعتماد الطلب",
+        "reject": "رفض الطلب",
+        "approveSuccess": "تم اعتماد الطلب وتعيين كلمة المرور المؤقتة بنجاح",
+        "rejectSuccess": "تم رفض طلب إعادة تعيين كلمة المرور",
+        "actionError": "تعذر إكمال العملية، حاول مرة أخرى"
+      },
+      "confirmReject": {
+        "title": "تأكيد رفض الطلب",
+        "description": "هل أنت متأكد من رفض طلب إعادة تعيين كلمة المرور؟ لن يتمكن الموظف من استخدام هذا الطلب مجددًا.",
+        "confirm": "نعم، ارفض الطلب",
+        "cancel": "إلغاء"
+      },
+      "exportSuccess": "تم تصدير تقرير الطلبات بنجاح",
+      "table": {
+        "id": "رقم الطلب",
+        "employee": "اسم الموظف",
+        "username": "اسم المستخدم",
+        "role": "الدور",
+        "status": "الحالة",
+        "date": "تاريخ الطلب",
+        "reason": "السبب"
+      }
+    },
+    "roomTypes": {
+      "eyebrow": "تكوين الفندق",
+      "title": "أنواع الغرف",
+      "description": "إدارة الأسعار والمزايا ومتابعة أداء فئتي الغرف.",
+      "export": "تصدير",
+      "updatePrices": "تحديث الأسعار",
+      "loading": "جاري تحميل أنواع الغرف...",
+      "loadError": "تعذّر تحميل أنواع الغرف",
+      "retry": "إعادة المحاولة",
+      "emptyTitle": "لا توجد أنواع غرف",
+      "emptyDescription": "لم يتم إعداد فئات الغرف بعد.",
+      "cardSubtitle": "{count} غرفة · تكوين قابل للتعديل",
+      "manageAria": "إعدادات {name}",
+      "priceRange": "النطاق السعري",
+      "perNight": "ج.م / ليلة",
+      "amenitiesLabel": "المزايا",
+      "occupancy": "الإشغال",
+      "monthlyRevenue": "الإيراد الشهري",
+      "roomsCount": "عدد الغرف",
+      "viewManage": "عرض وإدارة النوع",
+      "egpValue": "{value} ج.م",
+      "egpThousands": "{value} ألف ج.م",
+      "close": "إغلاق",
+      "cancel": "إلغاء",
+      "saving": "جاري الحفظ...",
+      "pricesEyebrow": "تحديث الأسعار",
+      "pricesTitle": "الأسعار الأساسية للغرف",
+      "pricesHint": "عدّل السعر الأساسي لكل فئة. نطاق \"من–إلى\" على الكروت محسوب من أسعار الغرف نفسها.",
+      "savePrices": "حفظ الأسعار",
+      "priceFrom": "أقل سعر",
+      "priceTo": "أعلى سعر",
+      "manageEyebrow": "إدارة النوع",
+      "saveType": "حفظ التغييرات",
+      "newAmenity": "إضافة ميزة",
+      "newAmenityPlaceholder": "مثال: واي فاي",
+      "addAmenity": "إضافة",
+      "removeAmenity": "إزالة {name}",
+      "noAmenities": "لا توجد مزايا بعد، أضف ميزة واحدة على الأقل.",
+      "colName": "النوع",
+      "colCategory": "الفئة",
+      "errors": {
+        "priceRequired": "أدخل السعر",
+        "priceNumber": "أدخل رقمًا صحيحًا بدون كسور",
+        "pricePositive": "السعر يجب أن يكون أكبر من صفر",
+        "priceTooHigh": "السعر أعلى من الحد المسموح ({max})",
+        "amenityRequired": "اكتب اسم الميزة",
+        "amenityTooLong": "اسم الميزة أطول من {max} حرفًا",
+        "amenityDuplicate": "هذه الميزة موجودة بالفعل",
+        "amenitiesFull": "الحد الأقصى {max} ميزة",
+        "amenitiesEmpty": "أضف ميزة واحدة على الأقل",
+        "capacityRequired": "أدخل السعة",
+        "capacityRange": "السعة من 1 إلى 10 أفراد",
+        "descriptionTooLong": "الوصف أطول من {max} حرفًا"
+      },
+      "toastPricesSaved": "تم تحديث أسعار الغرف",
+      "toastTypeSaved": "تم حفظ إعدادات {name}",
+      "toastExported": "تم تصدير أنواع الغرف",
+      "toastNothingToExport": "لا توجد أنواع غرف للتصدير",
+      "tierBasic": "فئة أساسية",
+      "tierPremium": "فئة مميزة",
+      "basePriceLine": "السعر الأساسي {price} / ليلة · السعة {capacity}",
+      "basePrice": "السعر الأساسي",
+      "currentRange": "أسعار الغرف الحالية: {range} ج.م",
+      "capacity": "السعة",
+      "guests": "أفراد",
+      "pricingAndCapacity": "السعر والسعة",
+      "typeNames": {
+        "standard": "الغرفة العادية",
+        "vip": "غرفة VIP"
+      },
+      "amenityNames": {
+        "street_view": "إطلالة على الشارع",
+        "twin_beds": "سريران",
+        "fan": "مروحة",
+        "air_conditioning": "تكييف هواء",
+        "fridge": "ثلاجة",
+        "private_bathroom": "حمام خاص",
+        "free_wi_fi": "واي فاي مجاني",
+        "wi_fi": "واي فاي",
+        "tv": "تلفزيون",
+        "balcony": "شرفة",
+        "minibar": "ميني بار",
+        "safe": "خزنة"
+      },
+      "apiErrors": {
+        "NAME_ALREADY_EXISTS": "يوجد نوع غرف بنفس الاسم"
+      },
+      "descriptionLabel": "الوصف"
+    },
+    "profile": {
+      "header": {
+        "eyebrow": "حساب إداري",
+        "title": "حساب المدير",
+        "subtitle": "مدير الفندق · Al Amin Hotel",
+        "location": "أسوان، مصر",
+        "notifications": "تفضيلات الإشعارات",
+        "edit": "تعديل الملف"
+      },
+      "stats": {
+        "employees": "الموظفون الفعّالون",
+        "employeesHint": "جميع الأقسام",
+        "rooms": "الغرف المدارة",
+        "roomsHint": "3 طوابق",
+        "reports": "التقارير المُنشأة",
+        "reportsHint": "هذا الشهر",
+        "tasks": "مهام الإدارة",
+        "tasksHint": "9 مكتملة"
+      },
+      "account": {
+        "title": "معلومات الحساب",
+        "subtitle": "بيانات التواصل والوصول",
+        "role": "الدور",
+        "roleValue": "مدير الفندق",
+        "accountName": "الحساب",
+        "accountNameValue": "حساب المدير",
+        "email": "البريد",
+        "phone": "الهاتف",
+        "lastLogin": "آخر دخول",
+        "lastLoginValue": "اليوم، 08:12 ص",
+        "status": "حالة الحساب",
+        "statusActive": "نشط",
+        "statusInactive": "غير نشط"
+      },
+      "activity": {
+        "title": "النشاط الإداري الأخير",
+        "subtitle": "آخر إجراءات الحساب",
+        "empty": "لا توجد أنشطة مسجلة حديثًا",
+        "items": {
+          "payment": {
+            "title": "تم استلام دفعة",
+            "description": "تمت المراجعة بواسطة حساب المدير"
+          },
+          "cleaning": {
+            "title": "تم تعيين مهمة نظافة",
+            "description": "تمت المراجعة بواسطة حساب المدير"
+          },
+          "maintenance": {
+            "title": "تم تسجيل بلاغ صيانة",
+            "description": "تمت المراجعة بواسطة حساب المدير"
+          }
+        }
+      },
+      "bottomBar": {
+        "changePassword": "تغيير كلمة المرور",
+        "notifications": "تفضيلات الإشعارات",
+        "logout": "تسجيل الخروج"
+      },
+      "editDrawer": {
+        "title": "تعديل الملف الشخصي",
+        "eyebrow": "البيانات الأساسية",
+        "name": "الاسم الكامل",
+        "email": "البريد الإلكتروني",
+        "phone": "رقم الهاتف",
+        "save": "حفظ التغييرات",
+        "cancel": "إلغاء",
+        "errors": {
+          "nameRequired": "الاسم الكامل مطلوب",
+          "emailInvalid": "يرجى إدخال بريد إلكتروني صحيح",
+          "phoneInvalid": "يرجى إدخال رقم هاتف صحيح"
+        }
+      },
+      "passwordDrawer": {
+        "title": "تغيير كلمة المرور",
+        "eyebrow": "أمان الحساب",
+        "currentPassword": "كلمة المرور الحالية",
+        "newPassword": "كلمة المرور الجديدة",
+        "confirmPassword": "تأكيد كلمة المرور الجديدة",
+        "hint": "يجب أن تحتوي كلمة المرور على 8 أحرف على الأقل",
+        "save": "تحديث كلمة المرور",
+        "cancel": "إلغاء",
+        "toggleVisibility": "تبديل رؤية كلمة المرور",
+        "errors": {
+          "currentRequired": "كلمة المرور الحالية مطلوبة",
+          "newRequired": "كلمة المرور الجديدة مطلوبة",
+          "minLength": "كلمة المرور يجب أن لا تقل عن 8 أحرف",
+          "mismatch": "كلمتا المرور غير متطابقتين"
+        }
+      },
+      "toasts": {
+        "updateSuccess": "تم تحديث الملف الشخصي بنجاح",
+        "updateError": "تعذر تحديث الملف الشخصي، يرجى المحاولة لاحقًا",
+        "passwordSuccess": "تم تغيير كلمة المرور بنجاح",
+        "passwordError": "تعذر تغيير كلمة المرور، يرجى التحقق من المدخلات"
+      },
+      "retry": "إعادة المحاولة"
+    },
+    "settings": {
+      "hero": {
+        "eyebrow": "تفضيلات النظام",
+        "title": "الإعدادات",
+        "subtitle": "إدارة معلومات الفندق والإشعارات والورديات وتفضيلات النظام",
+        "export": "تصدير",
+        "save": "حفظ التغييرات",
+        "saving": "جارٍ الحفظ...",
+        "savedToast": "تم حفظ الإعدادات بنجاح",
+        "saveErrorToast": "تعذر حفظ الإعدادات، يرجى المحاولة مرة أخرى",
+        "exportedToast": "تم تصدير ملف الإعدادات بنجاح"
+      },
+      "nav": {
+        "hotel": "معلومات الفندق",
+        "shifts": "تكوين الورديات",
+        "notifications": "الإشعارات",
+        "language": "اللغة",
+        "appearance": "المظهر",
+        "account": "الحساب",
+        "profile": "الملف الشخصي",
+        "roomConfig": "تكوين الغرف",
+        "systemPreferences": "تفضيلات النظام"
+      },
+      "hotel": {
+        "title": "معلومات الفندق",
+        "subtitle": "إعدادات الإدارة الأساسية لفندق الأمين",
+        "autoSaved": "محفوظ تلقائياً",
+        "name": "اسم الفندق",
+        "location": "الموقع",
+        "floors": "عدد الطوابق",
+        "rooms": "إجمالي الغرف"
+      },
+      "shifts": {
+        "title": "تكوين الورديات",
+        "subtitle": "أوقات العمل المعتمدة",
+        "morning": "الصباحية",
+        "evening": "المسائية",
+        "night": "الليلية",
+        "startTime": "وقت البدء",
+        "endTime": "وقت الانتهاء",
+        "validationError": "وقت البدء يجب أن يكون قبل وقت الانتهاء"
+      },
+      "notifications": {
+        "title": "الإشعارات",
+        "subtitle": "اختر التنبيهات التي تريد استقبالها",
+        "subtitleDesc": "إشعارات فورية وتحديثات مهمة",
+        "maintenance": "الصيانة",
+        "cleaning": "النظافة",
+        "payments": "المدفوعات",
+        "pendingTasks": "المهام المعلقة",
+        "shiftHandover": "تسليم الوردية",
+        "reports": "التقارير"
+      },
+      "preferences": {
+        "appearance": "المظهر",
+        "language": "اللغة",
+        "light": "فاتح",
+        "dark": "داكن",
+        "system": "النظام",
+        "comingSoon": "قريباً",
+        "arabic": "العربية",
+        "english": "English"
+      },
+      "unsavedWarning": "لديك تغييرات غير محفوظة في الإعدادات، هل أنت متأكد من مغادرة الصفحة؟",
+      "retry": "إعادة المحاولة"
+    }
   }
 }

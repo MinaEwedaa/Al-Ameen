@@ -1,4 +1,11 @@
 import { http, HttpResponse } from 'msw';
+import { managerDashboardHandlers } from './managerDashboard.handler';
+import { managerRoomsHandlers } from './managerRooms.handler';
+import { managerAuthHandlers } from './managerAuth';
+import { managerPasswordRequestsHandlers } from './managerPasswordRequests';
+import { managerProfileHandlers } from './managerProfile';
+import { managerSettingsHandlers } from './managerSettings';
+import { managerTeamHandlers } from './managerTeam.handlers';
 import type { RoomStatus } from '../../types/common.types';
 
 // شكل الغرفة كما يرجعه الـ API (معرّف هنا عشان الـ mocks ماتعتمدش على types الـ features)
@@ -658,6 +665,11 @@ const writeHandlers = [
 ];
 
 export const handlers = [
+  ...managerAuthHandlers,
+  ...managerPasswordRequestsHandlers,
+  ...managerProfileHandlers,
+  ...managerSettingsHandlers,
+  ...managerTeamHandlers,
   ...writeHandlers,
 
   // Development-only mock login. Not real authentication.
@@ -708,6 +720,8 @@ export const handlers = [
       shift_payments_total: paymentTotals(),
     }),
   ),
+
+  ...managerRoomsHandlers,
 
   http.get(`${API}/rooms`, ({ request }) => {
     const url = new URL(request.url);
@@ -883,4 +897,5 @@ export const handlers = [
       },
     });
   }),
+  ...managerDashboardHandlers,
 ];

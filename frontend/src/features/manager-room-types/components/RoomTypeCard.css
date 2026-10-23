@@ -1,0 +1,178 @@
+.room-type-card {
+  display: grid;
+  align-content: start;
+  gap: var(--space-5);
+  padding: var(--space-8) var(--space-10);
+  border-radius: var(--radius-panel);
+}
+
+/* VIP: warm gold wash and border, as in the design */
+.room-type-card--vip {
+  border-color: color-mix(in srgb, var(--color-gold) 35%, var(--color-border));
+  background: linear-gradient(to bottom, var(--color-surface), var(--color-gold-soft));
+}
+
+.room-type-card__header {
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+}
+
+.room-type-card__icon {
+  display: grid;
+  flex-shrink: 0;
+  width: 3.75rem;
+  aspect-ratio: 1;
+  place-items: center;
+  border-radius: var(--radius-card);
+  color: var(--color-primary);
+  background: var(--color-primary-soft);
+}
+
+.room-type-card__icon svg { width: 1.6rem; height: 1.6rem; }
+
+.room-type-card__title {
+  display: grid;
+  gap: 0.125rem;
+  min-width: 0;
+}
+
+.room-type-card__eyebrow {
+  color: var(--color-gold);
+  font-size: var(--font-size-xs);
+  letter-spacing: 0.04em;
+}
+
+.room-type-card__title h2 {
+  margin: 0;
+  color: var(--color-ink);
+  font-size: var(--font-size-xl);
+  line-height: 1.3;
+}
+
+.room-type-card__title small {
+  color: var(--color-text-muted);
+  font-size: var(--font-size-xs);
+}
+
+.room-type-card__gear {
+  display: grid;
+  width: 2.75rem;
+  aspect-ratio: 1;
+  margin-inline-start: auto;
+  place-items: center;
+  border: 0;
+  border-radius: var(--radius-card);
+  color: var(--color-primary);
+  background: var(--color-primary-soft);
+  cursor: pointer;
+}
+
+.room-type-card__gear:hover { color: var(--color-surface); background: var(--color-primary); }
+.room-type-card__gear svg { width: 1.15rem; height: 1.15rem; }
+
+.room-type-card__price {
+  display: grid;
+  gap: var(--space-2);
+  padding: var(--space-5) var(--space-6);
+  border-radius: var(--radius-panel);
+  background: var(--color-surface-muted);
+}
+
+.room-type-card--vip .room-type-card__price { background: var(--color-surface-muted); }
+
+.room-type-card__price > span {
+  color: var(--color-text-muted);
+  font-size: var(--font-size-xs);
+}
+
+.room-type-card__price p {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: var(--space-2);
+  margin: 0;
+}
+
+.room-type-card__price strong {
+  color: var(--color-primary);
+  font-size: var(--font-size-display);
+  font-weight: var(--font-weight-bold);
+  line-height: 1.2;
+}
+
+.room-type-card__price small {
+  color: var(--color-text-muted);
+  font-size: var(--font-size-sm);
+}
+
+.room-type-card__amenities {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.room-type-card__amenities li {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-2) var(--space-4);
+  border-radius: var(--radius-pill);
+  color: var(--color-primary-dark);
+  background: var(--color-primary-soft);
+  font-size: var(--font-size-xs);
+}
+
+.room-type-card__amenities svg { width: 1rem; height: 1rem; flex-shrink: 0; }
+
+.room-type-card__stats {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: var(--space-3);
+}
+
+.room-type-card__manage {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  position: relative;
+  min-height: 3.5rem;
+  padding-inline: var(--space-6);
+  border: 0;
+  border-radius: var(--radius-card);
+  color: var(--color-primary-dark);
+  background: var(--color-primary-soft);
+  font: inherit;
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-semibold);
+  cursor: pointer;
+}
+
+.room-type-card__manage svg {
+  position: absolute;
+  inset-inline-end: var(--space-6);
+  width: 1.1rem;
+  height: 1.1rem;
+}
+
+.room-type-card__manage:hover { background: color-mix(in srgb, var(--color-primary) 18%, var(--color-surface)); }
+
+@media (max-width: 40rem) {
+  .room-type-card { padding: var(--space-5); }
+  .room-type-card__stats { grid-template-columns: 1fr; }
+}
+
+.room-type-card__price .room-type-card__base {
+  color: var(--color-text-muted);
+  font-size: var(--font-size-xs);
+}
+
+.room-type-card__empty {
+  margin: 0;
+  color: var(--color-text-muted);
+  font-size: var(--font-size-sm);
+}
