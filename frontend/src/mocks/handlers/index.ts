@@ -16,6 +16,8 @@ import type {
   Payment,
 } from '../../features/shift-handover/types/shift-handover.types';
 
+import { managerTeamHandlers } from './managerTeam.handlers';
+
 const API = '/api/v1';
 
 export const mockHandlers = {
@@ -658,6 +660,7 @@ const writeHandlers = [
 ];
 
 export const handlers = [
+  ...managerTeamHandlers,
   ...writeHandlers,
 
   // Development-only mock login. Not real authentication.
