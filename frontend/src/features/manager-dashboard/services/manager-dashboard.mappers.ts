@@ -313,6 +313,13 @@ export function mapHotelActivitiesDto(dtos: HotelActivityDto[]): RecentActivityI
   });
 }
 
+/** ISO time from the contract -> "07:00 ص" in Cairo time */
+function formatShiftClock(iso: string): string {
+  const date = new Date(iso);
+  if (!Number.isFinite(date.getTime())) return iso;
+  return new Intl.DateTimeFormat('ar-EG', { hour: '2-digit', minute: '2-digit', hour12: true, timeZone: 'Africa/Cairo' }).format(date);
+}
+
 /**
  * Maps raw ShiftOverviewDto array to UI ShiftOverviewItem array.
  */
@@ -336,12 +343,12 @@ export function mapShiftsOverviewDto(dtos: ShiftOverviewDto[]): ShiftOverviewIte
       status === 'active' ? 'نشطة' : status === 'upcoming' ? 'قادمة' : 'مكتملة';
 
     return {
-      id: shift.id,
+      id: shift.shift_id ?? shift.shift_type,
       name: shiftName,
-      timeRange: `${shift.start_time} - ${shift.end_time}`,
-      staffName: shift.lead_employee_name,
-      revenue: shift.revenue_collected,
-      roomsCount: shift.rooms_serviced_count,
+      timeRange: `${formatShiftClock(shift.start_time)} - ${formatShiftClock(shift.end_time)}`,
+      staffName: shift.staff?.full_name ?? '—',
+      revenue: shift.gross_revenue,
+      roomsCount: shift.rooms_handled,
       status,
       statusLabel,
     };
@@ -352,37 +359,50 @@ export function mapShiftsOverviewDto(dtos: ShiftOverviewDto[]): ShiftOverviewIte
  * Maps raw StaffMemberDto array to UI StaffActivityOverview model.
  */
 export function mapStaffMembersDto(dtos: StaffMemberDto[]): StaffActivityOverview {
-  const activeStaff = (dtos || []).filter((s) => s.is_on_shift);
+  // On shift = checked in on today's running shift (contract: today_shift.presence, null = not checked in)
+  const isOnShift = (s: StaffMemberDto) => s.today_shift?.status === 'ACTIVE' && Boolean(s.today_shift.presence);
+  const activeStaff = (dtos || []).filter(isOnShift);
 
   const staffList = (dtos || []).map((staff) => {
     // Map contract role enum to Arabic label
     const roleLabel =
-      staff.role === 'MANAGER'
+      staff.staff_type === 'MANAGER'
         ? 'مدير'
-        : staff.role === 'RECEPTIONIST'
+        : staff.staff_type === 'RECEPTIONIST'
         ? 'استقبال'
-        : staff.role === 'HOUSEKEEPER'
+        : staff.staff_type === 'HOUSEKEEPER'
         ? 'تنظيف'
-        : staff.role === 'TECHNICIAN'
+        : staff.staff_type === 'TECHNICIAN'
         ? 'صيانة'
         : 'إدارة';
 
+    const presence = staff.today_shift?.presence ?? null;
+    const status: 'on_shift' | 'available' | 'on_break' =
+      presence === 'ON_DUTY' ? 'on_shift' : presence === 'ON_BREAK' ? 'on_break' : 'available';
     const statusLabel =
-      staff.status === 'on_shift'
+      status === 'on_shift'
         ? 'في الوردية'
-        : staff.status === 'available'
+        : status === 'available'
         ? 'متاح'
         : 'استراحة';
+    const shiftName =
+      staff.today_shift?.shift_type === 'MORNING'
+        ? 'الصباحية'
+        : staff.today_shift?.shift_type === 'EVENING'
+        ? 'المسائية'
+        : staff.today_shift?.shift_type === 'NIGHT'
+        ? 'الليلية'
+        : 'الوردية الحالية';
 
     return {
-      id: staff.id,
-      name: staff.name,
-      avatarLetter: staff.name.trim().charAt(0) || 'م',
+      id: staff.staff_id,
+      name: staff.full_name,
+      avatarLetter: staff.full_name.trim().charAt(0) || 'م',
       role: roleLabel,
-      shift: staff.today_shift?.shift_name || 'الوردية الحالية',
-      completedTasks: staff.workload?.completed_tasks ?? null,
-      pendingTasks: staff.workload?.pending_tasks ?? 0,
-      status: staff.status,
+      shift: shiftName,
+      completedTasks: staff.workload?.completed_today ?? null,
+      pendingTasks: staff.workload?.open ?? 0,
+      status,
       statusLabel,
     };
   });

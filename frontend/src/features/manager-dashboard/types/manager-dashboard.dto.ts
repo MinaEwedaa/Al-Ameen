@@ -97,39 +97,47 @@ export interface HotelActivityDto {
 
 // ===================== 5. GET /shifts/overview?business_date=YYYY-MM-DD =====================
 
+// Contract v1.2 §7: one aggregated card per shift type for the business date
 export interface ShiftOverviewDto {
-  id: string; // TODO confirm with backend
-  shift_type: ShiftTypeEnum; // Confirmed contract enum: MORNING | EVENING | NIGHT
-  status: ShiftStatusEnum; // Confirmed contract enum: SCHEDULED | ACTIVE | COMPLETED | CANCELLED
-  start_time: string; // e.g. "07:00 ص" or "07:00" // TODO confirm with backend
-  end_time: string; // e.g. "03:00 م" or "15:00" // TODO confirm with backend
-  lead_employee_name: string; // TODO confirm with backend
-  lead_employee_avatar?: string; // TODO confirm with backend
-  rooms_serviced_count: number; // TODO confirm with backend
-  revenue_collected: number; // TODO confirm with backend
+  shift_type: ShiftTypeEnum;
+  shift_id: string | null;
+  status: ShiftStatusEnum;
+  start_time: string; // ISO 8601 with offset
+  end_time: string; // ISO 8601 with offset
+  staff: { staff_id: string; full_name: string } | null;
+  team_count: number;
+  rooms_handled: number;
+  gross_revenue: number;
+  cleaning_tasks: number;
+  maintenance_requests: number;
+  pending_items: number;
+  report: { report_id: string; review_status: 'PENDING_REVIEW' | 'APPROVED' | 'NEEDS_REVIEW' } | null;
 }
 
 // ===================== 6. GET /staff?include=today_shift,workload&on_shift=true =====================
 
+/** TODO confirm with backend: the contract example shows only "AVAILABLE"; null = not checked in */
+export type StaffPresenceEnum = 'ON_DUTY' | 'AVAILABLE' | 'ON_BREAK';
+
 export interface StaffShiftInfoDto {
-  shift_name?: string; // e.g. 'صباحية' // TODO confirm with backend
-  shift_type?: ShiftTypeEnum; // Confirmed enum // TODO confirm with backend
-  start_time?: string; // TODO confirm with backend
-  end_time?: string; // TODO confirm with backend
+  shift_id: string;
+  shift_type: ShiftTypeEnum;
+  status: ShiftStatusEnum;
+  presence: StaffPresenceEnum | null;
 }
 
 export interface StaffWorkloadDto {
-  completed_tasks: number; // TODO confirm with backend
-  pending_tasks: number; // TODO confirm with backend
+  assigned_today: number;
+  completed_today: number;
+  open: number;
 }
 
+// Contract v1.2 §6 (GET /staff with include=today_shift,workload)
 export interface StaffMemberDto {
-  id: string; // TODO confirm with backend
-  name: string; // TODO confirm with backend
-  role: StaffRoleEnum; // Confirmed contract enum: MANAGER | RECEPTIONIST | HOUSEKEEPER | TECHNICIAN | ADMIN
-  avatar?: string; // TODO confirm with backend
-  is_on_shift: boolean; // Confirmed on_shift filter
-  status: 'on_shift' | 'available' | 'on_break'; // TODO confirm with backend
-  today_shift?: StaffShiftInfoDto; // Included via ?include=today_shift // TODO confirm with backend
-  workload?: StaffWorkloadDto; // Included via ?include=workload // TODO confirm with backend
+  staff_id: string;
+  full_name: string;
+  staff_type: StaffRoleEnum;
+  is_active: boolean;
+  today_shift?: StaffShiftInfoDto | null;
+  workload?: StaffWorkloadDto | null;
 }

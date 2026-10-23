@@ -1,4 +1,6 @@
 import { http, HttpResponse, delay } from 'msw';
+import { getAuthSession } from '../../core/auth/authManager';
+import { ROLES } from '../../core/constants/roles';
 import type {
   RoomDto,
   RoomActivityDto,
@@ -516,6 +518,10 @@ function getRoomActivitiesList(id: string): RoomActivityDto[] {
 export const managerRoomsHandlers = [
   // 1. GET /api/v1/rooms?page=1&limit=20
   http.get(`${API}/rooms`, async ({ request }) => {
+    // The receptionist Rooms page (Sprint 1) calls the same endpoint and its status updates only know
+    // the Sprint 1 rooms, so only the manager session gets this data; everyone else falls through.
+    if (getAuthSession()?.role !== ROLES.manager) return undefined;
+
     if (shouldMockError(request.url)) {
       await delay(350);
       return mockErrorResponse();

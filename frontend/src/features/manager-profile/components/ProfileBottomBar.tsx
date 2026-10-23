@@ -4,7 +4,7 @@ import { KeyRound, Bell, LogOut } from 'lucide-react';
 import { ROUTES } from '../../../core/constants/routes';
 import { useLanguage } from '../../../core/i18n/useLanguage';
 import { clearAuthSession } from '../../../core/auth/authManager';
-import { logoutRequest } from '../../auth/services/auth.api';
+import { logoutRequest } from '../services/manager-profile.api';
 import './ProfileBottomBar.css';
 
 interface ProfileBottomBarProps {

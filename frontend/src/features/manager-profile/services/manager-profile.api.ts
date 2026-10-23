@@ -147,3 +147,8 @@ export async function getManagerActivities(): Promise<ManagerActivityItem[]> {
   const list = 'data' in res && Array.isArray(res.data) ? res.data : (res as ApiMeActivity[]);
   return list.map(mapApiActivityToItem);
 }
+
+/** POST /auth/logout: kept in this feature so it doesn't import from features/auth (plan: no imports between features) */
+export async function logoutRequest(): Promise<void> {
+  await request<void>('/auth/logout', { method: 'POST' });
+}
