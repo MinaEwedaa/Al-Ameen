@@ -102,6 +102,11 @@
   opacity: 0.9;
 }
 
+.manager-sidebar__link--active .manager-sidebar__link-icon {
+  color: var(--color-gold);
+  opacity: 1;
+}
+
 .manager-sidebar__link-text {
   flex: 1;
   white-space: nowrap;

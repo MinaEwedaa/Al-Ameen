@@ -1,4 +1,4 @@
-import { Wrench, Sparkles, Wallet, BedDouble } from 'lucide-react';
+import { Wrench, Sparkles, Wallet, Bed } from 'lucide-react';
 import { useLanguage } from '../../../core/i18n/useLanguage';
 import { formatNumber } from '../../../utils/format';
 import { Card } from '../../../components/ui/Card';
@@ -21,7 +21,7 @@ function renderIssueIcon(icon: string) {
       return <Wallet size={18} aria-hidden="true" />;
     case 'bed':
     default:
-      return <BedDouble size={18} aria-hidden="true" />;
+      return <Bed size={18} aria-hidden="true" />;
   }
 }
 

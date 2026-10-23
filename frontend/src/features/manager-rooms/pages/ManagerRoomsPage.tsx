@@ -1,11 +1,9 @@
 import { useState, useEffect } from 'react';
 import {
-  BedDouble,
-  DoorClosed,
-  Crown,
+  Bed,
+  ReceiptText,
   LayoutGrid,
   FileText,
-  Download,
 } from 'lucide-react';
 import { PageHero } from '../../../components/common/PageHero';
 import { StatCard } from '../../../components/ui/StatCard';
@@ -154,7 +152,7 @@ export function ManagerRoomsPage() {
         type="button"
         onClick={handleExportFloorRooms}
       >
-        <Download size={18} aria-hidden="true" />
+        <FileText size={18} aria-hidden="true" />
         <span>{t('manager.rooms.hero.export')}</span>
       </Button>
     </>
@@ -199,21 +197,21 @@ export function ManagerRoomsPage() {
               label={t('manager.rooms.stats.totalRooms')}
               value={stats?.totalRooms ?? 36}
               hint={t('manager.rooms.stats.floorsSubtitle')}
-              icon={<BedDouble size={22} />}
+              icon={<Bed size={22} />}
               tone="green"
             />
             <StatCard
               label={t('manager.rooms.stats.standardRooms')}
               value={stats?.standardRooms ?? 21}
               hint={t('manager.rooms.stats.expandableSubtitle')}
-              icon={<DoorClosed size={22} />}
+              icon={<Bed size={22} />}
               tone="green"
             />
             <StatCard
               label={t('manager.rooms.stats.vipRooms')}
               value={stats?.vipRooms ?? 15}
               hint={t('manager.rooms.stats.expandableSubtitle')}
-              icon={<Crown size={22} />}
+              icon={<ReceiptText size={22} />}
               tone="gold"
             />
             <StatCard

@@ -1,4 +1,4 @@
-import { Wallet, Sparkles, Wrench, BedDouble } from 'lucide-react';
+import { Wallet, Sparkles, Wrench, Bed } from 'lucide-react';
 import { useLanguage } from '../../../core/i18n/useLanguage';
 import { Card } from '../../../components/ui/Card';
 import { Timeline, type TimelineItem } from '../../../components/common/Timeline';
@@ -21,7 +21,7 @@ function renderActivityIcon(type: RecentActivityItem['type']) {
       return <Wrench size={16} aria-hidden="true" />;
     case 'checkin':
     default:
-      return <BedDouble size={16} aria-hidden="true" />;
+      return <Bed size={16} aria-hidden="true" />;
   }
 }
 

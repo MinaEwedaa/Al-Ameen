@@ -1,4 +1,4 @@
-import { BedDouble } from 'lucide-react';
+import { Bed } from 'lucide-react';
 import { Drawer } from '../../../components/ui/Drawer';
 import { Button } from '../../../components/ui/Button';
 import { Timeline, type TimelineItem } from '../../../components/common/Timeline';
@@ -108,7 +108,7 @@ export function RoomReviewDrawer({ room, open, onClose }: RoomReviewDrawerProps)
             <span className="room-drawer__summary-price">{priceText}</span>
           </div>
           <div className="room-drawer__summary-icon" aria-hidden="true">
-            <BedDouble size={24} />
+            <Bed size={24} />
           </div>
         </div>
 

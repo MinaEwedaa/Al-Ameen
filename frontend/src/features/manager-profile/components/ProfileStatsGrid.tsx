@@ -1,5 +1,5 @@
 import React from 'react';
-import { User, BedDouble, FileText, CheckCircle2 } from 'lucide-react';
+import { User, Bed, FileText, Check } from 'lucide-react';
 import type { ManagerKPIs } from '../types/manager-profile.types';
 import { useLanguage } from '../../../core/i18n/useLanguage';
 import { formatNumber } from '../../../utils/format';
@@ -26,7 +26,7 @@ export function ProfileStatsGrid({ kpis }: ProfileStatsGridProps): React.ReactEl
       label: t('manager.profile.stats.rooms'),
       value: formatNumber(kpis.managedRooms, language),
       sublabel: t('manager.profile.stats.roomsHint'),
-      icon: BedDouble,
+      icon: Bed,
       tone: 'green',
     },
     {
@@ -42,7 +42,7 @@ export function ProfileStatsGrid({ kpis }: ProfileStatsGridProps): React.ReactEl
       label: t('manager.profile.stats.tasks'),
       value: formatNumber(kpis.managementTasks, language),
       sublabel: t('manager.profile.stats.tasksHint'),
-      icon: CheckCircle2,
+      icon: Check,
       tone: 'gold',
     },
   ] as const;

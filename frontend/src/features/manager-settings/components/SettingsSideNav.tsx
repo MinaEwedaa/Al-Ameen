@@ -1,14 +1,9 @@
 import React from 'react';
 import {
-  Building2,
+  Bed,
   Clock,
   Bell,
-  Globe,
-  Palette,
-  User,
-  UserCircle,
-  Layers,
-  SlidersHorizontal,
+  Settings,
 } from 'lucide-react';
 import type { SettingsTabId } from '../types/manager-settings.types';
 import { useLanguage } from '../../../core/i18n/useLanguage';
@@ -26,15 +21,15 @@ export function SettingsSideNav({
   const { t } = useLanguage();
 
   const navItems = [
-    { id: 'account', label: t('manager.settings.nav.account'), icon: User, disabled: true },
-    { id: 'profile', label: t('manager.settings.nav.profile'), icon: UserCircle, disabled: true },
-    { id: 'language', label: t('manager.settings.nav.language'), icon: Globe, tabId: 'language' as SettingsTabId },
+    { id: 'account', label: t('manager.settings.nav.account'), icon: Settings, disabled: true },
+    { id: 'profile', label: t('manager.settings.nav.profile'), icon: Settings, disabled: true },
+    { id: 'language', label: t('manager.settings.nav.language'), icon: Settings, tabId: 'language' as SettingsTabId },
     { id: 'notifications', label: t('manager.settings.nav.notifications'), icon: Bell, tabId: 'notifications' as SettingsTabId },
-    { id: 'appearance', label: t('manager.settings.nav.appearance'), icon: Palette, tabId: 'appearance' as SettingsTabId },
-    { id: 'hotel', label: t('manager.settings.nav.hotel'), icon: Building2, tabId: 'hotel' as SettingsTabId },
-    { id: 'roomConfig', label: t('manager.settings.nav.roomConfig'), icon: Layers, disabled: true },
+    { id: 'appearance', label: t('manager.settings.nav.appearance'), icon: Settings, tabId: 'appearance' as SettingsTabId },
+    { id: 'hotel', label: t('manager.settings.nav.hotel'), icon: Settings, tabId: 'hotel' as SettingsTabId },
+    { id: 'roomConfig', label: t('manager.settings.nav.roomConfig'), icon: Bed, disabled: true },
     { id: 'shifts', label: t('manager.settings.nav.shifts'), icon: Clock, tabId: 'shifts' as SettingsTabId },
-    { id: 'systemPreferences', label: t('manager.settings.nav.systemPreferences'), icon: SlidersHorizontal, disabled: true },
+    { id: 'systemPreferences', label: t('manager.settings.nav.systemPreferences'), icon: Settings, disabled: true },
   ];
 
   return (

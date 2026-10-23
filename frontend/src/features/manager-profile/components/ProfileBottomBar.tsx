@@ -1,6 +1,6 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { KeyRound, Bell, LogOut } from 'lucide-react';
+import { Settings, Bell, LogOut } from 'lucide-react';
 import { ROUTES } from '../../../core/constants/routes';
 import { useLanguage } from '../../../core/i18n/useLanguage';
 import { clearAuthSession } from '../../../core/auth/authManager';
@@ -39,7 +39,7 @@ export function ProfileBottomBar({
           className="profile-bottom-bar__btn profile-bottom-bar__btn--secondary"
           onClick={onChangePasswordClick}
         >
-          <KeyRound className="profile-bottom-bar__icon" aria-hidden="true" />
+          <Settings className="profile-bottom-bar__icon" aria-hidden="true" />
           <span>{t('manager.profile.bottomBar.changePassword')}</span>
         </button>
 

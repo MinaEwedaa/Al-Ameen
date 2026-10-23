@@ -1,5 +1,5 @@
 import React from 'react';
-import { Download, SlidersHorizontal, Check } from 'lucide-react';
+import { FileText, Settings, Check } from 'lucide-react';
 import { useLanguage } from '../../../core/i18n/useLanguage';
 import './PasswordRequestsHero.css';
 
@@ -40,7 +40,7 @@ export function PasswordRequestsHero({
           {pendingOnly ? (
             <Check className="pw-hero__btn-icon" aria-hidden="true" />
           ) : (
-            <SlidersHorizontal className="pw-hero__btn-icon" aria-hidden="true" />
+            <Settings className="pw-hero__btn-icon" aria-hidden="true" />
           )}
           <span>{t('manager.passwordRequests.hero.pendingFilter')}</span>
           {pendingCount > 0 && <span className="pw-hero__badge">{pendingCount}</span>}
@@ -51,7 +51,7 @@ export function PasswordRequestsHero({
           className="pw-hero__btn pw-hero__btn--export"
           onClick={onExport}
         >
-          <Download className="pw-hero__btn-icon" aria-hidden="true" />
+          <FileText className="pw-hero__btn-icon" aria-hidden="true" />
           <span>{t('manager.passwordRequests.hero.export')}</span>
         </button>
       </div>

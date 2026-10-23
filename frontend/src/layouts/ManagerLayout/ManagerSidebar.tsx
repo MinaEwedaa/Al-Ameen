@@ -2,16 +2,14 @@ import React from 'react';
 import { NavLink, useLocation, useNavigate } from 'react-router-dom';
 import {
   LayoutGrid,
-  BedDouble,
+  Bed,
   User,
   Sparkles,
   Wrench,
   Wallet,
   FileText,
-  Receipt,
-  KeyRound,
+  ReceiptText,
   ArrowLeftRight,
-  Layers,
   Settings,
   LogOut,
 } from 'lucide-react';
@@ -23,16 +21,16 @@ import './ManagerSidebar.css';
 
 const sidebarItems = [
   { key: 'dashboard', path: ROUTES.managerDashboard, icon: LayoutGrid },
-  { key: 'rooms', path: ROUTES.managerRooms, icon: BedDouble },
+  { key: 'rooms', path: ROUTES.managerRooms, icon: Bed },
   { key: 'employees', path: ROUTES.managerEmployees, icon: User },
   { key: 'housekeeping', path: ROUTES.managerHousekeeping, icon: Sparkles },
   { key: 'maintenance', path: ROUTES.managerMaintenance, icon: Wrench },
   { key: 'finance', path: ROUTES.managerFinance, icon: Wallet },
   { key: 'reports', path: ROUTES.managerReports, icon: FileText },
-  { key: 'refunds', path: ROUTES.managerRefunds, icon: Receipt },
-  { key: 'passwordRequests', path: ROUTES.managerPasswordRequests, icon: KeyRound },
+  { key: 'refunds', path: ROUTES.managerRefunds, icon: Wallet }, // same icon as finance in the design
+  { key: 'passwordRequests', path: ROUTES.managerPasswordRequests, icon: Settings }, // design uses the gear here
   { key: 'shifts', path: ROUTES.managerShifts, icon: ArrowLeftRight },
-  { key: 'roomTypes', path: ROUTES.managerRoomTypes, icon: Layers },
+  { key: 'roomTypes', path: ROUTES.managerRoomTypes, icon: ReceiptText },
   { key: 'profile', path: ROUTES.managerProfile, icon: User },
   { key: 'settings', path: ROUTES.managerSettings, icon: Settings },
 ] as const;

@@ -1,13 +1,12 @@
 import {
-  BedDouble,
-  Users,
+  Bed,
+  User,
   Check,
   Sparkles,
   Wrench,
   FileText,
   Wallet,
   Clock,
-  Download,
 } from 'lucide-react';
 import { PageHero } from '../../../components/common/PageHero';
 import { StatCard } from '../../../components/ui/StatCard';
@@ -96,7 +95,7 @@ export function ManagerDashboardPage() {
         type="button"
         onClick={handleExportStaff}
       >
-        <Download size={18} aria-hidden="true" />
+        <FileText size={18} aria-hidden="true" />
         <span>{t('manager.dashboard.hero.export')}</span>
       </Button>
     </>
@@ -197,14 +196,14 @@ export function ManagerDashboardPage() {
           label={t('manager.dashboard.kpis.totalRooms')}
           value={formatNumber(kpis.totalRooms.value, language)}
           hint={t('manager.dashboard.kpis.floorsSubtitle')}
-          icon={<BedDouble size={20} />}
+          icon={<Bed size={20} />}
           tone="green"
         />
         <StatCard
           label={t('manager.dashboard.kpis.occupiedRooms')}
           value={formatNumber(kpis.occupiedRooms.value, language)}
           hint={t('manager.dashboard.kpis.hotelPercentSubtitle')}
-          icon={<Users size={20} />}
+          icon={<User size={20} />}
           tone="teal"
         />
 
