@@ -32,7 +32,7 @@ const mockResetRequests: ApiPasswordResetRequest[] = [
     id: '6719b4a1f2e8c90012ab3497',
     staff_id: '6719b4a1f2e8c90012ab3410',
     staff_name: 'محمد علي',
-    staff_type: 'MAINTENANCE',
+    staff_type: 'TECHNICIAN',
     reason: 'إعادة تعيين روتينية للحساب',
     status: 'APPROVED',
     created_at: '2026-10-22T09:00:00Z',

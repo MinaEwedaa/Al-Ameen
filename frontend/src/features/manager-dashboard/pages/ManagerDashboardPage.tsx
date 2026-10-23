@@ -73,7 +73,10 @@ export function ManagerDashboardPage() {
   };
 
   const handleSelectShift = (shift: ShiftOverviewItem) => {
-    navigateToManagerRoute(`${MANAGER_NAV_TARGETS.shifts}?id=${shift.id}`);
+    // The shifts page opens its team/details drawer from ?details=<SHIFT_TYPE>
+    navigateToManagerRoute(
+      shift.shiftType ? `${MANAGER_NAV_TARGETS.shifts}?details=${shift.shiftType}` : MANAGER_NAV_TARGETS.shifts,
+    );
   };
 
   const heroActions = (

@@ -15,6 +15,7 @@ const DAYS_TRANSLATION_MAP: Record<string, string> = {
   'السبت': 'Sat',
   'الأحد': 'Sun',
   'الاثنين': 'Mon',
+  'الإثنين': 'Mon',
   'الثلاثاء': 'Tue',
   'الأربعاء': 'Wed',
   'الخميس': 'Thu',

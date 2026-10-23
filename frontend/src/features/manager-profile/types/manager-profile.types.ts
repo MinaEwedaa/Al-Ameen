@@ -73,6 +73,8 @@ export interface ManagerActivityItem {
   title: string;
   description: string;
   time: string;
+  /** Raw ISO time from /auth/me/activities, formatted per language in the timeline */
+  timestamp?: string;
   tone?: 'green' | 'gold' | 'blue';
 }
 

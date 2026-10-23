@@ -4,6 +4,7 @@ import { formatNumber } from '../../../utils/format';
 import { Card } from '../../../components/ui/Card';
 import type { ShiftOverviewItem } from '../types/manager-dashboard.types';
 import './ShiftsOverviewCard.css';
+import { formatCairoClock, translateOr } from '../utils/dashboardLabels';
 
 export interface ShiftsOverviewCardProps {
   shifts: ShiftOverviewItem[];
@@ -75,9 +76,16 @@ export function ShiftsOverviewCard({
                   <Clock size={18} aria-hidden="true" />
                 </div>
                 <div className="shifts-overview-card__shift-meta">
-                  <span className="shifts-overview-card__shift-name">{shift.name}</span>
+                  <span className="shifts-overview-card__shift-name">
+                    {shift.shiftType
+                      ? translateOr(t, `manager.dashboard.shiftNames.${shift.shiftType}`, shift.name)
+                      : shift.name}
+                  </span>
                   <span className="shifts-overview-card__shift-sub">
-                    {shift.timeRange} · {shift.staffName}
+                    {shift.startIso && shift.endIso
+                      ? `${formatCairoClock(shift.startIso, language)} - ${formatCairoClock(shift.endIso, language)}`
+                      : shift.timeRange}{' '}
+                    · <bdi>{shift.staffName}</bdi>
                   </span>
                 </div>
               </div>

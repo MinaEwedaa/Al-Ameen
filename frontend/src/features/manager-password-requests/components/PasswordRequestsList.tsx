@@ -3,6 +3,7 @@ import { ChevronLeft, ChevronRight, Inbox } from 'lucide-react';
 import type { PasswordRequest } from '../types/password-request.types';
 import { Avatar } from '../../../components/ui/Avatar';
 import { useLanguage } from '../../../core/i18n/useLanguage';
+import { formatRequestDate, translateOr } from '../utils/requestLabels';
 import './PasswordRequestsList.css';
 
 interface PasswordRequestsListProps {
@@ -32,15 +33,10 @@ export function PasswordRequestsList({
       {requests.map((item) => {
         const isSelected = item.id === selectedId;
 
-        const roleLabel =
-          item.role === 'ريسبشنيست' || item.role === 'receptionist'
-            ? t('manager.passwordRequests.roles.receptionist')
-            : item.role === 'فني صيانة' || item.role === 'maintenance'
-              ? t('manager.passwordRequests.roles.maintenance')
-              : item.role;
+        const roleLabel = translateOr(t, `manager.passwordRequests.roles.${item.role}`, item.role);
 
-        const employeeName =
-          t(`manager.passwordRequests.employees.${item.id}`) || item.employeeName;
+        // Names are data: shown as stored, never translated
+        const employeeName = item.employeeName;
 
         return (
           <div
@@ -66,7 +62,7 @@ export function PasswordRequestsList({
               <div className="pw-card__info">
                 <span className="pw-card__role">{roleLabel}</span>
                 <strong className="pw-card__name">{employeeName}</strong>
-                <span className="pw-card__date">{item.createdAt}</span>
+                <span className="pw-card__date">{formatRequestDate(item.createdAt, language)}</span>
               </div>
             </div>
 

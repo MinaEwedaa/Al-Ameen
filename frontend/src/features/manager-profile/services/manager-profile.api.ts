@@ -72,6 +72,7 @@ function mapApiActivityToItem(act: ApiMeActivity): ManagerActivityItem {
     title,
     description: act.description,
     time: timeStr,
+    timestamp: act.created_at,
     tone,
   };
 }

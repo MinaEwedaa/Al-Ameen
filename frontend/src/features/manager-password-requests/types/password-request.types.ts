@@ -9,7 +9,8 @@ export interface ApiPasswordResetRequest {
   id: string;
   staff_id: string;
   staff_name: string;
-  staff_type: 'RECEPTIONIST' | 'HOUSEKEEPING' | 'MAINTENANCE' | string;
+  // Contract v1.2 Staff.staff_type
+  staff_type: 'MANAGER' | 'RECEPTIONIST' | 'HOUSEKEEPER' | 'TECHNICIAN' | 'ADMIN' | string;
   reason: string;
   status: ApiPasswordResetStatus;
   created_at: string;

@@ -97,7 +97,7 @@ export function mapRoomDtoToManagerRoom(
   // Inferred room_type: check if 'vip' is in string, otherwise default to 'standard'
   // TODO confirm with backend: room_type enum vs string values
   const type: RoomType =
-    (dto.room_type || '').toLowerCase().includes('vip') ? 'vip' : 'standard';
+    (dto.room_type_name ?? dto.room_type ?? '').toLowerCase().includes('vip') ? 'vip' : 'standard';
 
   // Inferred floor: derive from floor field or first digit of room number
   // TODO confirm with backend: floor schema representation
@@ -110,17 +110,17 @@ export function mapRoomDtoToManagerRoom(
   // Inferred rack_rate / price
   // TODO confirm with backend: pricing field name (rack_rate vs price_per_night vs price)
   const price =
-    dto.rack_rate ?? dto.price ?? (type === 'vip' ? 850 : 300);
+    dto.price_per_night ?? dto.rack_rate ?? dto.price ?? (type === 'vip' ? 850 : 300);
 
   // Inferred guest name
   // TODO confirm with backend: guest name property (current_guest vs current_guest_name)
   const guestName =
-    dto.current_guest ?? dto.guest_name ?? undefined;
+    dto.current_guest_name ?? dto.current_guest ?? dto.guest_name ?? undefined;
 
   const log = mapRoomActivitiesDto(activities);
 
   return {
-    id: dto.id || (dto as unknown as { room_id?: string }).room_id || String(dto.room_number),
+    id: dto.room_id || dto.id || String(dto.room_number),
     number: String(dto.room_number || ''),
     floor,
     type,

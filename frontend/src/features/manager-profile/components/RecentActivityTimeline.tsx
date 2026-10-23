@@ -2,6 +2,7 @@ import React from 'react';
 import { Wallet, Sparkles, Wrench, Clock } from 'lucide-react';
 import type { ManagerActivityItem } from '../types/manager-profile.types';
 import { useLanguage } from '../../../core/i18n/useLanguage';
+import { formatActivityTime, translateOr } from '../utils/profileLabels';
 import './RecentActivityTimeline.css';
 
 interface RecentActivityTimelineProps {
@@ -24,7 +25,7 @@ function getActivityIcon(type: ManagerActivityItem['type']) {
 export function RecentActivityTimeline({
   activities,
 }: RecentActivityTimelineProps): React.ReactElement {
-  const { t } = useLanguage();
+  const { language, t } = useLanguage();
 
   return (
     <div className="activity-timeline-card">
@@ -48,10 +49,8 @@ export function RecentActivityTimeline({
             const tone = item.tone || (item.type === 'maintenance' ? 'gold' : 'green');
             const isLast = index === activities.length - 1;
 
-            const itemTitle =
-              t(`manager.profile.activity.items.${item.type}.title`) || item.title;
-            const itemDesc =
-              t(`manager.profile.activity.items.${item.type}.description`) || item.description;
+            const itemTitle = translateOr(t, `manager.profile.activity.items.${item.type}.title`, item.title);
+            const itemDesc = translateOr(t, `manager.profile.activity.items.${item.type}.description`, item.description);
 
             return (
               <li key={item.id} className="activity-timeline__item">
@@ -67,7 +66,9 @@ export function RecentActivityTimeline({
                     <strong className="activity-timeline__item-title">{itemTitle}</strong>
                     <span className="activity-timeline__item-desc">{itemDesc}</span>
                   </div>
-                  <time className="activity-timeline__time">{item.time}</time>
+                  <time className="activity-timeline__time" dateTime={item.timestamp}>
+                    {item.timestamp ? formatActivityTime(item.timestamp, language) : item.time}
+                  </time>
                 </div>
               </li>
             );

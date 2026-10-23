@@ -76,7 +76,7 @@ export function ManagerProfilePage(): React.ReactElement {
           className="manager-profile-page__retry-btn"
           onClick={() => loadData(true)}
         >
-          {t('retry') || 'Retry'}
+          {t('manager.profile.retry')}
         </button>
       </div>
     );

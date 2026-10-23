@@ -26,7 +26,7 @@ export type RoomOccupancyStatusEnum =
 // ===================== 1. GET /rooms?page=1&limit=100 =====================
 
 export interface RoomDto {
-  id: string; // TODO confirm with backend (id vs room_id)
+  id?: string; // TODO confirm with backend (id vs room_id)
   room_number: string; // TODO confirm with backend
   floor?: number | null; // TODO confirm with backend
   room_type?: string; // TODO confirm with backend (standard / vip / single / double)
@@ -36,6 +36,12 @@ export interface RoomDto {
   price?: number; // TODO confirm with backend fallback
   current_guest?: string | null; // TODO confirm with backend (current_guest vs current_guest_name)
   guest_name?: string | null; // TODO confirm with backend fallback
+  // Contract field names (v1.1 §10.2 example, v1.2 §11.2); read first by the mapper
+  room_id?: string;
+  room_type_id?: string;
+  room_type_name?: string;
+  price_per_night?: number;
+  current_guest_name?: string | null;
 }
 
 export interface ManagerListMeta {

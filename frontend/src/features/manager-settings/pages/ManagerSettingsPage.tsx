@@ -157,7 +157,7 @@ export function ManagerSettingsPage(): React.ReactElement {
           className="manager-settings-page__retry-btn"
           onClick={loadSettings}
         >
-          {t('retry') || 'Retry'}
+          {t('manager.settings.retry')}
         </button>
       </div>
     );

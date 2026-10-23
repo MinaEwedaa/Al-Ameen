@@ -97,6 +97,10 @@ export type ShiftStatus = 'active' | 'upcoming' | 'completed';
 
 export interface ShiftOverviewItem {
   id: string;
+  /** Contract enum, so the card can translate the name and format the times per language */
+  shiftType?: 'MORNING' | 'EVENING' | 'NIGHT';
+  startIso?: string;
+  endIso?: string;
   name: string;
   timeRange: string;
   staffName: string;
@@ -113,6 +117,8 @@ export interface RecentActivityItem {
   title: string;
   description: string;
   time: string;
+  /** Raw ISO time, so the card can show a relative time in the current language */
+  timestamp?: string;
   icon: string;
   tone: 'teal' | 'gold' | 'amber' | 'primary';
   // TODO: confirm with backend - activity log pagination and real-time event types
@@ -126,6 +132,9 @@ export interface StaffActivityItem {
   avatarLetter: string;
   role: string;
   shift: string;
+  /** Contract enums, so the table can translate role and shift */
+  roleType?: string;
+  shiftType?: string;
   completedTasks: number | null;
   pendingTasks: number;
   status: StaffMemberStatus;

@@ -4,6 +4,7 @@ import { Card } from '../../../components/ui/Card';
 import { Timeline, type TimelineItem } from '../../../components/common/Timeline';
 import type { RecentActivityItem } from '../types/manager-dashboard.types';
 import './LatestActivitiesCard.css';
+import { formatRelative } from '../utils/dashboardLabels';
 
 export interface LatestActivitiesCardProps {
   activities: RecentActivityItem[];
@@ -25,7 +26,7 @@ function renderActivityIcon(type: RecentActivityItem['type']) {
 }
 
 export function LatestActivitiesCard({ activities, className = '' }: LatestActivitiesCardProps) {
-  const { t } = useLanguage();
+  const { language, t } = useLanguage();
 
   const activityMap = new Map<string, RecentActivityItem>(
     activities.map((act) => [act.id, act]),
@@ -35,7 +36,7 @@ export function LatestActivitiesCard({ activities, className = '' }: LatestActiv
     id: act.id,
     title: act.title,
     description: act.description,
-    time: act.time,
+    time: (act.timestamp && formatRelative(act.timestamp, language)) || act.time,
   }));
 
   return (

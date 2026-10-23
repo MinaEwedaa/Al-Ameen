@@ -1323,7 +1323,24 @@
       "exportDownloaded": "Staff activity exported successfully",
       "exportError": "Unable to export data",
       "emptyTitle": "No Data Available",
-      "emptyDescription": "Could not find dashboard summary at this time"
+      "emptyDescription": "Could not find dashboard summary at this time",
+      "shiftNames": {
+        "MORNING": "Morning shift",
+        "EVENING": "Evening shift",
+        "NIGHT": "Night shift"
+      },
+      "shiftShort": {
+        "MORNING": "Morning",
+        "EVENING": "Evening",
+        "NIGHT": "Night"
+      },
+      "roles": {
+        "MANAGER": "Manager",
+        "RECEPTIONIST": "Reception",
+        "HOUSEKEEPER": "Housekeeping",
+        "TECHNICIAN": "Maintenance",
+        "ADMIN": "Admin"
+      }
     },
     "rooms": {
       "hero": {
@@ -1778,7 +1795,12 @@
       },
       "roles": {
         "receptionist": "Receptionist",
-        "maintenance": "Maintenance Tech"
+        "maintenance": "Maintenance Tech",
+        "MANAGER": "Manager",
+        "RECEPTIONIST": "Receptionist",
+        "HOUSEKEEPER": "Housekeeper",
+        "TECHNICIAN": "Maintenance Tech",
+        "ADMIN": "System Admin"
       },
       "employees": {
         "pr-1": "Receptionist A",
@@ -1995,7 +2017,8 @@
         "updateError": "Failed to update profile, please try again",
         "passwordSuccess": "Password changed successfully",
         "passwordError": "Failed to change password, please check your input"
-      }
+      },
+      "retry": "Retry"
     },
     "settings": {
       "hero": {
@@ -2060,7 +2083,8 @@
         "arabic": "العربية",
         "english": "English"
       },
-      "unsavedWarning": "You have unsaved changes in settings. Are you sure you want to leave?"
+      "unsavedWarning": "You have unsaved changes in settings. Are you sure you want to leave?",
+      "retry": "Retry"
     }
   }
 }

@@ -4,6 +4,7 @@ import type { PasswordRequest } from '../types/password-request.types';
 import { Drawer } from '../../../components/ui/Drawer';
 import { ConfirmDialog } from '../../../components/common/ConfirmDialog';
 import { useLanguage } from '../../../core/i18n/useLanguage';
+import { formatRequestDate, translateOr } from '../utils/requestLabels';
 import { useToast } from '../../../components/ui/ToastContext';
 import { generateTemporaryPassword } from '../utils/passwordGenerator';
 import { approvePasswordRequest, rejectPasswordRequest } from '../services/password-requests.api';
@@ -22,7 +23,7 @@ export function PasswordRequestDrawer({
   onClose,
   onUpdated,
 }: PasswordRequestDrawerProps): React.ReactElement | null {
-  const { t } = useLanguage();
+  const { language, t } = useLanguage();
   const { showToast } = useToast();
 
   const [tempPassword, setTempPassword] = useState('');
@@ -89,18 +90,12 @@ export function PasswordRequestDrawer({
 
   const isResolved = request.status === 'approved' || request.status === 'rejected';
 
-  const roleLabel =
-    request.role === 'ريسبشنيست' || request.role === 'receptionist'
-      ? t('manager.passwordRequests.roles.receptionist')
-      : request.role === 'فني صيانة' || request.role === 'maintenance'
-        ? t('manager.passwordRequests.roles.maintenance')
-        : request.role;
+  const roleLabel = translateOr(t, `manager.passwordRequests.roles.${request.role}`, request.role);
 
-  const employeeName =
-    t(`manager.passwordRequests.employees.${request.id}`) || request.employeeName;
+  // Names are data: shown as stored, never translated
+  const employeeName = request.employeeName;
 
-  const reason =
-    t(`manager.passwordRequests.reasons.${request.id}`) || request.reason;
+  const reason = request.reason;
 
   return (
     <>
@@ -158,7 +153,7 @@ export function PasswordRequestDrawer({
 
           <div className="pw-drawer__field">
             <span className="pw-drawer__label">{t('manager.passwordRequests.drawer.date')}</span>
-            <div className="pw-drawer__box">{request.createdAt}</div>
+            <div className="pw-drawer__box">{formatRequestDate(request.createdAt, language)}</div>
           </div>
 
           <div className="pw-drawer__field pw-drawer__field--full">

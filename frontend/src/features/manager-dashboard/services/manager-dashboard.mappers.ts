@@ -187,7 +187,36 @@ function mapPaymentMethod(
  * Note: Contract v1.2 does not guarantee week/month/year totals.
  * Fallbacks are documented as TODO confirm with backend.
  */
+/** YYYY-MM-DD -> Arabic weekday ("الإثنين"); the revenue card maps it to English when needed */
+function weekdayLabel(businessDate: string): string {
+  const date = new Date(`${businessDate}T12:00:00Z`);
+  if (!Number.isFinite(date.getTime())) return businessDate;
+  return new Intl.DateTimeFormat('ar-EG', { weekday: 'long', timeZone: 'UTC' }).format(date);
+}
+
 export function mapDashboardRevenueDto(dto: DashboardRevenueDto): RevenueOverview {
+  // Contract shape first (totals / series / by_method), earlier names as a fallback
+  if (dto.series || dto.totals || dto.by_method) {
+    const series = dto.series ?? [];
+    const points = series.map((p) => p.net_revenue);
+    const labels = series.map((p) => weekdayLabel(p.business_date));
+    const today = dto.totals?.today ?? points[points.length - 1] ?? 0;
+    return {
+      today,
+      week: dto.totals?.week ?? points.reduce((acc, curr) => acc + curr, 0),
+      month: dto.totals?.month ?? 0,
+      year: dto.totals?.year ?? 0,
+      changePercent: dto.change_pct_vs_previous_day ?? 0,
+      paymentMethods: (dto.by_method ?? []).map((pm) => mapPaymentMethod(pm.method, pm.share_pct, pm.amount)),
+      chartSeries: {
+        points,
+        labels,
+        data: series.map((p, index) => ({ day: labels[index], value: p.net_revenue })),
+      },
+    };
+  }
+
+  const todayRevenue = dto.today_revenue ?? 0;
   const chartPoints = (dto.chart_series || []).map((p) => p.revenue);
   const chartLabels = (dto.chart_series || []).map(
     (p) => p.day_label || p.date || ''
@@ -198,21 +227,21 @@ export function mapDashboardRevenueDto(dto: DashboardRevenueDto): RevenueOvervie
     dto.week_total ??
     (chartPoints.length > 0
       ? chartPoints.reduce((acc, curr) => acc + curr, 0)
-      : dto.today_revenue * 7);
+      : todayRevenue * 7);
 
-  const computedMonthTotal = dto.month_total ?? dto.today_revenue * 27.5;
-  const computedYearTotal = dto.year_total ?? dto.today_revenue * 300;
+  const computedMonthTotal = dto.month_total ?? todayRevenue * 27.5;
+  const computedYearTotal = dto.year_total ?? todayRevenue * 300;
 
   const paymentMethods: PaymentMethodBreakdown[] = (dto.payment_methods || []).map(
     (pm) => mapPaymentMethod(pm.method, pm.percentage, pm.amount)
   );
 
   return {
-    today: dto.today_revenue,
+    today: todayRevenue,
     week: computedWeekTotal,
     month: computedMonthTotal,
     year: computedYearTotal,
-    changePercent: dto.comparison_percentage,
+    changePercent: dto.comparison_percentage ?? 0,
     paymentMethods,
     chartSeries: {
       points: chartPoints,
@@ -249,27 +278,30 @@ function formatIsoOrRelativeTime(timestamp: string): string {
  */
 export function mapDashboardIssuesDto(dtos: DashboardIssueDto[]): CriticalIssueItem[] {
   return (dtos || []).map((issue) => {
-    const isCritical = issue.priority === 'critical';
-    const isHigh = issue.priority === 'high';
+    // Contract: severity CRITICAL | HIGH | RUSH | ...; earlier mocks: priority critical | high | ...
+    const level = (issue.severity ?? issue.priority ?? '').toLowerCase();
+    const isCritical = level === 'critical';
+    const isHigh = level === 'high' || level === 'rush';
+    const issueType = (issue.type ?? issue.issue_type ?? 'system').toLowerCase() as NonNullable<DashboardIssueDto['issue_type']>;
     const severity = isCritical ? 'critical' : isHigh ? 'high' : 'medium';
     const severityLabel = isCritical ? 'عاجل' : isHigh ? 'مرتفع' : 'متابعة';
 
     const icon =
-      issue.issue_type === 'housekeeping'
+      issueType === 'housekeeping'
         ? 'sparkles'
-        : issue.issue_type === 'maintenance'
+        : issueType === 'maintenance'
         ? 'wrench'
         : 'file';
 
     return {
-      id: issue.id,
+      id: issue.issue_id ?? issue.id ?? issue.title,
       title: issue.title,
       roomNumber: issue.room_number ?? '',
-      issueType: issue.issue_type,
+      issueType,
       severity,
       severityLabel,
       icon,
-      createdAt: formatIsoOrRelativeTime(issue.reported_at),
+      createdAt: formatIsoOrRelativeTime(issue.created_at ?? issue.reported_at ?? ''),
     };
   });
 }
@@ -307,6 +339,7 @@ export function mapHotelActivitiesDto(dtos: HotelActivityDto[]): RecentActivityI
       title: activity.title,
       description: activity.description,
       time: formatIsoOrRelativeTime(activity.timestamp),
+      timestamp: activity.timestamp,
       icon,
       tone,
     };
@@ -344,6 +377,9 @@ export function mapShiftsOverviewDto(dtos: ShiftOverviewDto[]): ShiftOverviewIte
 
     return {
       id: shift.shift_id ?? shift.shift_type,
+      shiftType: shift.shift_type,
+      startIso: shift.start_time,
+      endIso: shift.end_time,
       name: shiftName,
       timeRange: `${formatShiftClock(shift.start_time)} - ${formatShiftClock(shift.end_time)}`,
       staffName: shift.staff?.full_name ?? '—',
@@ -400,6 +436,8 @@ export function mapStaffMembersDto(dtos: StaffMemberDto[]): StaffActivityOvervie
       avatarLetter: staff.full_name.trim().charAt(0) || 'م',
       role: roleLabel,
       shift: shiftName,
+      roleType: staff.staff_type,
+      shiftType: staff.today_shift?.shift_type,
       completedTasks: staff.workload?.completed_today ?? null,
       pendingTasks: staff.workload?.open ?? 0,
       status,

@@ -61,10 +61,16 @@ export interface DailyRevenuePointDto {
 }
 
 export interface DashboardRevenueDto {
-  today_revenue: number; // TODO confirm with backend
-  comparison_percentage: number; // e.g. 12.4 // TODO confirm with backend
-  payment_methods: PaymentMethodShareDto[]; // Confirmed payment method enum
-  chart_series: DailyRevenuePointDto[]; // TODO confirm with backend
+  // Contract field names (v1.1 §4 GET /dashboard/revenue example); read first by the mapper
+  totals?: { today: number; week: number; month: number; year: number };
+  change_pct_vs_previous_day?: number;
+  series?: Array<{ business_date: string; net_revenue: number }>;
+  by_method?: Array<{ method: PaymentMethodEnum; amount: number; share_pct: number }>;
+  // Earlier field names, kept as a fallback for the mocks
+  today_revenue?: number; // TODO confirm with backend
+  comparison_percentage?: number; // e.g. 12.4 // TODO confirm with backend
+  payment_methods?: PaymentMethodShareDto[]; // Confirmed payment method enum
+  chart_series?: DailyRevenuePointDto[]; // TODO confirm with backend
   // The contract does not guarantee week/month/year totals.
   // TODO confirm with backend: week_total, month_total, year_total not guaranteed in v1.2
   week_total?: number;
@@ -75,11 +81,17 @@ export interface DashboardRevenueDto {
 // ===================== 3. GET /dashboard/issues?limit=4 =====================
 
 export interface DashboardIssueDto {
-  id: string; // TODO confirm with backend
+  // Contract field names (v1.1 §4 GET /dashboard/issues example); read first by the mapper
+  issue_id?: string;
+  type?: 'MAINTENANCE' | 'HOUSEKEEPING' | 'COMPLAINT' | 'SYSTEM' | string;
+  severity?: 'CRITICAL' | 'HIGH' | 'RUSH' | 'MEDIUM' | 'LOW' | string;
+  created_at?: string;
+  // Earlier field names, kept as a fallback for the mocks
+  id?: string; // TODO confirm with backend
   title: string; // TODO confirm with backend
-  issue_type: 'maintenance' | 'housekeeping' | 'complaint' | 'system'; // TODO confirm with backend
-  priority: 'critical' | 'high' | 'medium' | 'low'; // TODO confirm with backend
-  reported_at: string; // TODO confirm with backend
+  issue_type?: 'maintenance' | 'housekeeping' | 'complaint' | 'system'; // TODO confirm with backend
+  priority?: 'critical' | 'high' | 'medium' | 'low'; // TODO confirm with backend
+  reported_at?: string; // TODO confirm with backend
   room_number?: string; // TODO confirm with backend
   description?: string; // TODO confirm with backend
 }

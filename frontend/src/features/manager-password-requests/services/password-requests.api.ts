@@ -12,20 +12,12 @@ import type {
 export function mapApiToPasswordRequest(api: ApiPasswordResetRequest): PasswordRequest {
   const normalizedStatus = String(api.status).toLowerCase() as PasswordRequest['status'];
 
-  let roleTitle = api.staff_type;
-  if (api.staff_type === 'RECEPTIONIST') {
-    roleTitle = 'موظف استقبال';
-  } else if (api.staff_type === 'MAINTENANCE') {
-    roleTitle = 'فني صيانة';
-  } else if (api.staff_type === 'HOUSEKEEPING') {
-    roleTitle = 'موظف نظافة';
-  }
-
   return {
     id: api.id,
     employeeId: api.staff_id,
     employeeName: api.staff_name,
-    role: roleTitle,
+    // Contract enum; the components translate it (manager.passwordRequests.roles.<STAFF_TYPE>)
+    role: api.staff_type,
     username: api.staff_name.toLowerCase().replace(/\s+/g, '.'),
     createdAt: api.created_at,
     status: normalizedStatus,
