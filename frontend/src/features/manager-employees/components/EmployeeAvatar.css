@@ -1,0 +1,24 @@
+.employee-avatar {
+  display: inline-grid;
+  flex-shrink: 0;
+  place-items: center;
+  color: var(--color-surface);
+  font-weight: var(--font-weight-bold);
+  line-height: 1;
+}
+
+.employee-avatar--sm {
+  width: 2.25rem;
+  aspect-ratio: 1;
+  border-radius: var(--radius-sm);
+  background: color-mix(in srgb, var(--color-primary) 50%, var(--color-surface));
+  font-size: var(--font-size-sm);
+}
+
+.employee-avatar--lg {
+  width: 3.5rem;
+  aspect-ratio: 1;
+  border-radius: var(--radius-card);
+  background: var(--color-primary);
+  font-size: var(--font-size-lg);
+}

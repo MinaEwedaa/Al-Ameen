@@ -5,6 +5,7 @@ import { managerAuthHandlers } from './managerAuth';
 import { managerPasswordRequestsHandlers } from './managerPasswordRequests';
 import { managerProfileHandlers } from './managerProfile';
 import { managerSettingsHandlers } from './managerSettings';
+import { managerTeamHandlers } from './managerTeam.handlers';
 import type { RoomStatus } from '../../types/common.types';
 
 // شكل الغرفة كما يرجعه الـ API (معرّف هنا عشان الـ mocks ماتعتمدش على types الـ features)
@@ -668,6 +669,7 @@ export const handlers = [
   ...managerPasswordRequestsHandlers,
   ...managerProfileHandlers,
   ...managerSettingsHandlers,
+  ...managerTeamHandlers,
   ...writeHandlers,
 
   // Development-only mock login. Not real authentication.

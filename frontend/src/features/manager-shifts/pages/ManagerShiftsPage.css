@@ -1,0 +1,8 @@
+.manager-shifts {
+  min-width: 0;
+}
+
+.manager-shifts__cards {
+  display: grid;
+  gap: var(--space-4);
+}

@@ -1,0 +1,24 @@
+.manager-employees {
+  min-width: 0;
+}
+
+/* 7 cards: 4 on the first row, 3 on the second, starting from the start side as in the design */
+.manager-employees__stats {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+/* Icon colors sampled from the design: green icons use the brand green, gold ones the darker gold ink */
+.manager-employees__stats .ui-stat-card--green .ui-stat-card__icon { color: var(--color-primary); }
+.manager-employees__stats .ui-stat-card--gold .ui-stat-card__icon { color: var(--color-gold-ink); }
+.manager-employees__stats .manager-employees__stat--pending .ui-stat-card__icon {
+  color: var(--color-amber-ink);
+  background: var(--color-gold-softer);
+}
+
+@media (max-width: 72rem) {
+  .manager-employees__stats { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+
+@media (max-width: 36rem) {
+  .manager-employees__stats { grid-template-columns: 1fr; }
+}

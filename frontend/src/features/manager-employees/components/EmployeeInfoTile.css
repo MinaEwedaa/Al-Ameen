@@ -1,0 +1,22 @@
+.employee-info-tile {
+  display: grid;
+  align-content: start;
+  gap: var(--space-2);
+  min-width: 0;
+  padding: var(--space-4) var(--space-5);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-card);
+  background: var(--color-surface);
+}
+
+.employee-info-tile__label {
+  color: var(--color-text-muted);
+  font-size: var(--font-size-xs);
+}
+
+.employee-info-tile__value {
+  overflow-wrap: anywhere;
+  color: var(--color-ink);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-semibold);
+}

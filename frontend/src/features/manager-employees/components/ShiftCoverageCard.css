@@ -1,0 +1,118 @@
+.shift-coverage {
+  display: grid;
+  gap: var(--space-5);
+  padding: var(--space-6);
+  border-radius: var(--radius-panel);
+}
+
+.shift-coverage__header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--space-4);
+}
+
+.shift-coverage__header h2 {
+  margin: 0;
+  color: var(--color-ink);
+  font-size: var(--font-size-lg);
+}
+
+.shift-coverage__header p {
+  margin: var(--space-1) 0 0;
+  color: var(--color-text-muted);
+  font-size: var(--font-size-sm);
+}
+
+.shift-coverage__manage.ui-button {
+  min-height: 2.75rem;
+  border-radius: var(--radius-card);
+}
+
+.shift-coverage__grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: var(--space-4);
+}
+
+.shift-coverage__column {
+  display: grid;
+  align-content: start;
+  gap: var(--space-3);
+  padding: var(--space-4);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-card);
+  background: var(--color-surface-muted);
+}
+
+.shift-coverage__column--active {
+  border-color: color-mix(in srgb, var(--color-primary) 30%, var(--color-border));
+  background: var(--color-surface);
+}
+
+.shift-coverage__head {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  min-width: 0;
+}
+
+.shift-coverage__icon {
+  display: grid;
+  flex-shrink: 0;
+  place-items: center;
+  color: var(--color-ink);
+}
+
+.shift-coverage__icon svg { width: 1.35rem; height: 1.35rem; }
+
+.shift-coverage__name {
+  display: grid;
+  gap: 0.125rem;
+  min-width: 0;
+}
+
+.shift-coverage__name strong { color: var(--color-ink); font-size: var(--font-size-base); }
+
+.shift-coverage__name span,
+.shift-coverage__lead {
+  color: var(--color-text-muted);
+  font-size: var(--font-size-xs);
+}
+
+.shift-coverage__lead {
+  margin-inline-start: auto;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.shift-coverage__status.badge {
+  justify-content: center;
+  width: 100%;
+  padding-block: var(--space-2);
+}
+
+.shift-coverage__meta {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: var(--space-2);
+  margin: 0;
+  color: var(--color-text-muted);
+  font-size: var(--font-size-xs);
+}
+
+.shift-coverage__vacancy {
+  color: var(--color-danger);
+  font-weight: var(--font-weight-semibold);
+}
+
+@media (max-width: 60rem) {
+  .shift-coverage__grid { grid-template-columns: 1fr; }
+}
+
+@media (max-width: 36rem) {
+  .shift-coverage { padding: var(--space-4); }
+  .shift-coverage__header { flex-direction: column; }
+}

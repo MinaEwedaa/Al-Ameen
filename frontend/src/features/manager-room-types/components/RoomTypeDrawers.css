@@ -1,0 +1,170 @@
+.room-type-drawer__footer {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.4fr);
+  gap: var(--space-3);
+  width: 100%;
+}
+
+.room-type-drawer__footer .ui-button {
+  min-height: 3.25rem;
+  border-radius: var(--radius-card);
+}
+
+.room-type-form {
+  display: grid;
+  gap: var(--space-5);
+}
+
+.room-type-form__section {
+  display: grid;
+  gap: var(--space-3);
+  padding: var(--space-5);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-panel);
+  background: var(--color-surface);
+}
+
+.room-type-form__section--vip { background: linear-gradient(to bottom, var(--color-surface), var(--color-gold-soft)); }
+
+.room-type-form__section h3 {
+  margin: 0;
+  color: var(--color-ink);
+  font-size: var(--font-size-md);
+}
+
+.room-type-form__hint {
+  margin: 0;
+  color: var(--color-text-muted);
+  font-size: var(--font-size-sm);
+  line-height: 1.7;
+}
+
+.room-type-form__stats {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: var(--space-3);
+}
+
+.room-type-form__row {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  align-items: start;
+  gap: var(--space-4);
+}
+
+.room-type-form__field {
+  display: grid;
+  gap: var(--space-2);
+  min-width: 0;
+}
+
+.room-type-form__field > span:first-child {
+  color: var(--color-text-muted);
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-medium);
+}
+
+.room-type-form__field input,
+.room-type-form__field textarea {
+  width: 100%;
+  min-height: 3.25rem;
+  padding: var(--space-3) var(--space-4);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-card);
+  color: var(--color-ink);
+  background: var(--color-surface);
+  font: inherit;
+  font-size: var(--font-size-sm);
+  outline: none;
+}
+
+.room-type-form__field textarea { min-height: 5.5rem; line-height: 1.7; resize: vertical; }
+
+.room-type-form__field input:focus-visible,
+.room-type-form__field textarea:focus-visible {
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 3px var(--color-primary-soft);
+}
+
+.room-type-form__field input::placeholder { color: var(--color-text-muted); }
+.room-type-form__field input:disabled { opacity: 0.6; }
+.room-type-form__field .room-type-form__control--error { border-color: var(--color-danger); }
+
+.room-type-form__money {
+  position: relative;
+  display: block;
+}
+
+.room-type-form__money input { padding-inline-end: 5.5rem; }
+
+.room-type-form__money small {
+  position: absolute;
+  inset-block: 0;
+  inset-inline-end: var(--space-4);
+  display: flex;
+  align-items: center;
+  color: var(--color-text-muted);
+  font-size: var(--font-size-xs);
+  pointer-events: none;
+}
+
+.room-type-form__error {
+  color: var(--color-danger);
+  font-size: var(--font-size-xs);
+}
+
+.room-type-form__chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.room-type-form__chips li {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  padding-block: var(--space-1);
+  padding-inline: var(--space-4) var(--space-1);
+  border-radius: var(--radius-pill);
+  color: var(--color-primary-dark);
+  background: var(--color-primary-soft);
+  font-size: var(--font-size-xs);
+}
+
+.room-type-form__chips button {
+  display: grid;
+  width: 1.75rem;
+  aspect-ratio: 1;
+  place-items: center;
+  border: 0;
+  border-radius: var(--radius-pill);
+  color: var(--color-primary-dark);
+  background: transparent;
+  cursor: pointer;
+}
+
+.room-type-form__chips button:hover:not(:disabled) { color: var(--color-danger); background: var(--color-danger-soft); }
+.room-type-form__chips svg { width: 0.9rem; height: 0.9rem; }
+
+.room-type-form__add {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: start;
+  gap: var(--space-3);
+}
+
+.room-type-form__add .ui-button {
+  margin-block-start: 1.6rem;
+  min-height: 3.25rem;
+  border-radius: var(--radius-card);
+}
+
+.room-type-form__add .ui-button svg { width: 1rem; height: 1rem; }
+
+@media (max-width: 30rem) {
+  .room-type-form__row,
+  .room-type-form__stats { grid-template-columns: 1fr; }
+}
