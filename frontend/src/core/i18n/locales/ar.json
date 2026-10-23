@@ -1210,8 +1210,190 @@
         "description": "هذه الصفحة قيد التطوير وستكون متاحة قريبًا ضمن مساحة عمل الإدارة."
       }
     },
-    "dashboard": {},
-    "rooms": {},
+    "dashboard": {
+      "hero": {
+        "eyebrow": "مركز الإدارة",
+        "title": "لوحة تحكم المدير",
+        "description": "نظرة شاملة على تشغيل الفندق والإشغال والإيرادات ونشاط الموظفين والأداء الحالي.",
+        "export": "تصدير",
+        "createReport": "إنشاء تقرير"
+      },
+      "kpis": {
+        "totalRooms": "إجمالي الغرف",
+        "floorsSubtitle": "3 طوابق",
+        "occupiedRooms": "غرف مشغولة",
+        "hotelPercentSubtitle": "64% من الفندق",
+        "availableRooms": "غرف متاحة",
+        "readyForBooking": "جاهزة للحجز",
+        "underCleaning": "قيد التنظيف",
+        "priorityRooms": "غرفتان بأولوية",
+        "underMaintenance": "تحت الصيانة",
+        "criticalReport": "بلاغ حرج واحد",
+        "occupancyRate": "نسبة الإشغال",
+        "fromCurrentStock": "محسوبة من المخزون الحالي",
+        "todayRevenue": "إيراد اليوم",
+        "vsYesterday": "+12.4% عن الأمس",
+        "pendingTasks": "مهام معلقة",
+        "acrossDepartments": "عبر 3 أقسام"
+      },
+      "loading": "جاري تحميل لوحة تحكم المدير...",
+      "errorTitle": "تعذر تحميل لوحة تحكم المدير",
+      "retry": "إعادة المحاولة",
+      "revenueCard": {
+        "title": "نظرة على الإيرادات",
+        "subtitle": "أداء آخر سبعة أيام",
+        "changeBadge": "+12.4%",
+        "today": "اليوم",
+        "week": "الأسبوع",
+        "month": "الشهر",
+        "year": "العام",
+        "todayVal": "٢٤٫٨ ألف",
+        "weekVal": "١٦٨ ألف",
+        "monthVal": "٦٨٤ ألف",
+        "yearVal": "٧٫٨ مليون",
+        "cash": "نقدي",
+        "instapay": "إنستاباي",
+        "vodafoneCash": "فودافون كاش",
+        "chartAriaLabel": "مخطط أداء الإيرادات لآخر سبعة أيام"
+      },
+      "roomsOverviewCard": {
+        "title": "نظرة على الغرف",
+        "subtitle": "الحالة الحالية لجميع غرف الفندق",
+        "badge": "36 غرفة · 3 طوابق",
+        "standard": "عادية",
+        "vip": "VIP",
+        "occupancy": "الإشغال",
+        "occupied": "مشغولة",
+        "available": "متاحة",
+        "reserved": "محجوزة",
+        "cleaning": "تنظيف",
+        "maintenance": "صيانة",
+        "floor1": "الطابق الأول · 7 عادية / 5 VIP",
+        "floor2": "الطابق الثاني · 7 عادية / 5 VIP",
+        "floor3": "الطابق الثالث · 7 عادية / 5 VIP"
+      },
+      "criticalIssuesCard": {
+        "title": "قضايا مهمة",
+        "subtitle": "عناصر تتطلب متابعة الإدارة",
+        "countBadge": "{count} عناصر",
+        "severities": {
+          "critical": "حرج",
+          "high": "مرتفع",
+          "followup": "متابعة",
+          "medium": "متوسط"
+        }
+      },
+      "shiftsOverviewCard": {
+        "title": "نظرة الورديات",
+        "subtitle": "حالة الورديات الثلاث اليوم",
+        "viewDetails": "عرض التفاصيل",
+        "revenueLabel": "الإيراد",
+        "roomsLabel": "الغرف",
+        "egpSuffix": "ج.م",
+        "roomsSuffix": "غرفة",
+        "status": {
+          "active": "نشطة",
+          "upcoming": "قادمة",
+          "completed": "مكتملة"
+        }
+      },
+      "latestActivitiesCard": {
+        "title": "أحدث الأنشطة",
+        "subtitle": "تحديثات الفندق لحظة بلحظة"
+      },
+      "staffActivityCard": {
+        "title": "نشاط الموظفين",
+        "subtitle": "الموظفون العاملون والمهام الحالية",
+        "workingNowBadge": "{count} يعملون الآن",
+        "table": {
+          "employee": "الموظف",
+          "role": "الدور",
+          "shift": "الوردية",
+          "completed": "مكتملة",
+          "pending": "معلقة",
+          "status": "الحالة"
+        },
+        "status": {
+          "on_shift": "في الوردية",
+          "available": "متاح",
+          "on_break": "استراحة"
+        }
+      },
+      "reportDownloaded": "تم إنشاء وتحميل ملخص التقرير بنجاح",
+      "exportDownloaded": "تم تصدير نشاط الموظفين بنجاح",
+      "exportError": "تعذر تصدير البيانات",
+      "emptyTitle": "لا توجد بيانات متاحة",
+      "emptyDescription": "تعذر العثور على ملخص لوحة التحكم في الوقت الحالي"
+    },
+    "rooms": {
+      "hero": {
+        "eyebrow": "إدارة المخزون",
+        "title": "إدارة الغرف",
+        "description": "إدارة تكوين الغرف والأسعار والتفاصيل التشغيلية مع دعم توسعة الفندق مستقبلاً.",
+        "roomsReport": "تقرير الغرف",
+        "export": "تصدير"
+      },
+      "stats": {
+        "totalRooms": "إجمالي الغرف",
+        "floorsSubtitle": "3 طوابق",
+        "standardRooms": "غرف عادية",
+        "vipRooms": "غرف VIP",
+        "expandableSubtitle": "قابلة للتوسعة",
+        "floors": "الطوابق",
+        "approxPerFloorSubtitle": "12 غرفة تقريبًا لكل طابق"
+      },
+      "floorTabs": {
+        "floor1": "الطابق 1",
+        "floor2": "الطابق 2",
+        "floor3": "الطابق 3"
+      },
+      "floorCard": {
+        "title": "الطابق {floor}",
+        "subtitle": "تكوين حالي قابل للتعديل والتوسعة",
+        "occupancyBadge": "إشغال {percent}%"
+      },
+      "tile": {
+        "room": "غرفة",
+        "standard": "عادية",
+        "vip": "VIP",
+        "egp": "ج.م",
+        "currentGuest": "ضيف حالي",
+        "noGuest": "لا يوجد ضيف",
+        "status": {
+          "available": "متاحة",
+          "occupied": "مشغولة",
+          "reserved": "محجوزة",
+          "cleaning": "تنظيف",
+          "maintenance": "صيانة"
+        }
+      },
+      "loading": "جاري تحميل الغرف...",
+      "errorTitle": "تعذر تحميل الغرف",
+      "retry": "إعادة المحاولة",
+      "emptyTitle": "لا توجد غرف متاحة",
+      "emptyDescription": "لا توجد غرف مسجلة في هذا الطابق",
+      "reportDownloaded": "تم إنشاء وتحميل تقرير الغرف بنجاح",
+      "exportDownloaded": "تم تصدير قائمة الغرف بنجاح",
+      "exportError": "تعذر تصدير البيانات",
+      "allRoomsExported": "تم تصدير جميع الغرف (36 غرفة) بنجاح",
+      "floorRoomsExported": "تم تصدير غرف الطابق {floor} بنجاح",
+      "drawer": {
+        "eyebrow": "مراجعة الغرفة",
+        "title": "غرفة {number}",
+        "closeLabel": "إغلاق نافذة مراجعة الغرفة",
+        "info": {
+          "guest": "الضيف",
+          "type": "النوع",
+          "status": "الحالة",
+          "price": "السعر"
+        },
+        "operationsLog": "السجل التشغيلي",
+        "emptyLog": "لا توجد سجلات تشغيلية لهذه الغرفة",
+        "viewReport": "عرض التقرير",
+        "close": "إغلاق",
+        "logReportDownloaded": "تم تحميل تقرير السجل التشغيلي للغرفة {number} بنجاح"
+      }
+    },
     "employees": {},
     "shifts": {},
     "passwordRequests": {
@@ -1444,4 +1626,3 @@
     }
   }
 }
-

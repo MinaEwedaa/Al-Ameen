@@ -1,4 +1,6 @@
 import { http, HttpResponse } from 'msw';
+import { managerDashboardHandlers } from './managerDashboard.handler';
+import { managerRoomsHandlers } from './managerRooms.handler';
 import { managerAuthHandlers } from './managerAuth';
 import { managerPasswordRequestsHandlers } from './managerPasswordRequests';
 import { managerProfileHandlers } from './managerProfile';
@@ -717,6 +719,8 @@ export const handlers = [
     }),
   ),
 
+  ...managerRoomsHandlers,
+
   http.get(`${API}/rooms`, ({ request }) => {
     const url = new URL(request.url);
     const status = url.searchParams.get('status');
@@ -891,4 +895,5 @@ export const handlers = [
       },
     });
   }),
+  ...managerDashboardHandlers,
 ];

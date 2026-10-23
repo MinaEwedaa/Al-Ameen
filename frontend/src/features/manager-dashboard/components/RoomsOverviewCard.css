@@ -1,0 +1,117 @@
+/* Rooms Overview Card Styles - Manager Dashboard */
+.rooms-overview-card {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-card);
+  padding: var(--space-5);
+  box-shadow: var(--shadow-card);
+}
+
+.rooms-overview-card__header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--space-3);
+}
+
+.rooms-overview-card__title-group {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
+.rooms-overview-card__title {
+  margin: 0;
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-ink);
+}
+
+.rooms-overview-card__subtitle {
+  margin: 0;
+  font-size: var(--font-size-xs);
+  color: var(--color-text-muted);
+}
+
+.rooms-overview-card__badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 4px 12px;
+  background-color: var(--color-primary-soft);
+  color: var(--color-primary-dark);
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-semibold);
+  border-radius: var(--radius-pill);
+  white-space: nowrap;
+}
+
+.rooms-overview-card__tiles {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--space-3);
+}
+
+.rooms-overview-card__tile {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-3);
+  background-color: var(--color-surface-muted);
+  border-radius: var(--radius-control);
+  gap: var(--space-1);
+  text-align: center;
+}
+
+.rooms-overview-card__tile-value {
+  font-size: var(--font-size-xl);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-ink);
+  line-height: 1.1;
+}
+
+.rooms-overview-card__tile-value--accent {
+  color: var(--color-primary);
+}
+
+.rooms-overview-card__tile-label {
+  font-size: var(--font-size-xs);
+  color: var(--color-text-muted);
+  font-weight: var(--font-weight-medium);
+}
+
+.rooms-overview-card__floors {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  padding-top: var(--space-2);
+  border-top: 1px solid var(--color-table-divider);
+}
+
+.rooms-overview-card__floors .ui-progress-bar--inline {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+.rooms-overview-card__floors .ui-progress-bar__label {
+  color: var(--color-text-muted);
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-medium);
+  min-width: 175px;
+}
+
+.rooms-overview-card__floors .ui-progress-bar__value {
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-ink);
+  min-width: 34px;
+  text-align: end;
+}
+
+.rooms-overview-card__floors .ui-progress-bar__track {
+  direction: ltr;
+}

@@ -1,0 +1,74 @@
+/* ProgressBar Component Tokens & Styles */
+.ui-progress-bar {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  width: 100%;
+}
+
+.ui-progress-bar--inline {
+  flex-direction: row;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+.ui-progress-bar__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-2);
+}
+
+.ui-progress-bar__label {
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  color: var(--color-ink);
+  white-space: nowrap;
+}
+
+.ui-progress-bar__value {
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-ink);
+  white-space: nowrap;
+}
+
+.ui-progress-bar__track {
+  position: relative;
+  width: 100%;
+  flex: 1;
+  background-color: var(--color-table-divider);
+  border-radius: var(--radius-pill);
+  overflow: hidden;
+}
+
+.ui-progress-bar--sm .ui-progress-bar__track {
+  height: 6px;
+}
+
+.ui-progress-bar--md .ui-progress-bar__track {
+  height: 8px;
+}
+
+.ui-progress-bar--lg .ui-progress-bar__track {
+  height: 12px;
+}
+
+.ui-progress-bar__fill {
+  height: 100%;
+  border-radius: var(--radius-pill);
+  transition: width 0.3s ease-in-out;
+}
+
+/* Tones */
+.ui-progress-bar--success .ui-progress-bar__fill {
+  background-color: var(--color-primary);
+}
+
+.ui-progress-bar--gold .ui-progress-bar__fill {
+  background-color: var(--color-gold);
+}
+
+.ui-progress-bar--danger .ui-progress-bar__fill {
+  background-color: var(--color-danger);
+}
