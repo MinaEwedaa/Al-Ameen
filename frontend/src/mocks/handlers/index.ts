@@ -1,4 +1,6 @@
 import { http, HttpResponse } from 'msw';
+import { managerDashboardHandlers } from './managerDashboard.handler';
+import { managerRoomsHandlers } from './managerRooms.handler';
 import type { RoomStatus } from '../../types/common.types';
 
 // شكل الغرفة كما يرجعه الـ API (معرّف هنا عشان الـ mocks ماتعتمدش على types الـ features)
@@ -709,6 +711,8 @@ export const handlers = [
     }),
   ),
 
+  ...managerRoomsHandlers,
+
   http.get(`${API}/rooms`, ({ request }) => {
     const url = new URL(request.url);
     const status = url.searchParams.get('status');
@@ -883,4 +887,5 @@ export const handlers = [
       },
     });
   }),
-];
+  ...managerDashboardHandlers,
+];

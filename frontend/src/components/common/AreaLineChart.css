@@ -1,0 +1,45 @@
+/* AreaLineChart Component Tokens & Styles */
+.common-area-line-chart {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  position: relative;
+}
+
+.common-area-line-chart__svg {
+  display: block;
+  width: 100%;
+  height: auto;
+  overflow: visible;
+}
+
+.common-area-line-chart__grid-line {
+  stroke: var(--color-border);
+  stroke-dasharray: 4 4;
+  stroke-width: 1;
+}
+
+.common-area-line-chart__line {
+  fill: none;
+  stroke: var(--color-primary);
+  stroke-width: 2.75;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.common-area-line-chart__marker-ring {
+  fill: var(--color-surface);
+  stroke: var(--color-primary);
+  stroke-width: 2.5;
+}
+
+.common-area-line-chart__marker-dot {
+  fill: var(--color-primary);
+}
+
+.common-area-line-chart__label {
+  font-size: var(--font-size-xs);
+  fill: var(--color-text-muted);
+  font-family: inherit;
+  dominant-baseline: hanging;
+}

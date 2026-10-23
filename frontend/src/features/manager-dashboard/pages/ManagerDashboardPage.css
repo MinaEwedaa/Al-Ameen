@@ -1,0 +1,33 @@
+/* Manager Dashboard Page Styles */
+.manager-dashboard-page {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-6);
+  width: 100%;
+}
+
+.manager-dashboard__hero-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.manager-dashboard__kpi-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.65fr) minmax(0, 1fr);
+  gap: var(--space-4);
+}
+
+.manager-dashboard__two-col-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1.65fr) minmax(0, 1fr);
+  gap: var(--space-4);
+  align-items: stretch;
+}
+
+@media (max-width: 992px) {
+  .manager-dashboard__kpi-grid,
+  .manager-dashboard__two-col-row {
+    grid-template-columns: 1fr;
+  }
+}

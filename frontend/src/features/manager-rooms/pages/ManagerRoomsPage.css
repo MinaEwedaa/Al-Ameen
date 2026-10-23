@@ -1,0 +1,54 @@
+/* ManagerRoomsPage Styles - Token-only, RTL-safe */
+
+.manager-rooms-page {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-6);
+  width: 100%;
+}
+
+.manager-rooms-page__hero-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.manager-rooms-page__stats-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: var(--space-4);
+}
+
+.manager-rooms-page__tabs-bar {
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-card);
+  padding: var(--space-3) var(--space-4);
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  box-shadow: 0 1px 3px color-mix(in srgb, var(--color-ink) 4%, transparent);
+}
+
+.manager-rooms-page__state-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 280px;
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-card);
+  padding: var(--space-8);
+}
+
+@media (max-width: 1024px) {
+  .manager-rooms-page__stats-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 600px) {
+  .manager-rooms-page__stats-grid {
+    grid-template-columns: 1fr;
+  }
+}

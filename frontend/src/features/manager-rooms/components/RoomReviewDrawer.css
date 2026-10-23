@@ -1,0 +1,99 @@
+/* RoomReviewDrawer Component Styles - Manager Rooms */
+
+.room-drawer__content {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-6);
+}
+
+.room-drawer__summary-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--space-4) var(--space-5);
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-card);
+  box-shadow: 0 1px 3px color-mix(in srgb, var(--color-ink) 4%, transparent);
+}
+
+.room-drawer__summary-info {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
+.room-drawer__summary-top {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+.room-drawer__summary-type {
+  font-size: var(--font-size-md);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-ink);
+}
+
+.room-drawer__summary-price {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-muted);
+}
+
+.room-drawer__summary-icon {
+  width: 48px;
+  height: 48px;
+  border-radius: var(--radius-md);
+  background-color: var(--color-primary-soft);
+  color: var(--color-primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.room-drawer__info-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--space-3);
+}
+
+.room-drawer__log-section {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.room-drawer__log-title {
+  margin: 0;
+  font-size: var(--font-size-md);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-ink);
+}
+
+.room-drawer__empty-log {
+  margin: 0;
+  font-size: var(--font-size-sm);
+  color: var(--color-text-muted);
+  padding: var(--space-4);
+  background-color: var(--color-surface-muted);
+  border-radius: var(--radius-control);
+  text-align: center;
+}
+
+.room-drawer__footer {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  width: 100%;
+}
+
+.room-drawer__btn-report {
+  flex: 1.4;
+  min-height: 48px;
+}
+
+.room-drawer__btn-close {
+  flex: 1;
+  min-height: 48px;
+}

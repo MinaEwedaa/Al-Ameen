@@ -1167,5 +1167,191 @@
       "change": "Change password",
       "soon": "Changing the password will be available through the server"
     }
+  },
+  "manager": {
+    "dashboard": {
+      "hero": {
+        "eyebrow": "Management Center",
+        "title": "Manager Dashboard",
+        "description": "A comprehensive overview of hotel operations, occupancy, revenue, staff activity and current performance.",
+        "export": "Export",
+        "createReport": "Create Report"
+      },
+      "kpis": {
+        "totalRooms": "Total Rooms",
+        "floorsSubtitle": "3 floors",
+        "occupiedRooms": "Occupied Rooms",
+        "hotelPercentSubtitle": "64% of hotel",
+        "availableRooms": "Available Rooms",
+        "readyForBooking": "Ready for booking",
+        "underCleaning": "Under Cleaning",
+        "priorityRooms": "2 priority rooms",
+        "underMaintenance": "Under Maintenance",
+        "criticalReport": "1 critical ticket",
+        "occupancyRate": "Occupancy Rate",
+        "fromCurrentStock": "Calculated from current stock",
+        "todayRevenue": "Today's Revenue",
+        "vsYesterday": "+12.4% vs yesterday",
+        "pendingTasks": "Pending Tasks",
+        "acrossDepartments": "Across 3 departments"
+      },
+      "loading": "Loading manager dashboard...",
+      "errorTitle": "Unable to load manager dashboard",
+      "retry": "Retry",
+      "revenueCard": {
+        "title": "Revenue Overview",
+        "subtitle": "Last seven days performance",
+        "changeBadge": "+12.4%",
+        "today": "Today",
+        "week": "Week",
+        "month": "Month",
+        "year": "Year",
+        "todayVal": "24.8k",
+        "weekVal": "168k",
+        "monthVal": "684k",
+        "yearVal": "7.8M",
+        "cash": "Cash",
+        "instapay": "InstaPay",
+        "vodafoneCash": "Vodafone Cash",
+        "chartAriaLabel": "Last seven days revenue trend chart"
+      },
+      "roomsOverviewCard": {
+        "title": "Rooms Overview",
+        "subtitle": "Current status of all hotel rooms",
+        "badge": "36 rooms · 3 floors",
+        "standard": "Standard",
+        "vip": "VIP",
+        "occupancy": "Occupancy",
+        "occupied": "Occupied",
+        "available": "Available",
+        "reserved": "Reserved",
+        "cleaning": "Cleaning",
+        "maintenance": "Maintenance",
+        "floor1": "Floor 1 · 7 Standard / 5 VIP",
+        "floor2": "Floor 2 · 7 Standard / 5 VIP",
+        "floor3": "Floor 3 · 7 Standard / 5 VIP"
+      },
+      "criticalIssuesCard": {
+        "title": "Critical Issues",
+        "subtitle": "Items requiring management attention",
+        "countBadge": "{count} items",
+        "severities": {
+          "critical": "Critical",
+          "high": "High",
+          "followup": "Follow-up",
+          "medium": "Medium"
+        }
+      },
+      "shiftsOverviewCard": {
+        "title": "Shifts Overview",
+        "subtitle": "Status of today's three shifts",
+        "viewDetails": "View Details",
+        "revenueLabel": "Revenue",
+        "roomsLabel": "Rooms",
+        "egpSuffix": "EGP",
+        "roomsSuffix": "rooms",
+        "status": {
+          "active": "Active",
+          "upcoming": "Upcoming",
+          "completed": "Completed"
+        }
+      },
+      "latestActivitiesCard": {
+        "title": "Latest Activities",
+        "subtitle": "Real-time hotel updates"
+      },
+      "staffActivityCard": {
+        "title": "Staff Activity",
+        "subtitle": "Active staff and current duties",
+        "workingNowBadge": "{count} working now",
+        "table": {
+          "employee": "Employee",
+          "role": "Role",
+          "shift": "Shift",
+          "completed": "Completed",
+          "pending": "Pending",
+          "status": "Status"
+        },
+        "status": {
+          "on_shift": "On Shift",
+          "available": "Available",
+          "on_break": "On Break"
+        }
+      },
+      "reportDownloaded": "Report summary generated and downloaded successfully",
+      "exportDownloaded": "Staff activity exported successfully",
+      "exportError": "Unable to export data",
+      "emptyTitle": "No Data Available",
+      "emptyDescription": "Could not find dashboard summary at this time"
+    },
+    "rooms": {
+      "hero": {
+        "eyebrow": "Inventory Management",
+        "title": "Rooms Management",
+        "description": "Manage room configurations, pricing, and operational details with future hotel expansion support.",
+        "roomsReport": "Rooms Report",
+        "export": "Export"
+      },
+      "stats": {
+        "totalRooms": "Total Rooms",
+        "floorsSubtitle": "3 floors",
+        "standardRooms": "Standard Rooms",
+        "vipRooms": "VIP Rooms",
+        "expandableSubtitle": "Expandable",
+        "floors": "Floors",
+        "approxPerFloorSubtitle": "~12 rooms per floor"
+      },
+      "floorTabs": {
+        "floor1": "Floor 1",
+        "floor2": "Floor 2",
+        "floor3": "Floor 3"
+      },
+      "floorCard": {
+        "title": "Floor {floor}",
+        "subtitle": "Current configuration adjustable and expandable",
+        "occupancyBadge": "{percent}% Occupancy"
+      },
+      "tile": {
+        "room": "Room",
+        "standard": "Standard",
+        "vip": "VIP",
+        "egp": "EGP",
+        "currentGuest": "Current Guest",
+        "noGuest": "No Guest",
+        "status": {
+          "available": "Available",
+          "occupied": "Occupied",
+          "reserved": "Reserved",
+          "cleaning": "Cleaning",
+          "maintenance": "Maintenance"
+        }
+      },
+      "loading": "Loading rooms...",
+      "errorTitle": "Unable to load rooms",
+      "retry": "Retry",
+      "emptyTitle": "No Rooms Available",
+      "emptyDescription": "No rooms registered on this floor",
+      "reportDownloaded": "Rooms report generated and downloaded successfully",
+      "exportDownloaded": "Rooms list exported successfully",
+      "exportError": "Unable to export data",
+      "allRoomsExported": "All 36 rooms exported successfully",
+      "floorRoomsExported": "Floor {floor} rooms exported successfully",
+      "drawer": {
+        "eyebrow": "Room Review",
+        "title": "Room {number}",
+        "closeLabel": "Close room review drawer",
+        "info": {
+          "guest": "Guest",
+          "type": "Type",
+          "status": "Status",
+          "price": "Price"
+        },
+        "operationsLog": "Operations Log",
+        "emptyLog": "No operational history for this room",
+        "viewReport": "View Report",
+        "close": "Close",
+        "logReportDownloaded": "Operations log report for Room {number} downloaded successfully"
+      }
+    }
   }
 }

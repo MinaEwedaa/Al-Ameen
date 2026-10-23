@@ -1,0 +1,125 @@
+/* StackedStatusBar Component Tokens & Styles */
+.ui-stacked-status-bar {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  width: 100%;
+}
+
+.ui-stacked-status-bar__track {
+  display: flex;
+  width: 100%;
+  height: 14px;
+  background-color: var(--color-table-divider);
+  border-radius: var(--radius-pill);
+  overflow: hidden;
+  box-shadow: inset 0 1px 2px color-mix(in srgb, var(--color-ink) 6%, transparent);
+}
+
+.ui-stacked-status-bar__segment {
+  height: 100%;
+  min-width: 0;
+  transition: width 0.3s ease-in-out;
+  position: relative;
+}
+
+.ui-stacked-status-bar__segment:not(:last-child) {
+  border-inline-end: 1px solid var(--color-surface);
+}
+
+/* Tones for segments */
+.ui-stacked-status-bar__segment--primary,
+.ui-stacked-status-bar__segment--success {
+  background-color: var(--color-primary);
+}
+
+.ui-stacked-status-bar__segment--teal,
+.ui-stacked-status-bar__segment--info {
+  background-color: var(--color-info);
+}
+
+.ui-stacked-status-bar__segment--gold {
+  background-color: var(--color-gold);
+}
+
+.ui-stacked-status-bar__segment--amber,
+.ui-stacked-status-bar__segment--warning {
+  background-color: var(--color-amber);
+}
+
+.ui-stacked-status-bar__segment--danger {
+  background-color: var(--color-danger);
+}
+
+.ui-stacked-status-bar__segment--purple {
+  background-color: var(--color-purple);
+}
+
+.ui-stacked-status-bar__segment--neutral {
+  background-color: var(--color-text-muted);
+}
+
+/* Legend */
+.ui-stacked-status-bar__legend {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: var(--space-2) var(--space-4);
+  padding: 0 var(--space-1);
+}
+
+.ui-stacked-status-bar__legend-item {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-size: var(--font-size-xs);
+  color: var(--color-text-muted);
+}
+
+.ui-stacked-status-bar__legend-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: var(--radius-pill);
+  flex-shrink: 0;
+}
+
+.ui-stacked-status-bar__legend-dot--primary,
+.ui-stacked-status-bar__legend-dot--success {
+  background-color: var(--color-primary);
+}
+
+.ui-stacked-status-bar__legend-dot--teal,
+.ui-stacked-status-bar__legend-dot--info {
+  background-color: var(--color-info);
+}
+
+.ui-stacked-status-bar__legend-dot--gold {
+  background-color: var(--color-gold);
+}
+
+.ui-stacked-status-bar__legend-dot--amber,
+.ui-stacked-status-bar__legend-dot--warning {
+  background-color: var(--color-amber);
+}
+
+.ui-stacked-status-bar__legend-dot--danger {
+  background-color: var(--color-danger);
+}
+
+.ui-stacked-status-bar__legend-dot--purple {
+  background-color: var(--color-purple);
+}
+
+.ui-stacked-status-bar__legend-dot--neutral {
+  background-color: var(--color-text-muted);
+}
+
+.ui-stacked-status-bar__legend-label {
+  font-weight: var(--font-weight-regular);
+}
+
+.ui-stacked-status-bar__legend-value {
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-ink);
+}
