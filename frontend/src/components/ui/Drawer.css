@@ -1,7 +1,7 @@
 .drawer__backdrop {
   position: fixed;
   inset: 0;
-  z-index: 20;
+  z-index: 1000;
   display: flex;
   justify-content: flex-start; /* right side in Arabic (RTL), left side in English */
   background: rgba(12, 35, 40, 0.35);
@@ -81,23 +81,28 @@
 }
 
 /* Dark theme */
-[data-theme="dark"] .drawer__panel {
+[data-theme="dark"] .drawer__panel,
+.dark .drawer__panel {
   background: #12181f;
   color: #f8fafc;
 }
 
 [data-theme="dark"] .drawer__header,
-[data-theme="dark"] .drawer__footer {
+.dark .drawer__header,
+[data-theme="dark"] .drawer__footer,
+.dark .drawer__footer {
   border-color: #2a3441;
 }
 
-[data-theme="dark"] .drawer__close {
+[data-theme="dark"] .drawer__close,
+.dark .drawer__close {
   background: #1a222c;
   border-color: #2a3441;
   color: #e2e8f0;
 }
 
-[data-theme="dark"] .drawer__footer .ui-button--secondary {
+[data-theme="dark"] .drawer__footer .ui-button--secondary,
+.dark .drawer__footer .ui-button--secondary {
   background: #1a222c;
   border-color: #2a3441;
   color: #e2e8f0;

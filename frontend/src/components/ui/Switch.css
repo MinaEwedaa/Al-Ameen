@@ -1,0 +1,72 @@
+.ui-switch-wrapper {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-3);
+  cursor: pointer;
+  user-select: none;
+}
+
+.ui-switch-wrapper--disabled {
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.ui-switch {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  width: 44px;
+  height: 24px;
+  padding: 2px;
+  border: 0;
+  border-radius: var(--radius-pill);
+  background: #EBE8E0;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+  flex-shrink: 0;
+  outline: none;
+}
+
+.ui-switch:focus-visible {
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-primary) 20%, transparent);
+}
+
+.ui-switch--checked {
+  background: var(--color-primary);
+}
+
+.ui-switch__thumb {
+  display: block;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: #ffffff;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+  transition: transform 0.2s ease;
+  transform: translateX(0);
+}
+
+/* In RTL: unchecked is on start (right in RTL, left in LTR) */
+[dir="rtl"] .ui-switch--checked .ui-switch__thumb {
+  transform: translateX(-20px);
+}
+
+[dir="ltr"] .ui-switch--checked .ui-switch__thumb {
+  transform: translateX(20px);
+}
+
+.ui-switch__text {
+  display: flex;
+  flex-direction: column;
+}
+
+.ui-switch__label {
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-ink);
+}
+
+.ui-switch__desc {
+  font-size: var(--font-size-xs);
+  color: var(--color-text-muted);
+}

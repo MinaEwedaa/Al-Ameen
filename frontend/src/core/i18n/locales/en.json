@@ -1167,5 +1167,281 @@
       "change": "Change password",
       "soon": "Changing the password will be available through the server"
     }
+  },
+  "manager": {
+    "shell": {
+      "section": "Management Workspace",
+      "brand": "Al-Amin",
+      "location": "Hotel · Aswan",
+      "nav": {
+        "dashboard": "Dashboard",
+        "rooms": "Rooms Management",
+        "employees": "Employees",
+        "housekeeping": "Housekeeping",
+        "maintenance": "Maintenance",
+        "finance": "Finance",
+        "reports": "Reports",
+        "refunds": "Refund Requests",
+        "passwordRequests": "Password Reset Requests",
+        "shifts": "Shifts Overview",
+        "roomTypes": "Room Types",
+        "profile": "Profile",
+        "settings": "Settings"
+      },
+      "statusCard": {
+        "title": "Hotel Operating Now",
+        "occupancy": "Today's Occupancy 64%"
+      },
+      "logout": "Logout",
+      "topbar": {
+        "searchPlaceholder": "Search room, employee, or report",
+        "searchShortcut": "⌘ K",
+        "userName": "Manager Account",
+        "userRole": "Hotel Manager",
+        "userAvatar": "M",
+        "languageToggle": "Toggle Language",
+        "notifications": "Notifications",
+        "themeToggle": "Toggle Theme",
+        "themeLight": "Light Mode",
+        "themeDark": "Dark Mode"
+      },
+      "comingSoon": {
+        "title": "Coming Soon",
+        "description": "This page is under development and will be available soon in the Manager Portal."
+      }
+    },
+    "dashboard": {},
+    "rooms": {},
+    "employees": {},
+    "shifts": {},
+    "passwordRequests": {
+      "hero": {
+        "eyebrow": "Account Security",
+        "title": "Password Reset Requests",
+        "subtitle": "Review help requests and generate temporary credentials.",
+        "export": "Export",
+        "pendingFilter": "New Requests"
+      },
+      "list": {
+        "empty": "No password reset requests currently available"
+      },
+      "status": {
+        "pending": "New Request",
+        "in_review": "Under Review",
+        "approved": "Approved",
+        "rejected": "Rejected"
+      },
+      "roles": {
+        "receptionist": "Receptionist",
+        "maintenance": "Maintenance Tech"
+      },
+      "employees": {
+        "pr-1": "Receptionist A",
+        "pr-2": "Receptionist B",
+        "pr-3": "Maintenance Tech C"
+      },
+      "reasons": {
+        "pr-1": "Unable to log in to workstation, temporary password required",
+        "pr-2": "Forgot password after annual vacation",
+        "pr-3": "Routine account credential reset"
+      },
+      "drawer": {
+        "eyebrow": "Assistance Request",
+        "role": "Role",
+        "username": "Username",
+        "status": "Status",
+        "date": "Request Date",
+        "reason": "Request Reason",
+        "tempPassword": "Temporary Password",
+        "generate": "Generate Password",
+        "copy": "Copy",
+        "copiedToast": "Temporary password copied to clipboard",
+        "copyFailed": "Failed to copy password",
+        "approve": "Approve Request",
+        "reject": "Reject Request",
+        "approveSuccess": "Request approved and temporary password assigned",
+        "rejectSuccess": "Password reset request rejected",
+        "actionError": "Failed to complete operation, please try again"
+      },
+      "confirmReject": {
+        "title": "Confirm Rejection",
+        "description": "Are you sure you want to reject this password reset request? The employee will need to submit a new request.",
+        "confirm": "Yes, Reject Request",
+        "cancel": "Cancel"
+      },
+      "exportSuccess": "Requests report exported successfully",
+      "table": {
+        "id": "Request ID",
+        "employee": "Employee Name",
+        "username": "Username",
+        "role": "Role",
+        "status": "Status",
+        "date": "Request Date",
+        "reason": "Reason"
+      }
+    },
+    "roomTypes": {},
+    "profile": {
+      "header": {
+        "eyebrow": "Administrative Account",
+        "title": "Manager Account",
+        "subtitle": "Hotel Manager · Al Amin Hotel",
+        "location": "Aswan, Egypt",
+        "notifications": "Notification Preferences",
+        "edit": "Edit Profile"
+      },
+      "stats": {
+        "employees": "Active Employees",
+        "employeesHint": "All Departments",
+        "rooms": "Managed Rooms",
+        "roomsHint": "3 Floors",
+        "reports": "Generated Reports",
+        "reportsHint": "This Month",
+        "tasks": "Management Tasks",
+        "tasksHint": "9 Completed"
+      },
+      "account": {
+        "title": "Account Information",
+        "subtitle": "Contact & Access Details",
+        "role": "Role",
+        "roleValue": "Hotel Manager",
+        "accountName": "Account",
+        "accountNameValue": "Manager Account",
+        "email": "Email",
+        "phone": "Phone",
+        "lastLogin": "Last Login",
+        "lastLoginValue": "Today, 08:12 AM",
+        "status": "Account Status",
+        "statusActive": "Active",
+        "statusInactive": "Inactive"
+      },
+      "activity": {
+        "title": "Recent Administrative Activity",
+        "subtitle": "Recent Account Actions",
+        "empty": "No recent activity recorded",
+        "items": {
+          "payment": {
+            "title": "Payment Received",
+            "description": "Reviewed by Manager Account"
+          },
+          "cleaning": {
+            "title": "Cleaning Task Assigned",
+            "description": "Reviewed by Manager Account"
+          },
+          "maintenance": {
+            "title": "Maintenance Issue Logged",
+            "description": "Reviewed by Manager Account"
+          }
+        }
+      },
+      "bottomBar": {
+        "changePassword": "Change Password",
+        "notifications": "Notification Preferences",
+        "logout": "Sign Out"
+      },
+      "editDrawer": {
+        "title": "Edit Profile",
+        "eyebrow": "Basic Details",
+        "name": "Full Name",
+        "email": "Email Address",
+        "phone": "Phone Number",
+        "save": "Save Changes",
+        "cancel": "Cancel",
+        "errors": {
+          "nameRequired": "Full name is required",
+          "emailInvalid": "Please enter a valid email address",
+          "phoneInvalid": "Please enter a valid phone number"
+        }
+      },
+      "passwordDrawer": {
+        "title": "Change Password",
+        "eyebrow": "Account Security",
+        "currentPassword": "Current Password",
+        "newPassword": "New Password",
+        "confirmPassword": "Confirm New Password",
+        "hint": "Password must be at least 8 characters long",
+        "save": "Update Password",
+        "cancel": "Cancel",
+        "toggleVisibility": "Toggle password visibility",
+        "errors": {
+          "currentRequired": "Current password is required",
+          "newRequired": "New password is required",
+          "minLength": "Password must be at least 8 characters",
+          "mismatch": "Passwords do not match"
+        }
+      },
+      "toasts": {
+        "updateSuccess": "Profile updated successfully",
+        "updateError": "Failed to update profile, please try again",
+        "passwordSuccess": "Password changed successfully",
+        "passwordError": "Failed to change password, please check your input"
+      }
+    },
+    "settings": {
+      "hero": {
+        "eyebrow": "System Preferences",
+        "title": "Settings",
+        "subtitle": "Manage hotel information, alerts, shifts, and system preferences",
+        "export": "Export",
+        "save": "Save Changes",
+        "saving": "Saving...",
+        "savedToast": "Settings saved successfully",
+        "saveErrorToast": "Failed to save settings, please try again",
+        "exportedToast": "Settings exported successfully"
+      },
+      "nav": {
+        "hotel": "Hotel Information",
+        "shifts": "Shift Configuration",
+        "notifications": "Notifications",
+        "language": "Language",
+        "appearance": "Appearance",
+        "account": "Account",
+        "profile": "Profile",
+        "roomConfig": "Room Setup",
+        "systemPreferences": "System Preferences"
+      },
+      "hotel": {
+        "title": "Hotel Information",
+        "subtitle": "Primary administrative configuration for Al-Amin Hotel",
+        "autoSaved": "Saved Automatically",
+        "name": "Hotel Name",
+        "location": "Location",
+        "floors": "Number of Floors",
+        "rooms": "Total Rooms"
+      },
+      "shifts": {
+        "title": "Shift Configuration",
+        "subtitle": "Approved operating schedules",
+        "morning": "Morning Shift",
+        "evening": "Evening Shift",
+        "night": "Night Shift",
+        "startTime": "Start Time",
+        "endTime": "End Time",
+        "validationError": "Start time must be before end time"
+      },
+      "notifications": {
+        "title": "Notifications",
+        "subtitle": "Select the notifications you want to receive",
+        "subtitleDesc": "Instant alerts and critical updates",
+        "maintenance": "Maintenance",
+        "cleaning": "Housekeeping",
+        "payments": "Payments",
+        "pendingTasks": "Pending Tasks",
+        "shiftHandover": "Shift Handover",
+        "reports": "Reports"
+      },
+      "preferences": {
+        "appearance": "Appearance",
+        "language": "Language",
+        "light": "Light",
+        "dark": "Dark",
+        "system": "System",
+        "comingSoon": "Soon",
+        "arabic": "العربية",
+        "english": "English"
+      },
+      "unsavedWarning": "You have unsaved changes in settings. Are you sure you want to leave?"
+    }
   }
 }
+
