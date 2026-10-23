@@ -1,3 +1,7 @@
+/* The backdrop is the stacking context the dialog lives in, so it must sit above the drawer (z-index 1000)
+   or every confirm opened from a drawer shows up behind it. */
+.ui-dialog-backdrop { z-index: 1100; }
+
 .ui-dialog {
   position: fixed;
   z-index: 1100;
