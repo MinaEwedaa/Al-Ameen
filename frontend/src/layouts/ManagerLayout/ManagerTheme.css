@@ -1,0 +1,742 @@
+/* =====================================================================
+   Manager Portal Dark Theme (Member A Scope)
+   Adapts Manager Layout, Topbar, Sidebar, Profile, Password Requests,
+   and Settings to a luxury emerald & gold dark theme palette.
+   ===================================================================== */
+
+/* 1. Layout & Shell */
+[data-theme="dark"] .manager-shell,
+.dark .manager-shell {
+  background: var(--color-bg, #12181f);
+  color: var(--color-ink, #f8fafc);
+}
+
+[data-theme="dark"] .manager-page-placeholder,
+.dark .manager-page-placeholder {
+  background: var(--color-surface, #1a222c);
+  border-color: var(--color-border, #2a3441);
+  box-shadow: 0 12px 35px rgba(0, 0, 0, 0.4);
+}
+
+/* 2. Manager Sidebar */
+[data-theme="dark"] .manager-sidebar,
+.dark .manager-sidebar {
+  background: linear-gradient(180deg, #132b1c 0%, #0d1e14 100%);
+  border-inline-end: 1px solid rgba(65, 192, 106, 0.16);
+}
+
+[data-theme="dark"] .manager-sidebar__logo-tile,
+.dark .manager-sidebar__logo-tile {
+  background: #1a222c;
+  border: 1px solid #2a3441;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
+}
+
+[data-theme="dark"] .manager-sidebar__brand-name,
+.dark .manager-sidebar__brand-name {
+  color: #41C06A;
+}
+
+[data-theme="dark"] .manager-sidebar__brand-location,
+.dark .manager-sidebar__brand-location {
+  color: #94a3b8;
+}
+
+[data-theme="dark"] .manager-sidebar__link,
+.dark .manager-sidebar__link {
+  color: rgba(255, 255, 255, 0.78);
+}
+
+[data-theme="dark"] .manager-sidebar__link:hover,
+.dark .manager-sidebar__link:hover {
+  background: rgba(65, 192, 106, 0.14);
+  color: #ffffff;
+}
+
+[data-theme="dark"] .manager-sidebar__link--active,
+.dark .manager-sidebar__link--active {
+  background: rgba(65, 192, 106, 0.22);
+  color: #41C06A;
+  box-shadow: inset 0 0 0 1px rgba(65, 192, 106, 0.35);
+}
+
+[data-theme="dark"] .manager-sidebar__status-card,
+.dark .manager-sidebar__status-card {
+  background: rgba(0, 0, 0, 0.28);
+  border-color: rgba(255, 255, 255, 0.08);
+}
+
+/* 3. Manager Topbar */
+[data-theme="dark"] .manager-topbar,
+.dark .manager-topbar {
+  background: rgba(18, 24, 31, 0.92);
+  border-bottom-color: #2a3441;
+}
+
+[data-theme="dark"] .manager-topbar__search-wrap,
+.dark .manager-topbar__search-wrap {
+  background: #1a222c;
+  border-color: #2a3441;
+}
+
+[data-theme="dark"] .manager-topbar__search-wrap:focus-within,
+.dark .manager-topbar__search-wrap:focus-within {
+  border-color: #41C06A;
+  box-shadow: 0 0 0 3px rgba(65, 192, 106, 0.2);
+}
+
+[data-theme="dark"] .manager-topbar__search-input,
+.dark .manager-topbar__search-input {
+  color: #f8fafc;
+}
+
+[data-theme="dark"] .manager-topbar__shortcut,
+.dark .manager-topbar__shortcut {
+  background: #151c24;
+  border-color: #2a3441;
+  color: #94a3b8;
+}
+
+[data-theme="dark"] .manager-topbar__time,
+.dark .manager-topbar__time {
+  color: #94a3b8;
+}
+
+[data-theme="dark"] .manager-topbar__btn,
+.dark .manager-topbar__btn {
+  background: #1a222c;
+  border-color: #2a3441;
+  color: #f8fafc;
+}
+
+[data-theme="dark"] .manager-topbar__btn:hover,
+.dark .manager-topbar__btn:hover {
+  background: #242e3a;
+  border-color: #41C06A;
+  color: #41C06A;
+}
+
+[data-theme="dark"] .manager-topbar__bell-dot,
+.dark .manager-topbar__bell-dot {
+  box-shadow: 0 0 0 2px #1a222c;
+}
+
+[data-theme="dark"] .manager-topbar__user-name,
+.dark .manager-topbar__user-name {
+  color: #f8fafc;
+}
+
+[data-theme="dark"] .manager-topbar__user-role,
+.dark .manager-topbar__user-role {
+  color: #94a3b8;
+}
+
+[data-theme="dark"] .manager-topbar__user-chip:hover,
+.dark .manager-topbar__user-chip:hover {
+  background: rgba(255, 255, 255, 0.05);
+}
+
+[data-theme="dark"] .manager-topbar__search-results,
+.dark .manager-topbar__search-results {
+  background: #1a222c;
+  border-color: #2a3441;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+}
+
+[data-theme="dark"] .manager-topbar__search-item:hover,
+.dark .manager-topbar__search-item:hover {
+  background: #242e3a;
+}
+
+[data-theme="dark"] .manager-topbar__search-item-title,
+.dark .manager-topbar__search-item-title {
+  color: #f8fafc;
+}
+
+[data-theme="dark"] .manager-topbar__search-item-sub,
+.dark .manager-topbar__search-item-sub {
+  color: #94a3b8;
+}
+
+/* 4. Password Reset Requests */
+[data-theme="dark"] .pw-hero,
+.dark .pw-hero {
+  background: linear-gradient(135deg, #184828 0%, #10321c 100%);
+  border: 1px solid rgba(65, 192, 106, 0.25);
+  box-shadow: 0 12px 35px rgba(0, 0, 0, 0.4);
+}
+
+[data-theme="dark"] .pw-hero__eyebrow,
+.dark .pw-hero__eyebrow {
+  color: #e0be75;
+}
+
+[data-theme="dark"] .pw-hero__btn--filter-active,
+.dark .pw-hero__btn--filter-active {
+  background: #0d1e14;
+  border-color: #C9A768;
+  color: #e0be75;
+}
+
+[data-theme="dark"] .pw-card,
+.dark .pw-card {
+  background: #1a222c;
+  border-color: #2a3441;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.25);
+}
+
+[data-theme="dark"] .pw-card:hover,
+.dark .pw-card:hover {
+  background: #1f2937;
+  border-color: #41C06A;
+  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.4);
+}
+
+[data-theme="dark"] .pw-card--selected,
+.dark .pw-card--selected {
+  background: rgba(65, 192, 106, 0.12);
+  border-color: #41C06A;
+}
+
+[data-theme="dark"] .pw-card__name,
+.dark .pw-card__name {
+  color: #f8fafc;
+}
+
+[data-theme="dark"] .pw-card__role,
+.dark .pw-card__role {
+  color: #94a3b8;
+}
+
+[data-theme="dark"] .pw-card__date,
+.dark .pw-card__date {
+  color: #64748b;
+}
+
+[data-theme="dark"] .pw-status--pending,
+.dark .pw-status--pending,
+[data-theme="dark"] .pw-status--in_review,
+.dark .pw-status--in_review {
+  background: rgba(224, 168, 58, 0.16);
+  color: #e0be75;
+  border: 1px solid rgba(224, 168, 58, 0.3);
+}
+
+[data-theme="dark"] .pw-status--approved,
+.dark .pw-status--approved {
+  background: rgba(65, 192, 106, 0.16);
+  color: #41C06A;
+  border: 1px solid rgba(65, 192, 106, 0.3);
+}
+
+[data-theme="dark"] .pw-status--rejected,
+.dark .pw-status--rejected {
+  background: rgba(212, 92, 92, 0.16);
+  color: #f87171;
+  border: 1px solid rgba(212, 92, 92, 0.3);
+}
+
+[data-theme="dark"] .pw-list-empty,
+.dark .pw-list-empty {
+  background: #1a222c;
+  border-color: #2a3441;
+  color: #94a3b8;
+}
+
+/* Password Request Drawer */
+[data-theme="dark"] .pw-drawer .drawer__panel,
+.dark .pw-drawer .drawer__panel {
+  background: #1a222c;
+  border-inline-start: 1px solid #2a3441;
+  color: #f8fafc;
+}
+
+[data-theme="dark"] .pw-drawer__box,
+.dark .pw-drawer__box {
+  background: #151c24;
+  border-color: #2a3441;
+  color: #f8fafc;
+}
+
+[data-theme="dark"] .pw-drawer__box--multiline,
+.dark .pw-drawer__box--multiline {
+  color: #cbd5e1;
+}
+
+[data-theme="dark"] .pw-drawer__password-input,
+.dark .pw-drawer__password-input {
+  background: #12181f;
+  border-color: #2a3441;
+  color: #41C06A;
+}
+
+[data-theme="dark"] .pw-drawer__copy-btn,
+.dark .pw-drawer__copy-btn {
+  background: #1a222c;
+  border: 1px solid #2a3441;
+  color: #94a3b8;
+}
+
+[data-theme="dark"] .pw-drawer__copy-btn:hover,
+.dark .pw-drawer__copy-btn:hover {
+  background: rgba(65, 192, 106, 0.18);
+  color: #41C06A;
+}
+
+[data-theme="dark"] .pw-drawer__btn--reject,
+.dark .pw-drawer__btn--reject {
+  background: rgba(212, 92, 92, 0.18);
+  border-color: rgba(212, 92, 92, 0.35);
+  color: #f87171;
+}
+
+[data-theme="dark"] .pw-drawer__btn--reject:hover:not(:disabled),
+.dark .pw-drawer__btn--reject:hover:not(:disabled) {
+  background: rgba(212, 92, 92, 0.28);
+  color: #ffffff;
+}
+
+/* 5. Manager Profile */
+[data-theme="dark"] .profile-header-card,
+.dark .profile-header-card {
+  background: #1a222c;
+  border-color: #2a3441;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.35);
+}
+
+[data-theme="dark"] .profile-header-card__logo-box,
+.dark .profile-header-card__logo-box {
+  background: #151c24;
+  border-color: #2a3441;
+}
+
+[data-theme="dark"] .profile-header-card__title,
+.dark .profile-header-card__title {
+  color: #f8fafc;
+}
+
+[data-theme="dark"] .profile-header-card__subtitle,
+.dark .profile-header-card__subtitle {
+  color: #cbd5e1;
+}
+
+[data-theme="dark"] .profile-header-card__eyebrow,
+.dark .profile-header-card__eyebrow {
+  color: #e0be75;
+}
+
+[data-theme="dark"] .profile-header-card__location,
+.dark .profile-header-card__location {
+  color: #94a3b8;
+}
+
+[data-theme="dark"] .profile-header-card__btn--secondary,
+.dark .profile-header-card__btn--secondary {
+  background: #151c24;
+  border-color: #2a3441;
+  color: #f8fafc;
+}
+
+[data-theme="dark"] .profile-header-card__btn--secondary:hover,
+.dark .profile-header-card__btn--secondary:hover {
+  background: #242e3a;
+  border-color: #41C06A;
+  color: #41C06A;
+}
+
+/* Profile Stats Grid */
+[data-theme="dark"] .profile-stat-card,
+.dark .profile-stat-card {
+  background: #1a222c;
+  border-color: #2a3441;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.25);
+}
+
+[data-theme="dark"] .profile-stat-card:hover,
+.dark .profile-stat-card:hover {
+  border-color: #3b4758;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+}
+
+[data-theme="dark"] .profile-stat-card__label,
+.dark .profile-stat-card__label {
+  color: #94a3b8;
+}
+
+[data-theme="dark"] .profile-stat-card__value,
+.dark .profile-stat-card__value {
+  color: #f8fafc;
+}
+
+[data-theme="dark"] .profile-stat-card__sublabel,
+.dark .profile-stat-card__sublabel {
+  color: #64748b;
+}
+
+[data-theme="dark"] .profile-stat-card--green .profile-stat-card__icon-wrap,
+.dark .profile-stat-card--green .profile-stat-card__icon-wrap {
+  background: rgba(65, 192, 106, 0.16);
+  color: #41C06A;
+}
+
+[data-theme="dark"] .profile-stat-card--gold .profile-stat-card__icon-wrap,
+.dark .profile-stat-card--gold .profile-stat-card__icon-wrap {
+  background: rgba(201, 167, 104, 0.16);
+  color: #e0be75;
+}
+
+/* Account Info Card */
+[data-theme="dark"] .account-info-card,
+.dark .account-info-card {
+  background: #1a222c;
+  border-color: #2a3441;
+}
+
+[data-theme="dark"] .account-info-card__title,
+.dark .account-info-card__title {
+  color: #f8fafc;
+}
+
+[data-theme="dark"] .account-info-card__subtitle,
+.dark .account-info-card__subtitle {
+  color: #94a3b8;
+}
+
+[data-theme="dark"] .account-info-tile,
+.dark .account-info-tile {
+  background: #151c24;
+  border-color: #242e3a;
+}
+
+[data-theme="dark"] .account-info-tile__label,
+.dark .account-info-tile__label {
+  color: #94a3b8;
+}
+
+[data-theme="dark"] .account-info-tile__value,
+.dark .account-info-tile__value {
+  color: #f8fafc;
+}
+
+/* Activity Timeline */
+[data-theme="dark"] .activity-timeline-card,
+.dark .activity-timeline-card {
+  background: #1a222c;
+  border-color: #2a3441;
+}
+
+[data-theme="dark"] .activity-timeline-card__title,
+.dark .activity-timeline-card__title {
+  color: #f8fafc;
+}
+
+[data-theme="dark"] .activity-timeline-card__subtitle,
+.dark .activity-timeline-card__subtitle {
+  color: #94a3b8;
+}
+
+[data-theme="dark"] .activity-timeline__item-title,
+.dark .activity-timeline__item-title {
+  color: #f8fafc;
+}
+
+[data-theme="dark"] .activity-timeline__item-desc,
+.dark .activity-timeline__item-desc {
+  color: #94a3b8;
+}
+
+[data-theme="dark"] .activity-timeline__time,
+.dark .activity-timeline__time {
+  color: #64748b;
+}
+
+[data-theme="dark"] .activity-timeline__connector,
+.dark .activity-timeline__connector {
+  background: #242e3a;
+}
+
+[data-theme="dark"] .activity-timeline__icon-circle--green,
+.dark .activity-timeline__icon-circle--green {
+  background: rgba(65, 192, 106, 0.16);
+  color: #41C06A;
+}
+
+[data-theme="dark"] .activity-timeline__icon-circle--gold,
+.dark .activity-timeline__icon-circle--gold {
+  background: rgba(201, 167, 104, 0.16);
+  color: #e0be75;
+}
+
+/* Profile Bottom Bar */
+[data-theme="dark"] .profile-bottom-bar,
+.dark .profile-bottom-bar {
+  background: #1a222c;
+  border-color: #2a3441;
+}
+
+[data-theme="dark"] .profile-bottom-bar__btn--secondary,
+.dark .profile-bottom-bar__btn--secondary {
+  background: #151c24;
+  border-color: #2a3441;
+  color: #f8fafc;
+}
+
+[data-theme="dark"] .profile-bottom-bar__btn--secondary:hover,
+.dark .profile-bottom-bar__btn--secondary:hover {
+  background: #242e3a;
+  border-color: #41C06A;
+  color: #41C06A;
+}
+
+[data-theme="dark"] .profile-bottom-bar__btn--danger,
+.dark .profile-bottom-bar__btn--danger {
+  background: rgba(212, 92, 92, 0.16);
+  border-color: rgba(212, 92, 92, 0.3);
+  color: #f87171;
+}
+
+[data-theme="dark"] .profile-bottom-bar__btn--danger:hover,
+.dark .profile-bottom-bar__btn--danger:hover {
+  background: rgba(212, 92, 92, 0.26);
+  color: #ffffff;
+}
+
+/* Edit & Change Password Drawers */
+[data-theme="dark"] .edit-profile-drawer.drawer__panel,
+.dark .edit-profile-drawer.drawer__panel,
+[data-theme="dark"] .password-drawer.drawer__panel,
+.dark .password-drawer.drawer__panel {
+  background: #1a222c;
+  border-inline-start: 1px solid #2a3441;
+  color: #f8fafc;
+}
+
+[data-theme="dark"] .edit-profile-form__label,
+.dark .edit-profile-form__label,
+[data-theme="dark"] .password-form__label,
+.dark .password-form__label {
+  color: #f8fafc;
+}
+
+[data-theme="dark"] .edit-profile-form__input,
+.dark .edit-profile-form__input,
+[data-theme="dark"] .password-form__input,
+.dark .password-form__input {
+  background: #12181f;
+  border-color: #2a3441;
+  color: #f8fafc;
+}
+
+[data-theme="dark"] .edit-profile-form__input:focus,
+.dark .edit-profile-form__input:focus,
+[data-theme="dark"] .password-form__input:focus,
+.dark .password-form__input:focus {
+  border-color: #41C06A;
+  box-shadow: 0 0 0 3px rgba(65, 192, 106, 0.2);
+}
+
+[data-theme="dark"] .password-form__hint,
+.dark .password-form__hint {
+  color: #94a3b8;
+}
+
+[data-theme="dark"] .password-form__toggle-btn,
+.dark .password-form__toggle-btn {
+  color: #94a3b8;
+}
+
+[data-theme="dark"] .password-form__toggle-btn:hover,
+.dark .password-form__toggle-btn:hover {
+  color: #41C06A;
+}
+
+[data-theme="dark"] .edit-profile-drawer__btn--cancel,
+.dark .edit-profile-drawer__btn--cancel,
+[data-theme="dark"] .password-drawer__btn--cancel,
+.dark .password-drawer__btn--cancel {
+  background: #151c24;
+  border-color: #2a3441;
+  color: #f8fafc;
+}
+
+[data-theme="dark"] .edit-profile-drawer__btn--cancel:hover,
+.dark .edit-profile-drawer__btn--cancel:hover,
+[data-theme="dark"] .password-drawer__btn--cancel:hover,
+.dark .password-drawer__btn--cancel:hover {
+  background: #242e3a;
+  color: #ffffff;
+}
+
+/* 6. Manager Settings */
+[data-theme="dark"] .settings-hero,
+.dark .settings-hero {
+  background: linear-gradient(135deg, #184828 0%, #10321c 100%);
+  border: 1px solid rgba(65, 192, 106, 0.25);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+}
+
+[data-theme="dark"] .settings-hero__eyebrow,
+.dark .settings-hero__eyebrow {
+  color: #e0be75;
+}
+
+[data-theme="dark"] .settings-side-nav,
+.dark .settings-side-nav {
+  background: #1a222c;
+  border-color: #2a3441;
+}
+
+[data-theme="dark"] .settings-side-nav__item,
+.dark .settings-side-nav__item {
+  color: #e2e8f0;
+}
+
+[data-theme="dark"] .settings-side-nav__icon,
+.dark .settings-side-nav__icon {
+  color: #94a3b8;
+}
+
+[data-theme="dark"] .settings-side-nav__item:hover:not(.settings-side-nav__item--active):not(.settings-side-nav__item--disabled),
+.dark .settings-side-nav__item:hover:not(.settings-side-nav__item--active):not(.settings-side-nav__item--disabled) {
+  background: #151c24;
+  color: #f8fafc;
+}
+
+[data-theme="dark"] .settings-side-nav__item--active,
+.dark .settings-side-nav__item--active {
+  background: rgba(65, 192, 106, 0.16);
+  color: #41C06A;
+}
+
+[data-theme="dark"] .settings-side-nav__item--active .settings-side-nav__icon,
+.dark .settings-side-nav__item--active .settings-side-nav__icon {
+  color: #41C06A;
+}
+
+/* Settings Cards & Form Controls */
+[data-theme="dark"] .settings-card,
+.dark .settings-card {
+  background: #1a222c;
+  border-color: #2a3441;
+}
+
+[data-theme="dark"] .settings-card__title,
+.dark .settings-card__title {
+  color: #f8fafc;
+}
+
+[data-theme="dark"] .settings-card__subtitle,
+.dark .settings-card__subtitle {
+  color: #94a3b8;
+}
+
+[data-theme="dark"] .hotel-info-section__badge,
+.dark .hotel-info-section__badge {
+  background: rgba(65, 192, 106, 0.16);
+  color: #41C06A;
+}
+
+[data-theme="dark"] .hotel-info-section__label,
+.dark .hotel-info-section__label {
+  color: #94a3b8;
+}
+
+[data-theme="dark"] .hotel-info-section__input,
+.dark .hotel-info-section__input {
+  background: #12181f;
+  border-color: #2a3441;
+  color: #f8fafc;
+}
+
+[data-theme="dark"] .hotel-info-section__input:focus,
+.dark .hotel-info-section__input:focus {
+  border-color: #41C06A;
+}
+
+/* Shifts Configuration */
+[data-theme="dark"] .shift-timing-card,
+.dark .shift-timing-card {
+  background: #151c24;
+  border-color: #242e3a;
+}
+
+[data-theme="dark"] .shift-timing-card--error,
+.dark .shift-timing-card--error {
+  background: rgba(212, 92, 92, 0.14);
+  border-color: #D45C5C;
+}
+
+[data-theme="dark"] .shift-timing-card__icon-wrap,
+.dark .shift-timing-card__icon-wrap {
+  background: rgba(65, 192, 106, 0.16);
+  color: #41C06A;
+}
+
+[data-theme="dark"] .shift-timing-card__name,
+.dark .shift-timing-card__name {
+  color: #f8fafc;
+}
+
+[data-theme="dark"] .shift-timing-card__preview,
+.dark .shift-timing-card__preview {
+  color: #94a3b8;
+}
+
+[data-theme="dark"] .shift-timing-card__time-label,
+.dark .shift-timing-card__time-label {
+  color: #94a3b8;
+}
+
+[data-theme="dark"] .shift-timing-card__time-input,
+.dark .shift-timing-card__time-input {
+  background: #12181f;
+  border-color: #2a3441;
+  color: #f8fafc;
+}
+
+/* Notification Section */
+[data-theme="dark"] .notification-toggle-card,
+.dark .notification-toggle-card {
+  background: #151c24;
+  border-color: #242e3a;
+}
+
+[data-theme="dark"] .notification-toggle-card:hover,
+.dark .notification-toggle-card:hover {
+  background: #1a222c;
+}
+
+/* Preferences Section (Appearance & Language) */
+[data-theme="dark"] .preferences-section__label,
+.dark .preferences-section__label {
+  color: #f8fafc;
+}
+
+[data-theme="dark"] .segmented-pill-group,
+.dark .segmented-pill-group {
+  background: #151c24;
+  border-color: #242e3a;
+}
+
+[data-theme="dark"] .segmented-pill-btn,
+.dark .segmented-pill-btn {
+  color: #94a3b8;
+}
+
+[data-theme="dark"] .segmented-pill-btn:hover:not(:disabled):not(.segmented-pill-btn--active),
+.dark .segmented-pill-btn:hover:not(:disabled):not(.segmented-pill-btn--active) {
+  color: #f8fafc;
+}
+
+[data-theme="dark"] .segmented-pill-btn--active,
+.dark .segmented-pill-btn--active {
+  background: #1a222c;
+  color: #41C06A;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.4);
+}
+
+[data-theme="dark"] .segmented-pill-badge,
+.dark .segmented-pill-badge {
+  background: #242e3a;
+  color: #94a3b8;
+}

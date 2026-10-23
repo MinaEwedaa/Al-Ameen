@@ -1,0 +1,121 @@
+.shifts-config-section__list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.shift-timing-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-4);
+  padding: 14px 20px;
+  background: var(--color-surface-muted);
+  border: 1px solid var(--color-table-divider);
+  border-radius: 16px;
+  flex-wrap: wrap;
+  transition: all 0.18s ease;
+}
+
+.shift-timing-card--error {
+  border-color: var(--color-danger);
+  background: #FFF8F8;
+}
+
+.shift-timing-card__main {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.shift-timing-card__icon-wrap {
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  background: var(--color-primary-soft);
+  color: var(--color-primary-dark);
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+}
+
+.shift-timing-card__icon {
+  width: 20px;
+  height: 20px;
+  stroke-width: 1.85;
+}
+
+.shift-timing-card__info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.shift-timing-card__name {
+  font-size: 0.95rem;
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-ink);
+}
+
+.shift-timing-card__preview {
+  font-size: 0.8rem;
+  color: var(--color-text-muted);
+  direction: ltr;
+  text-align: inherit;
+}
+
+.shift-timing-card__controls {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.shift-timing-card__input-group {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.shift-timing-card__time-label {
+  font-size: 0.72rem;
+  color: var(--color-text-muted);
+}
+
+.shift-timing-card__time-input {
+  height: 2.35rem;
+  padding: 0 10px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  background: var(--color-surface);
+  font-size: 0.88rem;
+  color: var(--color-ink);
+  direction: ltr;
+}
+
+.shift-timing-card__time-input:focus {
+  outline: none;
+  border-color: var(--color-primary);
+}
+
+.shift-timing-card__divider {
+  color: var(--color-text-muted);
+  margin-top: 14px;
+}
+
+.shift-timing-card__error-text {
+  width: 100%;
+  font-size: 0.76rem;
+  color: var(--color-danger);
+  margin-top: 4px;
+}
+
+@media (max-width: 640px) {
+  .shift-timing-card {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .shift-timing-card__controls {
+    justify-content: space-between;
+  }
+}

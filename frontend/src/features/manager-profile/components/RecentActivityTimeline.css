@@ -1,0 +1,122 @@
+.activity-timeline-card {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: 20px;
+  padding: 24px 28px;
+  box-shadow: 0 4px 16px rgba(47, 47, 47, 0.03);
+}
+
+.activity-timeline-card__header {
+  margin-bottom: var(--space-4);
+}
+
+.activity-timeline-card__title {
+  color: var(--color-ink);
+  font-size: 1.25rem;
+  font-weight: var(--font-weight-bold);
+  margin: 0 0 2px 0;
+}
+
+.activity-timeline-card__subtitle {
+  color: var(--color-text-muted);
+  font-size: 0.82rem;
+  margin: 0;
+}
+
+.activity-timeline-card__empty {
+  color: var(--color-text-muted);
+  font-size: 0.9rem;
+  padding: var(--space-4) 0;
+  text-align: center;
+}
+
+.activity-timeline {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.activity-timeline__item {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-4);
+  position: relative;
+  min-height: 4.5rem;
+}
+
+.activity-timeline__line-col {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex-shrink: 0;
+  position: relative;
+}
+
+.activity-timeline__icon-circle {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+  z-index: 1;
+}
+
+.activity-timeline__icon {
+  width: 20px;
+  height: 20px;
+  stroke-width: 1.85;
+}
+
+.activity-timeline__icon-circle--green {
+  background: var(--color-primary-soft);
+  color: var(--color-primary-dark);
+}
+
+.activity-timeline__icon-circle--gold {
+  background: var(--color-gold-soft);
+  color: var(--color-gold);
+}
+
+.activity-timeline__connector {
+  width: 2px;
+  flex: 1;
+  background: var(--color-table-divider);
+  min-height: 28px;
+  margin-top: 4px;
+}
+
+.activity-timeline__content {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex: 1;
+  gap: var(--space-3);
+  padding-top: 6px;
+}
+
+.activity-timeline__text {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.activity-timeline__item-title {
+  color: var(--color-ink);
+  font-size: 0.95rem;
+  font-weight: var(--font-weight-semibold);
+}
+
+.activity-timeline__item-desc {
+  color: var(--color-text-muted);
+  font-size: 0.8rem;
+}
+
+.activity-timeline__time {
+  color: var(--color-text-muted);
+  font-size: 0.82rem;
+  font-variant-numeric: tabular-nums;
+  flex-shrink: 0;
+}

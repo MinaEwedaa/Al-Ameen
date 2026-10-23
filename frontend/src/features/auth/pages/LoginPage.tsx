@@ -17,8 +17,9 @@ export function LoginPage() {
   const { language, toggleLanguage, t } = useLanguage();
 
   useEffect(() => {
-    if (getAuthSession()) {
-      navigate(ROUTES.dashboard, { replace: true });
+    const session = getAuthSession();
+    if (session) {
+      navigate(session.role === ROLES.manager ? ROUTES.managerDashboard : ROUTES.dashboard, { replace: true });
     }
   }, [navigate]);
 
@@ -48,13 +49,14 @@ export function LoginPage() {
     try {
       const response = await login(input);
       setAccessToken(response.access_token);
+      const isManager = (response.staff as { role?: string }).role === 'manager';
       setAuthSession({
-        role: ROLES.receptionist,
+        role: isManager ? ROLES.manager : ROLES.receptionist,
         userId: String(response.staff.staff_id),
         staffName: response.staff.name,
         readOnly: response.read_only,
       });
-      navigate(ROUTES.dashboard, { replace: true });
+      navigate(isManager ? ROUTES.managerDashboard : ROUTES.dashboard, { replace: true });
     } catch (error) {
       setApiError(getErrorMessage(error, language));
     } finally {
