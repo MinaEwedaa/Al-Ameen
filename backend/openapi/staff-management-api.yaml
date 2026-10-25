@@ -203,6 +203,180 @@ paths:
                 read_only: true
         '401':
           $ref: '#/components/responses/Unauthorized'
+    patch:
+      tags: [Auth]
+      operationId: updateMe
+      summary: Update manager profile
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              minProperties: 1
+              properties:
+                full_name:
+                  type: string
+                phone:
+                  type: string
+                email:
+                  type: string
+      responses:
+        '200':
+          description: Profile updated
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  full_name:
+                    type: string
+                  phone:
+                    type: string
+                  email:
+                    type: string
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '409':
+          $ref: '#/components/responses/Conflict'
+  /auth/change-password:
+    post:
+      tags: [Auth]
+      operationId: changePassword
+      summary: Change staff password
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [current_password, new_password]
+              properties:
+                current_password:
+                  type: string
+                new_password:
+                  type: string
+      responses:
+        '204':
+          description: Password changed successfully
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '429':
+          $ref: '#/components/responses/TooManyRequests'
+  /auth/me/stats:
+    get:
+      tags: [Auth]
+      operationId: getMeStats
+      summary: Manager statistics
+      responses:
+        '200':
+          description: Manager statistics
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [data]
+                properties:
+                  data:
+                    type: object
+                    required: [audits_total, decisions_this_month, reports_pending_review]
+                    properties:
+                      audits_total:
+                        type: integer
+                      decisions_this_month:
+                        type: integer
+                      reports_pending_review:
+                        type: integer
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+  /auth/me/activities:
+    get:
+      tags: [Auth]
+      operationId: getMeActivities
+      summary: Manager activities
+      parameters:
+        - name: limit
+          in: query
+          required: false
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 20
+            default: 5
+      responses:
+        '200':
+          description: Manager activities
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  required: [id, action]
+                  properties:
+                    id:
+                      type: string
+                    action:
+                      type: string
+                    entity:
+                      type: string
+                      nullable: true
+                    entity_id:
+                      type: string
+                      nullable: true
+                    at:
+                      type: string
+                      format: date-time
+                      nullable: true
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+  /auth/password-reset-requests:
+    post:
+      tags: [Auth]
+      operationId: requestPasswordReset
+      summary: Public request for password reset
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [username]
+              properties:
+                username:
+                  type: string
+      responses:
+        '202':
+          description: Reset request accepted
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [data]
+                properties:
+                  data:
+                    type: object
+                    required: [message]
+                    properties:
+                      message:
+                        type: string
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '429':
+          $ref: '#/components/responses/TooManyRequests'
   /dashboard:
     get:
       tags: [Dashboard]
@@ -1498,7 +1672,7 @@ components:
       enum: [low, medium, high, urgent]
     RoomStatus:
       type: string
-      enum: [available, reserved, occupied, cleaning, maintenance]
+      enum: [available, reserved, occupied, cleaning, maintenance, out_of_service]
     ReservationStatus:
       type: string
       enum: [confirmed, checked_in, checked_out, cancelled]
@@ -1533,14 +1707,30 @@ components:
           maxLength: 200
     Staff:
       type: object
-      required: [staff_id, name, default_shift_type]
+      required: [staff_id, name]
       properties:
         staff_id:
           type: string
         name:
           type: string
+        role:
+          type: string
+          enum: [receptionist, manager, admin]
         default_shift_type:
-          $ref: '#/components/schemas/ShiftType'
+          type: string
+          enum: [morning, evening, night, null]
+          nullable: true
+        staff_type:
+          type: string
+        email:
+          type: string
+          nullable: true
+        phone:
+          type: string
+          nullable: true
+        department:
+          type: string
+          nullable: true
     Shift:
       type: object
       required: [shift_id, staff_id, shift_date, shift_type, start_time, end_time, status]
@@ -1634,6 +1824,17 @@ components:
           $ref: '#/components/schemas/NullableShift'
         read_only:
           type: boolean
+        open_business_day:
+          type: object
+          nullable: true
+          properties:
+            business_date:
+              type: string
+            status:
+              type: string
+            opened_at:
+              type: string
+              format: date-time
     PaymentTotals:
       type: object
       required: [cash, instapay, vodafone_cash, total]

@@ -2,7 +2,8 @@
   "errors": {
     "VALIDATION_ERROR": "The data entered is invalid. Please check the fields and try again",
     "UNAUTHORIZED": "Your session expired or the credentials are wrong. Please enter your password again",
-    "FORBIDDEN": "This action is not allowed. The session is read-only until your shift starts",
+    "FORBIDDEN": "You do not have permission to perform this action",
+    "READ_ONLY_SESSION": "This action is not allowed. The session is read-only until your shift starts",
     "OUTSIDE_SHIFT_HOURS": "You cannot log in outside your shift hours",
     "NOT_SCHEDULED": "You have no shift scheduled today",
     "NOT_FOUND": "The requested item was not found",

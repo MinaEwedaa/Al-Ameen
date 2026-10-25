@@ -95,6 +95,15 @@ describe('Feature 12: Security Hardening (tests/security.test.js)', () => {
       active: true,
     });
 
+    await Staff.create({
+      username: 'sec_housekeeper',
+      name: 'Security Housekeeper',
+      password_hash: passwordHash,
+      default_shift_type: 'morning',
+      role: 'housekeeper',
+      active: true,
+    });
+
     // Login receptionist
     const loginRes = await request(app)
       .post('/api/v1/auth/login')
@@ -139,7 +148,7 @@ describe('Feature 12: Security Hardening (tests/security.test.js)', () => {
       for (const method of Object.keys(methods)) {
         if (['post', 'get', 'patch', 'delete', 'put'].includes(method.toLowerCase())) {
           // Skip public endpoints
-          if (routePath === '/auth/login' || routePath === '/auth/refresh') continue;
+          if (routePath === '/auth/login' || routePath === '/auth/refresh' || routePath === '/auth/password-reset-requests') continue;
 
           // Replace URL params like {guest_id} with dummyId
           const resolvedPath = '/api/v1' + routePath.replace(/\{[^}]+\}/g, dummyId);
@@ -177,6 +186,12 @@ describe('Feature 12: Security Hardening (tests/security.test.js)', () => {
       if (p.includes('/handover') && m === 'patch') {
         return { shift_notes: 'notes' };
       }
+      if (p.includes('/change-password') && m === 'post') {
+        return { current_password: 'OldPassword123!', new_password: 'NewStrongPassword123!' };
+      }
+      if (p === '/auth/me' && m === 'patch') {
+        return { full_name: 'Security Admin' };
+      }
       return {};
     };
 
@@ -210,11 +225,11 @@ describe('Feature 12: Security Hardening (tests/security.test.js)', () => {
       expect(res.body.error.code).toBe('FORBIDDEN');
     });
 
-    test('manager cannot log into receptionist login endpoint', async () => {
+    test('housekeeper cannot log into receptionist login endpoint', async () => {
       const res = await request(app)
         .post('/api/v1/auth/login')
         .set('x-test-time', Cairo13)
-        .send({ username: 'sec_manager', password });
+        .send({ username: 'sec_housekeeper', password });
 
       expect(res.status).toBe(403);
       expect(res.body.error.code).toBe('FORBIDDEN');

@@ -27,14 +27,18 @@ module.exports = (err, req, res, next) => {
   }
 
   if (err.code && err.status) {
-  const error = { code: err.code, message: err.message };
+    const error = {
+      code: err.code,
+      message: err.message,
+      ...(err.details ? { details: err.details } : {}),
+    };
 
-  if (err.guest_id) {
-    error.guest_id = err.guest_id;
+    if (err.guest_id) {
+      error.guest_id = err.guest_id;
+    }
+
+    return res.status(err.status).json({ error });
   }
-
-  return res.status(err.status).json({ error });
-}
 
   if (req.log) {
     req.log.error({ err }, 'unhandled error');

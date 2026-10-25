@@ -4,10 +4,16 @@ import { getAuthSession } from '../../core/auth/authManager';
 import { ROUTES } from '../../core/constants/routes';
 
 export function ProtectedRoute({ children }: { children: ReactNode }) {
-  if (!getAuthSession()) {
+  const session = getAuthSession();
+  if (!session) {
     return <Navigate to={ROUTES.login} replace />;
   }
 
-  return children;
+  const role = (session.role || '').toLowerCase();
+  if (role === 'manager' || role === 'admin') {
+    return <Navigate to={ROUTES.managerDashboard} replace />;
+  }
+
+  return <>{children}</>;
 }
 

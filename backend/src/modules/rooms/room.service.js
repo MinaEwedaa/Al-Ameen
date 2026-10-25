@@ -155,7 +155,7 @@ async function changeStatus({ roomId, status, notes, staff, shift, ip, now }) {
       // تحديث شرطي: لو حد غيّر الحالة في نفس اللحظة، modifiedCount مش هيبقى 1
       const upd = await Room.updateOne(
         { _id: room._id, status: room.status },
-        { $set: { status } },
+        { $set: { status, inspected: false } }, // MANAGER-M5
         { session }
       );
       if (upd.modifiedCount !== 1) {

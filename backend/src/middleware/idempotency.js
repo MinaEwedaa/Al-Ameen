@@ -12,7 +12,22 @@ function stableStringify(v) {
     .map((k) => JSON.stringify(k) + ':' + stableStringify(v[k])).join(',') + '}';
 }
 
-module.exports = () => async (req, res, next) => {
+const redactBody = (body, fields) => {
+  if (!fields || !fields.length || !body) return body;
+  const clone = JSON.parse(JSON.stringify(body));
+  const walk = (o) => {
+    if (o && typeof o === 'object') {
+      for (const k of Object.keys(o)) {
+        if (fields.includes(k)) o[k] = null;
+        else walk(o[k]);
+      }
+    }
+  };
+  walk(clone);
+  return clone;
+};
+
+module.exports = ({ redact = [] } = {}) => async (req, res, next) => {
   try {
     const key = req.get('Idempotency-Key');
     if (!key || !KEY_PATTERN.test(key)) {
@@ -49,7 +64,7 @@ module.exports = () => async (req, res, next) => {
         if (res.statusCode >= 200 && res.statusCode < 300) {
           await IdempotencyKey.updateOne(
             { _id: rec._id },
-            { status: 'done', response_status: res.statusCode, response_body: body }
+            { status: 'done', response_status: res.statusCode, response_body: redactBody(body, redact) }
           );
         } else {
           await IdempotencyKey.deleteOne({ _id: rec._id, status: 'in_progress' });

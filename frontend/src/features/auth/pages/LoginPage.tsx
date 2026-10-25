@@ -37,7 +37,7 @@ export function LoginPage() {
     event.preventDefault();
     setApiError(null);
 
-    const input = { username, password };
+    const input = { username: username.trim(), password };
     const validationErrors = validateLogin(input, t);
     if (validationErrors) {
       setErrors(validationErrors);
@@ -49,7 +49,8 @@ export function LoginPage() {
     try {
       const response = await login(input);
       setAccessToken(response.access_token);
-      const isManager = (response.staff as { role?: string }).role === 'manager';
+      const role = String((response.staff as { role?: string }).role || '').toLowerCase();
+      const isManager = role === 'manager' || role === 'admin';
       setAuthSession({
         role: isManager ? ROLES.manager : ROLES.receptionist,
         userId: String(response.staff.staff_id),

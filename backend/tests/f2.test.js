@@ -25,11 +25,11 @@ describe('Feature 2: Authentication & Session Management', () => {
     });
 
     manager = await Staff.create({
-      username: 'sami_manager',
+      username: 'sami_housekeeper',
       name: 'Sami',
       password_hash: passwordHash,
       default_shift_type: 'morning',
-      role: 'manager',
+      role: 'housekeeper',
       active: true,
     });
   });
@@ -237,11 +237,11 @@ describe('Feature 2: Authentication & Session Management', () => {
     expect(meRes.status).toBe(401);
   });
 
-  test('logging in with manager account returns 403 FORBIDDEN', async () => {
+  test('logging in with housekeeper account returns 403 FORBIDDEN', async () => {
     const res = await request(app)
       .post('/api/v1/auth/login')
       .send({
-        username: 'sami_manager',
+        username: 'sami_housekeeper',
         password,
       });
 

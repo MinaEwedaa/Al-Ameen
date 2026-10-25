@@ -14,6 +14,15 @@ const AuditLog = require('./AuditLog');
 const IdempotencyKey = require('./IdempotencyKey');
 const Session = require('./Session');
 const ShiftReport = require('./ShiftReport');
+const RoomType = require('./RoomType');
+const ShiftSchedule = require('./ShiftSchedule');
+const LeaveRequest = require('./LeaveRequest');
+const ApprovalRequest = require('./ApprovalRequest');
+const CancellationSettlement = require('./CancellationSettlement');
+const PasswordResetRequest = require('./PasswordResetRequest');
+const DailyClosing = require('./DailyClosing');
+const Notification = require('./Notification');
+const Setting = require('./Setting');
 
 module.exports = {
   Staff,
@@ -32,4 +41,13 @@ module.exports = {
   IdempotencyKey,
   Session,
   ShiftReport,
+  RoomType,
+  ShiftSchedule,
+  LeaveRequest,
+  ApprovalRequest,
+  CancellationSettlement,
+  PasswordResetRequest,
+  DailyClosing,
+  Notification,
+  Setting,
 };

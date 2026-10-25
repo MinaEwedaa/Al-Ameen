@@ -30,7 +30,7 @@ app.use(
   cors({
     origin: env.allowedOrigins,
     credentials: true,
-    methods: ['GET', 'POST', 'PATCH', 'OPTIONS'],
+    methods: ['GET', 'POST', 'PATCH', 'DELETE', 'OPTIONS'],
     exposedHeaders: ['Idempotent-Replayed', 'Retry-After'],
   })
 );
@@ -48,22 +48,38 @@ const fs = require('fs');
 const swaggerUi = require('swagger-ui-express');
 const yaml = require('js-yaml');
 
+const MANAGER_PREFIX = /^\/api\/v1\/manager(\/|$)/;
+
 app.get('/health', (req, res) => res.json({ ok: true }));
 
 const apiSpecPath = path.resolve(__dirname, '../openapi/staff-management-api.yaml');
+const managerApiSpecPath = path.resolve(__dirname, '../openapi/manager-api.yaml');
 
 if (env.nodeEnv !== 'production') {
   const swaggerDocument = yaml.load(fs.readFileSync(apiSpecPath, 'utf8'));
   app.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 }
 
+// Receptionist validator (ignores manager endpoints)
 app.use(
   OpenApiValidator.middleware({
     apiSpec: apiSpecPath,
     validateRequests: { removeAdditional: 'all' },
     validateResponses: env.nodeEnv !== 'production',
     validateSecurity: false,
-    ignorePaths: /^\/(health|docs|api\/v1\/test-)/,
+    ignorePaths: (p) => /^\/(health|docs|api\/v1\/test-|api\/v1\/leave-requests)/.test(p) || MANAGER_PREFIX.test(p),
+  })
+);
+
+// Manager validator (only runs on /api/v1/manager endpoints)
+app.use(
+  '/api/v1/manager',
+  OpenApiValidator.middleware({
+    apiSpec: managerApiSpecPath,
+    validateRequests: { removeAdditional: true },
+    validateResponses: env.nodeEnv !== 'production',
+    validateSecurity: false,
+    ignorePaths: (p) => !/^\/api\/v1\/manager\/(password-reset-requests|notifications)/.test(p),
   })
 );
 
@@ -81,6 +97,8 @@ app.use('/api/v1/reservations', require('./modules/reservations/reservation.rout
 app.use('/api/v1/payments', require('./modules/payments/payment.routes'));
 app.use('/api/v1/cleaning-tasks', require('./modules/cleaning/cleaning.routes'));
 app.use('/api/v1/maintenance-issues', require('./modules/maintenance/maintenance.routes'));
+app.use('/api/v1/leave-requests', require('./modules/manager/leaves/receptionistLeave.routes'));
+app.use('/api/v1/manager', require('./modules/manager'));
 if (env.nodeEnv === 'test') {
   app.post(
     '/api/v1/test-shift-write',

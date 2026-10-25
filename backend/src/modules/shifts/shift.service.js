@@ -91,7 +91,8 @@ function formatPayment(payment) {
  * Returns the shift types scheduled for a staff member on a specific Cairo date,
  * resolving default shift and exceptions (cancel, swap, extra).
  */
-async function getScheduledShifts(staff, dateStr) {
+// MANAGER-M6: Legacy resolution based on default_shift_type and ShiftException
+async function getScheduledShiftsLegacy(staff, dateStr) {
   const exceptions = await ShiftException.find({
     staff_id: staff._id,
     shift_date: dateStr,
@@ -118,6 +119,36 @@ async function getScheduledShifts(staff, dateStr) {
   }
 
   return shifts;
+}
+
+const { ensureBaseline } = require('../manager/common/schedule.service');
+
+// MANAGER-M6: Master schedule resolution reading from ShiftSchedule with baseline materialization
+async function getScheduledShifts(staff, dateStr) {
+  if (process.env.SCHEDULE_SOURCE === 'legacy') {
+    return getScheduledShiftsLegacy(staff, dateStr);
+  }
+
+  try {
+    // Materialize baseline on demand for today onwards
+    await ensureBaseline(dateStr, dateStr, [staff._id]);
+
+    const rows = await ShiftSchedule.find({
+      staff_id: staff._id,
+      shift_date: dateStr,
+      status: 'SCHEDULED',
+    })
+      .select('shift_type')
+      .lean();
+
+    if (rows.length > 0) {
+      return rows.map((r) => r.shift_type);
+    }
+  } catch (err) {
+    // If validation or error, fallback to legacy
+  }
+
+  return getScheduledShiftsLegacy(staff, dateStr);
 }
 
 /**

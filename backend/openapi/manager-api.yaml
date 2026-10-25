@@ -1,0 +1,420 @@
+openapi: 3.0.3
+info:
+  title: Al-Amin Manager API
+  version: '1.2'
+servers:
+  - url: /api/v1/manager
+security:
+  - bearerAuth: []
+paths:
+  /password-reset-requests:
+    get:
+      summary: List password reset requests
+      operationId: listPasswordResetRequests
+      parameters:
+        - name: status
+          in: query
+          required: false
+          schema:
+            type: string
+            enum: [PENDING, IN_REVIEW, APPROVED, REJECTED]
+            default: PENDING
+        - $ref: '#/components/parameters/Page'
+        - $ref: '#/components/parameters/Limit'
+      responses:
+        '200':
+          description: Paginated list of password reset requests
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [data, meta]
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/PasswordResetRequestItem'
+                  meta:
+                    $ref: '#/components/schemas/Meta'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+  /password-reset-requests/{id}/decision:
+    patch:
+      summary: Decide on a password reset request
+      operationId: decidePasswordResetRequest
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            $ref: '#/components/schemas/ObjectId'
+        - $ref: '#/components/parameters/IdempotencyKey'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PasswordResetDecisionRequest'
+      responses:
+        '200':
+          description: Request decided successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [data]
+                properties:
+                  data:
+                    $ref: '#/components/schemas/PasswordResetDecisionResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '409':
+          description: Conflict or already decided
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /notifications:
+    get:
+      summary: List manager notifications
+      operationId: listNotifications
+      parameters:
+        - name: is_read
+          in: query
+          required: false
+          schema:
+            type: boolean
+        - $ref: '#/components/parameters/Page'
+        - $ref: '#/components/parameters/Limit'
+      responses:
+        '200':
+          description: Paginated notifications
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [data, meta]
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/NotificationItem'
+                  meta:
+                    $ref: '#/components/schemas/Meta'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+  /notifications/{id}/read:
+    patch:
+      summary: Mark notification as read
+      operationId: markNotificationRead
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            $ref: '#/components/schemas/ObjectId'
+      responses:
+        '200':
+          description: Notification marked as read
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [data]
+                properties:
+                  data:
+                    $ref: '#/components/schemas/NotificationItem'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+  /notifications/read-all:
+    post:
+      summary: Mark all unread notifications as read
+      operationId: markAllNotificationsRead
+      responses:
+        '200':
+          description: All notifications marked as read
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [data]
+                properties:
+                  data:
+                    type: object
+                    required: [updated]
+                    properties:
+                      updated:
+                        type: integer
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+  /notifications/preferences:
+    get:
+      summary: Get manager notification preferences
+      operationId: getNotificationPreferences
+      responses:
+        '200':
+          description: Notification preferences
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [data]
+                properties:
+                  data:
+                    $ref: '#/components/schemas/NotificationPreferences'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+    patch:
+      summary: Update manager notification preferences
+      operationId: updateNotificationPreferences
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NotificationPreferencesPatch'
+      responses:
+        '200':
+          description: Updated preferences
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [data]
+                properties:
+                  data:
+                    $ref: '#/components/schemas/NotificationPreferences'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+  parameters:
+    Page:
+      name: page
+      in: query
+      schema:
+        type: integer
+        minimum: 1
+        default: 1
+    Limit:
+      name: limit
+      in: query
+      schema:
+        type: integer
+        minimum: 1
+        maximum: 100
+        default: 20
+    IdempotencyKey:
+      name: Idempotency-Key
+      in: header
+      required: true
+      schema:
+        type: string
+  responses:
+    BadRequest:
+      description: Validation error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    Unauthorized:
+      description: Authentication required
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    Forbidden:
+      description: Forbidden
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    NotFound:
+      description: Resource not found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+  schemas:
+    ObjectId:
+      type: string
+      pattern: '^[a-f0-9]{24}$'
+    Meta:
+      type: object
+      required: [page, limit, total, total_pages]
+      properties:
+        page:
+          type: integer
+        limit:
+          type: integer
+        total:
+          type: integer
+        total_pages:
+          type: integer
+        unread_count:
+          type: integer
+    Error:
+      type: object
+      required: [error]
+      properties:
+        error:
+          type: object
+          required: [code, message]
+          properties:
+            code:
+              type: string
+            message:
+              type: string
+            details:
+              type: object
+    PasswordResetRequestItem:
+      type: object
+      required: [id, staff_id, staff_name, username, status, requested_at]
+      properties:
+        id:
+          type: string
+        staff_id:
+          type: string
+        staff_name:
+          type: string
+        username:
+          type: string
+        status:
+          type: string
+          enum: [PENDING, IN_REVIEW, APPROVED, REJECTED]
+        requested_at:
+          type: string
+          format: date-time
+        decided_at:
+          type: string
+          format: date-time
+          nullable: true
+        decided_by_staff_id:
+          type: string
+          nullable: true
+        manager_comment:
+          type: string
+          nullable: true
+    PasswordResetDecisionRequest:
+      type: object
+      required: [action]
+      properties:
+        action:
+          type: string
+          enum: [APPROVE, REJECT]
+        manager_comment:
+          type: string
+          nullable: true
+    PasswordResetDecisionResponse:
+      type: object
+      required: [id, status, staff_id]
+      properties:
+        id:
+          type: string
+        status:
+          type: string
+        staff_id:
+          type: string
+        temporary_password:
+          type: string
+          nullable: true
+    NotificationItem:
+      type: object
+      required: [id, type, title, message, is_read, created_at]
+      properties:
+        id:
+          type: string
+        type:
+          type: string
+          enum:
+            - APPROVAL_REQUEST
+            - APPROVAL_DECISION
+            - LEAVE_REQUEST
+            - LEAVE_DECISION
+            - CRITICAL_MAINTENANCE
+            - CRITICAL_COMPLAINT
+            - SHIFT_REPORT_SUBMITTED
+            - SYSTEM
+        title:
+          type: string
+        message:
+          type: string
+        ref_type:
+          type: string
+          nullable: true
+        ref_id:
+          type: string
+          nullable: true
+        is_read:
+          type: boolean
+        created_at:
+          type: string
+          format: date-time
+        read_at:
+          type: string
+          format: date-time
+          nullable: true
+    NotificationPreferences:
+      type: object
+      required:
+        - approval_request
+        - leave_request
+        - critical_maintenance
+        - critical_complaint
+        - shift_report_submitted
+        - system
+      properties:
+        approval_request:
+          type: boolean
+        leave_request:
+          type: boolean
+        critical_maintenance:
+          type: boolean
+        critical_complaint:
+          type: boolean
+        shift_report_submitted:
+          type: boolean
+        system:
+          type: boolean
+    NotificationPreferencesPatch:
+      type: object
+      minProperties: 1
+      properties:
+        approval_request:
+          type: boolean
+        leave_request:
+          type: boolean
+        critical_maintenance:
+          type: boolean
+        critical_complaint:
+          type: boolean
+        shift_report_submitted:
+          type: boolean
+        system:
+          type: boolean
+

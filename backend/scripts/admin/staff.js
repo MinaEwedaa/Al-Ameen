@@ -1,12 +1,6 @@
-const crypto = require('crypto');
-const argon2 = require('argon2');
 const { Staff, Session } = require('../../src/db/models');
 const { guard } = require('./guard');
-
-function generateSecurePassword() {
-  // Generate 16-character alphanumeric password
-  return crypto.randomBytes(12).toString('base64url');
-}
+const { hashPassword, generatePassword } = require('../../src/utils/password');
 
 async function createStaff({ username, name, shiftType, role = 'receptionist', password, by, reason, yes }) {
   await guard({
@@ -22,8 +16,8 @@ async function createStaff({ username, name, shiftType, role = 'receptionist', p
     throw new Error(`Staff member with username '${username}' already exists.`);
   }
 
-  const plainPassword = password || generateSecurePassword();
-  const passwordHash = await argon2.hash(plainPassword);
+  const plainPassword = password || generatePassword();
+  const passwordHash = await hashPassword(plainPassword);
 
   const staff = await Staff.create({
     username,
@@ -82,8 +76,8 @@ async function resetPassword({ username, password, by, reason, yes }) {
     throw new Error(`Staff member with username '${username}' not found.`);
   }
 
-  const plainPassword = password || generateSecurePassword();
-  const passwordHash = await argon2.hash(plainPassword);
+  const plainPassword = password || generatePassword();
+  const passwordHash = await hashPassword(plainPassword);
 
   staff.password_hash = passwordHash;
   staff.failed_attempts = 0;

@@ -49,6 +49,21 @@ async function createMaintenanceIssue({ room_id, problem, priority, notes, staff
     ip,
   });
 
+  if (issue.priority === 'urgent') {
+    try {
+      const { notifyManagers } = require('../notifications/notify');
+      await notifyManagers({
+        type: 'CRITICAL_MAINTENANCE',
+        title: 'Critical maintenance',
+        message: 'Room ' + room.room_number,
+        refType: 'MaintenanceRequest',
+        refId: issue._id,
+      });
+    } catch (err) {
+      // Failure here must never fail the receptionist's request
+    }
+  }
+
   issue.room_id = { _id: room._id, room_number: room.room_number };
   return toMaintenanceIssueDto(issue);
 }

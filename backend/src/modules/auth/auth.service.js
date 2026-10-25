@@ -77,8 +77,9 @@ async function login({ username, password, ip, reqTime }) {
     throw E.unauthorized('Invalid credentials');
   }
 
-  // 4. Role validation (Only receptionist can log into receptionist system)
-  if (staff.role !== 'receptionist') {
+  // 4. Role validation
+  const LOGIN_ROLES = ['receptionist', 'manager', 'admin'];
+  if (!LOGIN_ROLES.includes(staff.role)) {
     throw E.forbidden('Forbidden', 'FORBIDDEN');
   }
 
@@ -89,9 +90,19 @@ async function login({ username, password, ip, reqTime }) {
   await staff.save();
 
   // 5. Shift check
-  const shiftInfo = await resolveLoginShift(staff, now, reqTime);
+  let state;
+  if (staff.role === 'receptionist') {
+    state = await resolveLoginShift(staff, now, reqTime);
+  } else {
+    state = {
+      scheduled_shift: null,
+      shift: null,
+      read_only: false,
+      refreshExpiresAt: new Date(now.getTime() + env.managerSessionHours * 3600e3),
+    };
+  }
 
-  // 6. Invalidate any existing sessions (one device per receptionist)
+  // 6. Invalidate any existing sessions
   await Session.updateMany(
     { staff_id: staff._id, revoked_at: null },
     { revoked_at: now }
@@ -105,9 +116,9 @@ async function login({ username, password, ip, reqTime }) {
   const session = await Session.create({
     staff_id: staff._id,
     refresh_hash: refreshHash,
-    expires_at: shiftInfo.refreshExpiresAt,
-    scheduled_shift: shiftInfo.scheduled_shift,
-    shift_id: shiftInfo.shift ? shiftInfo.shift._id : null,
+    expires_at: state.refreshExpiresAt,
+    scheduled_shift: state.scheduled_shift,
+    shift_id: state.shift ? state.shift._id : null,
     last_seen_at: now,
   });
 
@@ -126,10 +137,11 @@ async function login({ username, password, ip, reqTime }) {
     staff: {
       staff_id: String(staff._id),
       name: staff.name,
+      role: staff.role,
       default_shift_type: staff.default_shift_type,
     },
-    shift: formatShift(shiftInfo.shift),
-    readOnly: shiftInfo.read_only,
+    shift: state.shift ? formatShift(state.shift) : null,
+    readOnly: state.read_only,
   };
 }
 

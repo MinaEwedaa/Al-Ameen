@@ -29,4 +29,38 @@ const generalRateLimiter = rateLimit({
   },
 });
 
-module.exports = { loginRateLimiter, generalRateLimiter };
+const changePasswordTestMax = Number(process.env.CHANGE_PASSWORD_RATE_LIMIT_MAX);
+const CHANGE_PASSWORD_MAX =
+  process.env.NODE_ENV === 'test' && changePasswordTestMax > 0 ? changePasswordTestMax : 5;
+
+const changePasswordRateLimiter = rateLimit({
+  windowMs: 60 * 1000, // 1 minute
+  max: CHANGE_PASSWORD_MAX,
+  keyGenerator: (req) => String(req.auth?.staff?._id || req.ip),
+  validate: { keyGeneratorIpFallback: false },
+  standardHeaders: true,
+  legacyHeaders: false,
+  handler: (req, res, next) => {
+    next(E.tooMany('Too many change password attempts', 60));
+  },
+});
+
+const resetTestMax = Number(process.env.RESET_RATE_LIMIT_MAX);
+const RESET_MAX = process.env.NODE_ENV === 'test' && resetTestMax > 0 ? resetTestMax : 5;
+
+const passwordResetRateLimiter = rateLimit({
+  windowMs: 60 * 60 * 1000, // 1 hour
+  max: RESET_MAX,
+  standardHeaders: true,
+  legacyHeaders: false,
+  handler: (req, res, next) => {
+    next(E.tooMany('Too many password reset requests', 3600));
+  },
+});
+
+module.exports = {
+  loginRateLimiter,
+  generalRateLimiter,
+  changePasswordRateLimiter,
+  passwordResetRateLimiter,
+};

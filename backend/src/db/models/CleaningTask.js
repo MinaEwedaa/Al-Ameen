@@ -17,6 +17,11 @@ const cleaningTaskSchema = new Schema(
       ref: 'Staff',
       default: null,
     },
+    assigned_to_staff_id: {
+      type: Schema.Types.ObjectId,
+      ref: 'Staff',
+      default: null,
+    },
     priority: {
       type: String,
       enum: ['low', 'medium', 'high', 'urgent'],

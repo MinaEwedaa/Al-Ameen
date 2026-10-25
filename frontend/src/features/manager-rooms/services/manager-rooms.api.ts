@@ -26,17 +26,17 @@ export async function getRooms(
   page = 1,
   limit = 100
 ): Promise<RoomListResponseDto> {
-  return request<RoomListResponseDto>(`/rooms?page=${page}&limit=${limit}`);
+  return request<RoomListResponseDto>(`/manager/rooms?page=${page}&limit=${limit}`);
 }
 
 /**
- * GET /rooms/{id}/activities
+ * GET /manager/rooms/{id}/activities
  * Fetches operational activity history for a specific room.
  */
 export async function getRoomActivities(
   id: string
 ): Promise<RoomActivitiesResponseDto> {
   return request<RoomActivitiesResponseDto>(
-    `/rooms/${encodeURIComponent(id)}/activities`
+    `/manager/rooms/${encodeURIComponent(id)}/activities`
   );
 }

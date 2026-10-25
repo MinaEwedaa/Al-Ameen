@@ -48,6 +48,21 @@ const paymentSchema = new Schema(
       type: String,
       default: null,
     },
+    // M1 fields
+    payment_type: {
+      type: String,
+      enum: ['payment', 'refund', 'correction'],
+      default: 'payment',
+    },
+    approval_id: {
+      type: Schema.Types.ObjectId,
+      default: null,
+    },
+    approved_by_staff_id: {
+      type: Schema.Types.ObjectId,
+      ref: 'Staff',
+      default: null,
+    },
   },
   { timestamps: true }
 );

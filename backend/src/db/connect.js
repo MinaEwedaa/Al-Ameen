@@ -3,7 +3,6 @@ const env = require('../config/env');
 
 const connectDB = async () => {
   try {
-    mongoose.set('sanitizeFilter', true);
     console.log('Connecting to MongoDB Atlas...');
     const conn = await mongoose.connect(env.mongoUri);
     console.log('Successfully connected to MongoDB Atlas!');

@@ -21,9 +21,6 @@ const roomSchema = new Schema(
     floor: {
       type: Number,
     },
-        floor: {
-      type: Number,
-    },
     view: {
       type: String,
       enum: ['nile', 'garden', 'city'],
@@ -41,8 +38,17 @@ const roomSchema = new Schema(
     },
     status: {
       type: String,
-      enum: ['available', 'occupied', 'cleaning', 'maintenance'],
+      enum: ['available', 'occupied', 'cleaning', 'maintenance', 'out_of_service'],
       default: 'available',
+    },
+    room_type_id: {
+      type: Schema.Types.ObjectId,
+      ref: 'RoomType',
+      index: true,
+    },
+    inspected: {
+      type: Boolean,
+      default: false,
     },
   },
   { timestamps: true }

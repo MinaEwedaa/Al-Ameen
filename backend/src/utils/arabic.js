@@ -33,8 +33,17 @@ const normalizeArabic = (s) =>
     .replace(/ة/g, 'ه')
     .toLowerCase();
 
+function normalizePhone(raw) {
+  if (!raw) return '';
+  let p = normalizeDigits(raw).replace(/[\s\-()]/g, '');
+  if (p.startsWith('00')) p = '+' + p.slice(2);
+  if (/^01\d{9}$/.test(p)) p = '+2' + p;
+  return p;
+}
+
 module.exports = {
   normalizeDigits,
   sanitizeText,
   normalizeArabic,
+  normalizePhone,
 };

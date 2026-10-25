@@ -34,4 +34,5 @@ module.exports = {
   allowedOrigins: process.env.ALLOWED_ORIGINS.split(',').map((o) => o.trim()),
   cookieSecure: process.env.COOKIE_SECURE !== 'false',
   lateGraceMinutes: Number(process.env.LATE_GRACE_MINUTES || 15),
+  managerSessionHours: Number(process.env.MANAGER_SESSION_HOURS || 12),
 };

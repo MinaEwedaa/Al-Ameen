@@ -16,7 +16,10 @@ export function RoleRoute({ children, allowedRoles = [ROLES.manager] }: RoleRout
     return <Navigate to={ROUTES.login} replace />;
   }
 
-  if (!allowedRoles.includes(session.role)) {
+  const userRole = (session.role || '').toLowerCase();
+  const allowed = allowedRoles.map((r) => String(r).toLowerCase());
+
+  if (!allowed.includes(userRole) && userRole !== 'admin') {
     return <Navigate to={ROUTES.dashboard} replace />;
   }
 

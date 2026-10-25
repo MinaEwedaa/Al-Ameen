@@ -37,6 +37,7 @@ async function authenticate(req, res, next) {
       session,
       role: decoded.role,
     };
+    req.staff = staff;
 
     next();
   } catch (err) {

@@ -46,61 +46,61 @@ function unwrapList<T>(res: unknown): T[] {
 }
 
 /**
- * 1. GET /dashboard/overview
+ * 1. GET /manager/dashboard/overview
  * Fetches dashboard overview metrics (8 KPIs, room counts, floor occupancies).
  */
 export async function getDashboardOverview(): Promise<DashboardOverviewDto> {
-  const res = await request<DashboardOverviewDto | { data: DashboardOverviewDto }>('/dashboard/overview');
+  const res = await request<DashboardOverviewDto | { data: DashboardOverviewDto }>('/manager/dashboard/overview');
   return unwrapResource<DashboardOverviewDto>(res);
 }
 
 /**
- * 2. GET /dashboard/revenue?days=7
+ * 2. GET /manager/dashboard/revenue?days=7
  * Fetches weekly revenue trend, payment method shares, and change percentage.
  */
 export async function getDashboardRevenue(days = 7): Promise<DashboardRevenueDto> {
-  const res = await request<DashboardRevenueDto | { data: DashboardRevenueDto }>(`/dashboard/revenue?days=${days}`);
+  const res = await request<DashboardRevenueDto | { data: DashboardRevenueDto }>(`/manager/dashboard/revenue?days=${days}`);
   return unwrapResource<DashboardRevenueDto>(res);
 }
 
 /**
- * 3. GET /dashboard/issues?limit=4
+ * 3. GET /manager/dashboard/issues?limit=4
  * Fetches critical issues and tasks requiring attention.
  */
 export async function getDashboardIssues(limit = 4): Promise<DashboardIssueDto[]> {
-  const res = await request<DashboardIssueDto[] | { data: DashboardIssueDto[] }>(`/dashboard/issues?limit=${limit}`);
+  const res = await request<DashboardIssueDto[] | { data: DashboardIssueDto[] }>(`/manager/dashboard/issues?limit=${limit}`);
   return unwrapList<DashboardIssueDto>(res);
 }
 
 /**
- * 4. GET /activities?limit=4
+ * 4. GET /manager/activities?limit=4
  * Fetches latest hotel-wide operational activities.
  */
 export async function getActivities(limit = 4): Promise<HotelActivityDto[]> {
-  const res = await request<HotelActivityDto[] | { data: HotelActivityDto[] }>(`/activities?limit=${limit}`);
+  const res = await request<HotelActivityDto[] | { data: HotelActivityDto[] }>(`/manager/activities?limit=${limit}`);
   return unwrapList<HotelActivityDto>(res);
 }
 
 /**
- * 5. GET /shifts/overview?business_date=YYYY-MM-DD
+ * 5. GET /manager/shifts/overview?business_date=YYYY-MM-DD
  * Fetches shifts for Cairo business date.
  */
 export async function getShiftsOverview(businessDate?: string): Promise<ShiftOverviewDto[]> {
   const date = businessDate || getCairoBusinessDate();
   const res = await request<ShiftOverviewDto[] | { data: ShiftOverviewDto[] }>(
-    `/shifts/overview?business_date=${encodeURIComponent(date)}`
+    `/manager/shifts/overview?business_date=${encodeURIComponent(date)}`
   );
   return unwrapList<ShiftOverviewDto>(res);
 }
 
 /**
- * 6. GET /staff?include=today_shift,workload&on_shift=true
+ * 6. GET /manager/staff?include=today_shift,workload&on_shift=true
  * Fetches active staff members currently on duty with their workloads.
  */
 export async function getStaff(onShift = true): Promise<StaffMemberDto[]> {
   const query = onShift
     ? 'include=today_shift,workload&on_shift=true'
     : 'include=today_shift,workload';
-  const res = await request<StaffMemberDto[] | { data: StaffMemberDto[] }>(`/staff?${query}`);
+  const res = await request<StaffMemberDto[] | { data: StaffMemberDto[] }>(`/manager/staff?${query}`);
   return unwrapList<StaffMemberDto>(res);
 }

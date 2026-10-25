@@ -79,6 +79,19 @@ const reservationSchema = new Schema(
       ref: 'Shift',
       default: null,
     },
+    // M1 fields
+    pending_refund: {
+      type: Boolean,
+      default: false,
+    },
+    refund_settled: {
+      type: Boolean,
+      default: false,
+    },
+    settlement_id: {
+      type: Schema.Types.ObjectId,
+      default: null,
+    },
   },
   { timestamps: true }
 );

@@ -17,17 +17,55 @@ const NEXT_SHIFT = {
 const cairoDate = (d = new Date()) =>
   DateTime.fromJSDate(d, { zone: ZONE }).toFormat('yyyy-MM-dd');
 
-function shiftWindow(shiftDate, shiftType) {
-  const s = SHIFTS[shiftType];
+let SHIFT_HOURS = {
+  morning: { start: 7, end: 16 },
+  evening: { start: 16, end: 23 },
+  night: { start: 23, end: 7 },
+};
+
+function getShiftHours() {
+  return JSON.parse(JSON.stringify(SHIFT_HOURS));
+}
+
+function setShiftHours(h) {
+  if (h && typeof h === 'object') {
+    SHIFT_HOURS = Object.freeze(JSON.parse(JSON.stringify(h)));
+  }
+}
+
+function todayCairo() {
+  return DateTime.now().setZone(ZONE).toFormat('yyyy-MM-dd');
+}
+
+function eachDate(start, to) {
+  const dates = [];
+  let cur = DateTime.fromISO(start, { zone: ZONE });
+  const end = DateTime.fromISO(to, { zone: ZONE });
+  while (cur <= end) {
+    dates.push(cur.toFormat('yyyy-MM-dd'));
+    cur = cur.plus({ days: 1 });
+  }
+  return dates;
+}
+
+function shiftWindow(shiftDate, shiftType, hours = SHIFT_HOURS) {
+  const type = (shiftType || '').toLowerCase();
+  const s = (hours && hours[type]) || SHIFTS[type] || SHIFTS.morning;
   const base = DateTime.fromISO(shiftDate, { zone: ZONE }).startOf('day');
-  const startAt = base.set({ hour: s.start, minute: 0, second: 0, millisecond: 0 });
-  const endAt = base
-    .plus({ days: s.endDayOffset })
-    .set({ hour: s.end, minute: 0, second: 0, millisecond: 0 });
+  const sStart = base.set({ hour: s.start, minute: 0, second: 0, millisecond: 0 });
+  let sEnd = base.set({ hour: s.end, minute: 0, second: 0, millisecond: 0 });
+  if (s.end <= s.start) {
+    sEnd = sEnd.plus({ days: 1 });
+  }
+
+  const startUtc = sStart.toUTC().toJSDate();
+  const endUtc = sEnd.toUTC().toJSDate();
 
   return {
-    startAt: startAt.toUTC().toJSDate(),
-    endAt: endAt.toUTC().toJSDate(),
+    start_at: startUtc,
+    end_at: endUtc,
+    startAt: startUtc,
+    endAt: endUtc,
   };
 }
 
@@ -60,9 +98,14 @@ const stayDays = (inDay, nights) =>
 module.exports = {
   ZONE,
   SHIFTS,
+  SHIFT_HOURS,
   NEXT_SHIFT,
   cairoDate,
+  todayCairo,
+  eachDate,
   shiftWindow,
+  getShiftHours,
+  setShiftHours,
   stayDay,
   noonCairo,
   nightsBetween,
