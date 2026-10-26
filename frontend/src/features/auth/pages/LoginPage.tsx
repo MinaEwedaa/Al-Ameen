@@ -10,7 +10,7 @@ import { getAuthSession, setAuthSession } from '../../../core/auth/authManager';
 import { ROUTES } from '../../../core/constants/routes';
 import { useLanguage } from '../../../core/i18n/useLanguage';
 import { validateLogin, type LoginValidationErrors } from '../schemas/login.schema';
-import { login } from '../services/auth.api';
+import { login, requestPasswordReset } from '../services/auth.api';
 
 export function LoginPage() {
   const navigate = useNavigate();
@@ -30,7 +30,9 @@ export function LoginPage() {
   const [errors, setErrors] = useState<LoginValidationErrors>({});
   const [apiError, setApiError] = useState<string | null>(null);
   const [showForgotModal, setShowForgotModal] = useState(false);
-  const [forgotEmail, setForgotEmail] = useState('');
+  const [forgotUsername, setForgotUsername] = useState('');
+  const [forgotLoading, setForgotLoading] = useState(false);
+  const [forgotError, setForgotError] = useState<string | null>(null);
   const [forgotSent, setForgotSent] = useState(false);
 
   async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
@@ -65,10 +67,23 @@ export function LoginPage() {
     }
   }
 
-  function handleForgotSubmit(event: React.FormEvent) {
+  async function handleForgotSubmit(event: React.FormEvent) {
     event.preventDefault();
-    if (!forgotEmail) return;
-    setForgotSent(true);
+    const clean = forgotUsername.trim();
+    if (!clean) {
+      setForgotError(t('forgotPasswordRequired'));
+      return;
+    }
+    setForgotLoading(true);
+    setForgotError(null);
+    try {
+      await requestPasswordReset(clean);
+      setForgotSent(true);
+    } catch (error) {
+      setForgotError(getErrorMessage(error, language));
+    } finally {
+      setForgotLoading(false);
+    }
   }
 
   return (
@@ -122,7 +137,8 @@ export function LoginPage() {
                 className="figma-link-btn"
                 onClick={() => {
                   setForgotSent(false);
-                  setForgotEmail('');
+                  setForgotUsername(username.trim() || '');
+                  setForgotError(null);
                   setShowForgotModal(true);
                 }}
               >
@@ -167,28 +183,49 @@ export function LoginPage() {
               {!forgotSent ? (
                 <form onSubmit={handleForgotSubmit} className="figma-auth-form" style={{ marginTop: 12 }}>
                   <p className="figma-dialog-desc">{t('forgotPasswordDesc')}</p>
+                  {forgotError && <p className="figma-alert figma-alert--error">{forgotError}</p>}
                   <Input
-                    type="email"
+                    type="text"
                     className="figma-input"
-                    value={forgotEmail}
-                    onChange={(event) => setForgotEmail(event.target.value)}
-                    placeholder={t('emailPlaceholder')}
+                    value={forgotUsername}
+                    onChange={(event) => {
+                      setForgotUsername(event.target.value);
+                      if (forgotError) setForgotError(null);
+                    }}
+                    placeholder={t('forgotPasswordUsernamePlaceholder')}
+                    disabled={forgotLoading}
                     required
+                    autoFocus
                   />
                   <div className="ui-dialog__actions">
-                    <Button type="button" className="ui-button--secondary" onClick={() => setShowForgotModal(false)}>
+                    <Button
+                      type="button"
+                      className="ui-button--secondary"
+                      onClick={() => setShowForgotModal(false)}
+                      disabled={forgotLoading}
+                    >
                       {t('cancel')}
                     </Button>
-                    <Button type="submit" className="figma-btn-primary" style={{ width: 'auto' }}>
-                      {t('forgotPasswordSend')}
+                    <Button
+                      type="submit"
+                      className="figma-btn-primary"
+                      style={{ width: 'auto' }}
+                      disabled={forgotLoading}
+                    >
+                      {forgotLoading ? t('loading') : t('forgotPasswordSend')}
                     </Button>
                   </div>
                 </form>
               ) : (
-                <div>
+                <div style={{ marginTop: 12 }}>
                   <p className="figma-alert figma-alert--success">{t('forgotPasswordSuccess')}</p>
-                  <div className="ui-dialog__actions">
-                    <Button type="button" className="figma-btn-primary" style={{ width: 'auto' }} onClick={() => setShowForgotModal(false)}>
+                  <div className="ui-dialog__actions" style={{ marginTop: 16 }}>
+                    <Button
+                      type="button"
+                      className="figma-btn-primary"
+                      style={{ width: 'auto' }}
+                      onClick={() => setShowForgotModal(false)}
+                    >
                       {t('back')}
                     </Button>
                   </div>

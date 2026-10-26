@@ -30,20 +30,23 @@ export function PasswordRequestDrawer({
   const [copied, setCopied] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [showRejectConfirm, setShowRejectConfirm] = useState(false);
+  const [approvedHandout, setApprovedHandout] = useState<string | null>(null);
 
   useEffect(() => {
     if (request) {
       setTempPassword(request.tempPassword || generateTemporaryPassword());
       setCopied(false);
       setShowRejectConfirm(false);
+      setApprovedHandout(null);
     }
   }, [request]);
 
   if (!request) return null;
 
-  async function handleCopy() {
+  async function handleCopy(pwToCopy?: string) {
+    const text = pwToCopy || tempPassword;
     try {
-      await navigator.clipboard.writeText(tempPassword);
+      await navigator.clipboard.writeText(text);
       setCopied(true);
       showToast(t('manager.passwordRequests.drawer.copiedToast'), 'success');
       window.setTimeout(() => setCopied(false), 2000);
@@ -64,9 +67,11 @@ export function PasswordRequestDrawer({
       const updated = await approvePasswordRequest(request.id, tempPassword);
       showToast(t('manager.passwordRequests.drawer.approveSuccess'), 'success');
       onUpdated(updated);
-      onClose();
-    } catch {
-      showToast(t('manager.passwordRequests.drawer.actionError'), 'error');
+      setApprovedHandout(updated.tempPassword || tempPassword);
+    } catch (err) {
+      console.error('Failed to approve password request:', err);
+      const msg = err && typeof err === 'object' && 'message' in err ? String((err as { message: unknown }).message) : '';
+      showToast(msg || t('manager.passwordRequests.drawer.actionError'), 'error');
     } finally {
       setSubmitting(false);
     }
@@ -88,13 +93,10 @@ export function PasswordRequestDrawer({
     }
   }
 
-  const isResolved = request.status === 'approved' || request.status === 'rejected';
-
+  const isResolved = request.status === 'approved' || request.status === 'rejected' || approvedHandout !== null;
+  const currentStatus = approvedHandout ? 'approved' : request.status;
   const roleLabel = translateOr(t, `manager.passwordRequests.roles.${request.role}`, request.role);
-
-  // Names are data: shown as stored, never translated
   const employeeName = request.employeeName;
-
   const reason = request.reason;
 
   return (
@@ -106,7 +108,17 @@ export function PasswordRequestDrawer({
         title={employeeName}
         className="pw-drawer"
         footer={
-          !isResolved ? (
+          approvedHandout ? (
+            <div className="pw-drawer__actions" style={{ gridTemplateColumns: '1fr' }}>
+              <button
+                type="button"
+                className="pw-drawer__btn pw-drawer__btn--approve"
+                onClick={onClose}
+              >
+                {t('manager.passwordRequests.drawer.done')}
+              </button>
+            </div>
+          ) : !isResolved ? (
             <div className="pw-drawer__actions">
               <button
                 type="button"
@@ -145,8 +157,8 @@ export function PasswordRequestDrawer({
           <div className="pw-drawer__field">
             <span className="pw-drawer__label">{t('manager.passwordRequests.drawer.status')}</span>
             <div className="pw-drawer__box">
-              <span className={`pw-status pw-status--${request.status}`}>
-                {t(`manager.passwordRequests.status.${request.status}`)}
+              <span className={`pw-status pw-status--${currentStatus}`}>
+                {t(`manager.passwordRequests.status.${currentStatus}`)}
               </span>
             </div>
           </div>
@@ -156,14 +168,41 @@ export function PasswordRequestDrawer({
             <div className="pw-drawer__box">{formatRequestDate(request.createdAt, language)}</div>
           </div>
 
-          <div className="pw-drawer__field pw-drawer__field--full">
-            <span className="pw-drawer__label">{t('manager.passwordRequests.drawer.reason')}</span>
-            <div className="pw-drawer__box pw-drawer__box--multiline">
-              {reason}
+          {reason ? (
+            <div className="pw-drawer__field pw-drawer__field--full">
+              <span className="pw-drawer__label">{t('manager.passwordRequests.drawer.reason')}</span>
+              <div className="pw-drawer__box pw-drawer__box--multiline">
+                {reason}
+              </div>
             </div>
-          </div>
+          ) : null}
 
-          {!isResolved && (
+          {approvedHandout ? (
+            <div className="pw-drawer__handout">
+              <div className="pw-drawer__handout-header">
+                <Check className="pw-drawer__action-icon" aria-hidden="true" />
+                <span>{t('manager.passwordRequests.drawer.handoutTitle')}</span>
+              </div>
+              <p className="pw-drawer__handout-desc">
+                {t('manager.passwordRequests.drawer.handoutSubtitle')}
+              </p>
+              <div className="pw-drawer__handout-pw-box">
+                <span className="pw-drawer__handout-pw-text">{approvedHandout}</span>
+                <button
+                  type="button"
+                  className="pw-drawer__handout-copy-btn"
+                  onClick={() => handleCopy(approvedHandout)}
+                >
+                  {copied ? (
+                    <Check size={16} aria-hidden="true" />
+                  ) : (
+                    <Copy size={16} aria-hidden="true" />
+                  )}
+                  <span>{copied ? t('manager.passwordRequests.drawer.copiedToast') : t('manager.passwordRequests.drawer.copy')}</span>
+                </button>
+              </div>
+            </div>
+          ) : !isResolved ? (
             <div className="pw-drawer__field pw-drawer__field--full">
               <div className="pw-drawer__label-row">
                 <span className="pw-drawer__label">
@@ -182,14 +221,18 @@ export function PasswordRequestDrawer({
               <div className="pw-drawer__password-wrap">
                 <input
                   type="text"
-                  readOnly
                   value={tempPassword}
+                  onChange={(e) => {
+                    setTempPassword(e.target.value);
+                    setCopied(false);
+                  }}
                   className="pw-drawer__password-input"
+                  placeholder="e.g. Al-Amin#7K9M"
                 />
                 <button
                   type="button"
                   className="pw-drawer__copy-btn"
-                  onClick={handleCopy}
+                  onClick={() => handleCopy()}
                   title={t('manager.passwordRequests.drawer.copy')}
                   aria-label={t('manager.passwordRequests.drawer.copy')}
                 >
@@ -201,7 +244,7 @@ export function PasswordRequestDrawer({
                 </button>
               </div>
             </div>
-          )}
+          ) : null}
         </div>
       </Drawer>
 

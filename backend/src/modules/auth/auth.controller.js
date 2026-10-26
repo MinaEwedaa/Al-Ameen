@@ -1,3 +1,4 @@
+const crypto = require('crypto');
 const argon2 = require('argon2');
 const { DateTime } = require('luxon');
 const env = require('../../config/env');
@@ -321,43 +322,72 @@ async function requestPasswordReset(req, res, next) {
     const { username } = req.body || {};
     const cleanUsername = String(username || '').trim().toLowerCase();
 
-    // Look for an active Staff member whose role is receptionist
-    const staff = await Staff.findOne({ username: cleanUsername, role: 'receptionist', active: true });
+    if (!cleanUsername) {
+      throw E.badRequest('Username is required');
+    }
 
-    if (staff) {
-      const existingPending = await PasswordResetRequest.findOne({
+    // Look for Staff member
+    const staff = await Staff.findOne({
+      username: cleanUsername,
+      active: true,
+    });
+
+    if (!staff) {
+      throw E.notFound('Staff member not found', 'STAFF_NOT_FOUND');
+    }
+
+    if (['manager', 'admin'].includes(staff.role)) {
+      throw E.forbidden(
+        'Manager and admin accounts cannot request password resets through this portal',
+        'MANAGER_CANNOT_RESET'
+      );
+    }
+
+    // Invalidate existing password immediately so old password no longer works
+    const unguessableRandom = crypto.randomBytes(32).toString('hex');
+    staff.password_hash = await hashPassword(unguessableRandom);
+    staff.password_changed_at = new Date();
+    await staff.save();
+
+    // Revoke all active sessions for this staff member immediately
+    await Session.updateMany(
+      { staff_id: staff._id, revoked_at: null },
+      { revoked_at: new Date() }
+    );
+
+    const existingPending = await PasswordResetRequest.findOne({
+      staff_id: staff._id,
+      status: 'PENDING',
+    });
+
+    let prr = existingPending;
+    if (!existingPending) {
+      prr = await PasswordResetRequest.create({
         staff_id: staff._id,
+        username: staff.username,
         status: 'PENDING',
+        requested_ip: req.ip,
       });
 
-      if (!existingPending) {
-        const prr = await PasswordResetRequest.create({
-          staff_id: staff._id,
-          username: staff.username,
-          status: 'PENDING',
-          requested_ip: req.ip,
-        });
-
-        await notifyManagers({
-          type: 'SYSTEM',
-          title: 'Password reset request',
-          message: cleanUsername,
-          refType: 'PasswordResetRequest',
-          refId: prr._id,
-        });
-      }
+      await notifyManagers({
+        type: 'SYSTEM',
+        title: 'Password reset request',
+        message: cleanUsername,
+        refType: 'PasswordResetRequest',
+        refId: prr._id,
+      });
     }
 
     await audit({
       action: 'PASSWORD_RESET_REQUESTED',
-      actorStaffId: null,
+      actorStaffId: staff._id,
       ip: req.ip,
-      details: { username: cleanUsername },
+      details: { username: cleanUsername, reset_request_id: prr._id },
     });
 
     return res.status(202).json({
       data: {
-        message: 'If the account exists, your request was sent to the manager',
+        message: 'Password reset request sent to the manager',
       },
     });
   } catch (err) {

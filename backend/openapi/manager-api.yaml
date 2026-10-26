@@ -560,6 +560,9 @@ components:
         manager_comment:
           type: string
           nullable: true
+        temporary_password:
+          type: string
+          nullable: true
     PasswordResetDecisionResponse:
       type: object
       required: [id, status, staff_id]

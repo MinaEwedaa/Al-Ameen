@@ -130,6 +130,65 @@ export const managerPasswordRequestsHandlers = [
     return HttpResponse.json(response);
   }),
 
+  // Handlers for /manager/password-reset-requests
+  http.get(`${API}/manager/password-reset-requests`, ({ request }) => {
+    const url = new URL(request.url);
+    const statusParam = url.searchParams.get('status')?.toUpperCase();
+
+    let filtered = [...mockResetRequests];
+    if (statusParam && statusParam !== 'ALL') {
+      filtered = filtered.filter((item) => item.status === statusParam);
+    }
+
+    return HttpResponse.json({
+      data: filtered,
+      meta: {
+        page: 1,
+        limit: 20,
+        total: filtered.length,
+        total_pages: Math.max(1, Math.ceil(filtered.length / 20)),
+      },
+      pagination: {
+        page: 1,
+        limit: 20,
+        total: filtered.length,
+        totalPages: Math.max(1, Math.ceil(filtered.length / 20)),
+      },
+    });
+  }),
+
+  http.patch(`${API}/manager/password-reset-requests/:id/decision`, async ({ params, request }) => {
+    const item = mockResetRequests.find((r) => r.id === params.id);
+    if (!item) {
+      return HttpResponse.json(
+        { error: { code: 'NOT_FOUND', message: 'Request not found' } },
+        { status: 404 },
+      );
+    }
+
+    const body = (await request.json().catch(() => ({}))) as Partial<ApiDecisionPayload>;
+    const decidedAt = new Date().toISOString();
+
+    if (body.action === 'APPROVE') {
+      item.status = 'APPROVED';
+      item.temporary_password = body.temporary_password || 'Al-Amin#2026';
+      item.decided_at = decidedAt;
+    } else {
+      item.status = 'REJECTED';
+      item.decided_at = decidedAt;
+    }
+
+    return HttpResponse.json({
+      data: {
+        id: item.id,
+        status: item.status as 'APPROVED' | 'REJECTED',
+        staff_id: item.staff_id,
+        temporary_password: item.temporary_password,
+        decided_at: decidedAt,
+      },
+    });
+  }),
+
   // Compatibility aliases for legacy endpoints
   http.get(`${API}/manager/password-requests`, ({ request }) => {
     const url = new URL(request.url);

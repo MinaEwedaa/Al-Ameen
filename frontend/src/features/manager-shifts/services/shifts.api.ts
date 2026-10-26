@@ -16,8 +16,13 @@ import type {
 // Manager API Contract v1.1. Served by the mocks until the backend ships (VITE_USE_MOCKS=true).
 
 export async function getShiftsOverview(businessDate: string): Promise<ShiftOverview[]> {
-  const response = await request<{ data: ShiftOverview[] }>('/shifts/overview', { params: { business_date: businessDate } });
-  return response.data;
+  const response = await request<{ data: ShiftOverview[] | { cards: ShiftOverview[] } }>('/shifts/overview', { params: { business_date: businessDate } });
+  const rawData = response.data;
+  if (Array.isArray(rawData)) return rawData;
+  if (rawData && typeof rawData === 'object' && 'cards' in rawData && Array.isArray(rawData.cards)) {
+    return rawData.cards;
+  }
+  return [];
 }
 
 export async function getShiftTeam(businessDate: string, shiftType: ShiftType): Promise<ShiftEntry[]> {

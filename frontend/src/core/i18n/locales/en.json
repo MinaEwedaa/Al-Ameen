@@ -16,6 +16,8 @@
     "SHIFT_HANDOVER_ONLY": "The next shift has started. You can only hand over this shift",
     "TOO_MANY_REQUESTS": "Too many attempts. Please try again shortly",
     "NETWORK_ERROR": "Cannot reach the server. Check your internet connection",
+    "STAFF_NOT_FOUND": "Username is not registered as a hotel staff member",
+    "MANAGER_CANNOT_RESET": "Manager accounts cannot request a reset here. Please contact the administrator.",
     "UNKNOWN_ERROR": "An unexpected error occurred. Please try again"
   },
   "appName": "Al-Amin Hotel",
@@ -414,10 +416,12 @@
   "phonePlaceholder": "+20 100 000 0000",
   "roleLabel": "Job Role",
   "forgotPassword": "Forgot Password?",
-  "forgotPasswordSend": "Send",
+  "forgotPasswordSend": "Submit to Manager",
   "forgotPasswordTitle": "Reset Password",
-  "forgotPasswordDesc": "Enter your email to receive a password reset link",
-  "forgotPasswordSuccess": "Password reset link sent to your email address",
+  "forgotPasswordDesc": "Enter your username to submit a password reset request to the manager",
+  "forgotPasswordSuccess": "Password reset request submitted successfully to the manager. Please visit your manager to receive your new password offline.",
+  "forgotPasswordUsernamePlaceholder": "Username",
+  "forgotPasswordRequired": "Please enter your username",
   "noAccountYet": "Don't have an account?",
   "alreadyHaveAccount": "Already have an account?",
   "showPassword": "Show password",
@@ -1829,7 +1833,10 @@
         "reject": "Reject Request",
         "approveSuccess": "Request approved and temporary password assigned",
         "rejectSuccess": "Password reset request rejected",
-        "actionError": "Failed to complete operation, please try again"
+        "actionError": "Failed to complete operation, please try again",
+        "handoutTitle": "Ready for Offline Handout",
+        "handoutSubtitle": "Please provide the following temporary credentials to the staff member in-person:",
+        "done": "Done / Close"
       },
       "confirmReject": {
         "title": "Confirm Rejection",

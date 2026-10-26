@@ -137,7 +137,7 @@ async function getOverview() {
  * 2. GET /manager/dashboard/revenue?days=7
  */
 async function getRevenue(days = 7) {
-  const numDays = Math.min(30, Math.max(1, Number(days) || 7));
+  const numDays = Math.min(90, Math.max(1, Number(days) || 7));
   const nowCairo = DateTime.now().setZone(ZONE);
   const startDate = nowCairo.minus({ days: numDays - 1 }).startOf('day');
   const startOfYear = nowCairo.startOf('year');

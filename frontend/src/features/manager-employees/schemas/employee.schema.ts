@@ -100,8 +100,9 @@ export function hasErrors(errors: EmployeeFormErrors): boolean {
 }
 
 /** Call only after validateEmployee returned no errors */
-export function toCreateStaffBody(values: EmployeeFormValues): { body: StaffCreate; shift: ShiftType | null } {
+export function toCreateStaffBody(values: EmployeeFormValues): { body: StaffCreate & { default_shift_type?: ShiftType }; shift: ShiftType | null } {
   const nationalId = normalizeDigits(values.nationalId.trim());
+  const assignedShift = values.shift && values.shift !== NO_SHIFT ? (values.shift as ShiftType) : null;
   return {
     body: {
       full_name: values.fullName.trim().replace(/\s+/g, ' '),
@@ -110,8 +111,9 @@ export function toCreateStaffBody(values: EmployeeFormValues): { body: StaffCrea
       staff_type: values.staffType as StaffType,
       hire_date: values.hireDate,
       ...(nationalId ? { national_id: nationalId } : {}),
+      ...(values.staffType === 'RECEPTIONIST' ? { default_shift_type: assignedShift ?? 'MORNING' } : {}),
     },
-    shift: values.shift && values.shift !== NO_SHIFT ? values.shift : null,
+    shift: assignedShift,
   };
 }
 

@@ -41,6 +41,9 @@ function unwrapList<T>(res: unknown): T[] {
     if (Array.isArray(candidate)) {
       return candidate as T[];
     }
+    if (candidate && typeof candidate === 'object' && 'cards' in candidate && Array.isArray((candidate as { cards: unknown }).cards)) {
+      return (candidate as { cards: T[] }).cards;
+    }
   }
   return Array.isArray(res) ? (res as T[]) : [];
 }

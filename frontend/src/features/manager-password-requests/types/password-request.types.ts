@@ -7,14 +7,19 @@ export type ApiPasswordResetStatus = 'PENDING' | 'IN_REVIEW' | 'APPROVED' | 'REJ
 
 export interface ApiPasswordResetRequest {
   id: string;
+  _id?: string;
   staff_id: string;
   staff_name: string;
-  // Contract v1.2 Staff.staff_type
-  staff_type: 'MANAGER' | 'RECEPTIONIST' | 'HOUSEKEEPER' | 'TECHNICIAN' | 'ADMIN' | string;
-  reason: string;
+  username?: string;
+  role?: string;
+  staff_type?: 'MANAGER' | 'RECEPTIONIST' | 'HOUSEKEEPER' | 'TECHNICIAN' | 'ADMIN' | string;
+  reason?: string;
+  manager_comment?: string | null;
   status: ApiPasswordResetStatus;
-  created_at: string;
-  decided_at?: string;
+  created_at?: string;
+  requested_at?: string;
+  decided_at?: string | null;
+  decided_by_staff_id?: string | null;
   temporary_password?: string;
 }
 

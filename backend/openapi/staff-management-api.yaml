@@ -375,6 +375,10 @@ paths:
                         type: string
         '400':
           $ref: '#/components/responses/BadRequest'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
         '429':
           $ref: '#/components/responses/TooManyRequests'
   /dashboard:
@@ -1740,6 +1744,8 @@ components:
         - BAD_REQUEST
         - RECORD_ALREADY_DECIDED
         - CANNOT_APPROVE_OWN_REQUEST
+        - STAFF_NOT_FOUND
+        - MANAGER_CANNOT_RESET
     ApprovalRequest:
       type: object
       required: [approval_id, booking_id, request_type, status, reason, requested_refund_amount, net_paid_amount, approved_refund_amount, retained_amount]

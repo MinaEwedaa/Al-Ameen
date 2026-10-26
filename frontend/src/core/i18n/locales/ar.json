@@ -16,6 +16,8 @@
     "SHIFT_HANDOVER_ONLY": "بدأت الوردية التالية، يمكنك تسليم الوردية فقط",
     "TOO_MANY_REQUESTS": "محاولات كثيرة، حاول مرة أخرى بعد قليل",
     "NETWORK_ERROR": "تعذر الاتصال بالخادم، تحقق من الاتصال بالإنترنت",
+    "STAFF_NOT_FOUND": "اسم المستخدم غير مسجل كأحد موظفي الفندق",
+    "MANAGER_CANNOT_RESET": "هذا الحساب تابع للإدارة، يرجى مراجعة المسؤول",
     "UNKNOWN_ERROR": "حدث خطأ غير متوقع، حاول مرة أخرى"
   },
   "appName": "فندق الأمين | Al-Amin Hotel",
@@ -414,10 +416,12 @@
   "phonePlaceholder": "+20 100 000 0000",
   "roleLabel": "الدور الوظيفي",
   "forgotPassword": "هل نسيت كلمة المرور؟",
-  "forgotPasswordSend": "إرسال",
+  "forgotPasswordSend": "إرسال الطلب للمدير",
   "forgotPasswordTitle": "استعادة كلمة المرور",
-  "forgotPasswordDesc": "أدخل بريدك الإلكتروني لإرسال رابط إعادة الضبط",
-  "forgotPasswordSuccess": "تم إرسال رابط إعادة الضبط إلى بريدك الإلكتروني بنجاح",
+  "forgotPasswordDesc": "أدخل اسم المستخدم لإرسال طلب إعادة تعيين كلمة المرور إلى المدير",
+  "forgotPasswordSuccess": "تم إرسال طلب إعادة تعيين كلمة المرور إلى المدير بنجاح. يرجى التوجه إلى المدير لاستلام كلمة المرور الجديدة أوفلاين.",
+  "forgotPasswordUsernamePlaceholder": "اسم المستخدم",
+  "forgotPasswordRequired": "يرجى إدخال اسم المستخدم",
   "noAccountYet": "ليس لديك حساب؟",
   "alreadyHaveAccount": "لديك حساب بالفعل؟",
   "showPassword": "إظهار كلمة المرور",
@@ -1860,7 +1864,10 @@
         "reject": "رفض الطلب",
         "approveSuccess": "تم اعتماد الطلب وتعيين كلمة المرور المؤقتة بنجاح",
         "rejectSuccess": "تم رفض طلب إعادة تعيين كلمة المرور",
-        "actionError": "تعذر إكمال العملية، حاول مرة أخرى"
+        "actionError": "تعذر إكمال العملية، حاول مرة أخرى",
+        "handoutTitle": "جاهز للتسليم أوفلاين",
+        "handoutSubtitle": "يرجى تسليم كلمة المرور المؤقتة التالية للموظف شخصياً لتسجيل الدخول بها:",
+        "done": "تم التسليم / إغلاق"
       },
       "confirmReject": {
         "title": "تأكيد رفض الطلب",

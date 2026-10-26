@@ -17,11 +17,12 @@ async function list(req, res, next) {
 async function decide(req, res, next) {
   try {
     const { id } = req.params;
-    const { action, manager_comment } = req.body;
+    const { action, manager_comment, temporary_password } = req.body;
     const result = await passwordService.decidePasswordResetRequest({
       id,
       action,
       manager_comment,
+      temporary_password,
       managerStaffId: req.auth.staff._id,
       ip: req.ip,
     });

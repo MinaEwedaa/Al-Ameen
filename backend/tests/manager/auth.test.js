@@ -376,25 +376,26 @@ describe('Manager Module M2: Manager Login and Passwords', () => {
   });
 
   describe('Public Password Reset Requests', () => {
-    test('non-existent username returns 202 and creates no request', async () => {
+    test('non-existent username returns 404 STAFF_NOT_FOUND and creates no request', async () => {
       const countBefore = await PasswordResetRequest.countDocuments({});
       const res = await request(app)
         .post('/api/v1/auth/password-reset-requests')
         .send({ username: 'non_existent_user_999' });
 
-      expect(res.status).toBe(202);
-      expect(res.body.data.message).toContain('If the account exists');
+      expect(res.status).toBe(404);
+      expect(res.body.error.code).toBe('STAFF_NOT_FOUND');
       const countAfter = await PasswordResetRequest.countDocuments({});
       expect(countAfter).toBe(countBefore);
     });
 
-    test('manager username returns 202 and creates no request', async () => {
+    test('manager username returns 403 MANAGER_CANNOT_RESET and creates no request', async () => {
       const countBefore = await PasswordResetRequest.countDocuments({});
       const res = await request(app)
         .post('/api/v1/auth/password-reset-requests')
         .send({ username: managerStaff.username });
 
-      expect(res.status).toBe(202);
+      expect(res.status).toBe(403);
+      expect(res.body.error.code).toBe('MANAGER_CANNOT_RESET');
       const countAfter = await PasswordResetRequest.countDocuments({});
       expect(countAfter).toBe(countBefore);
     });

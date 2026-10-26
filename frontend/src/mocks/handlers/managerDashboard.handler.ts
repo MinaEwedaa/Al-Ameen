@@ -212,8 +212,15 @@ export const managerDashboardHandlers = [
       return mockErrorResponse();
     }
     await delay(350);
+    const url = new URL(request.url);
+    const rawDays = parseInt(url.searchParams.get('days') || '7', 10);
+    const days = Math.min(90, Math.max(1, isNaN(rawDays) ? 7 : rawDays));
+    const data = {
+      ...mockDashboardRevenueDto,
+      chart_series: (mockDashboardRevenueDto.chart_series ?? []).slice(-days),
+    };
     return HttpResponse.json({
-      data: mockDashboardRevenueDto,
+      data,
     });
   }),
 

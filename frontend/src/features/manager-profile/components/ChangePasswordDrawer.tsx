@@ -58,10 +58,13 @@ export function ChangePasswordDrawer({
       newErrors.currentPassword = t('manager.profile.passwordDrawer.errors.currentRequired');
     }
 
+    const strongPasswordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{12,}$/;
     if (!newPassword.trim()) {
       newErrors.newPassword = t('manager.profile.passwordDrawer.errors.newRequired');
-    } else if (newPassword.trim().length < 8) {
-      newErrors.newPassword = t('manager.profile.passwordDrawer.errors.minLength');
+    } else if (newPassword.trim().length < 12) {
+      newErrors.newPassword = 'Password must be at least 12 characters long.';
+    } else if (!strongPasswordRegex.test(newPassword.trim())) {
+      newErrors.newPassword = 'Password must contain at least one uppercase letter, one lowercase letter, and one number.';
     }
 
     if (!confirmPassword.trim()) {
