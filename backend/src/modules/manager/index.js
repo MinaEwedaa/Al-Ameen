@@ -14,5 +14,6 @@ router.use('/housekeeping-tasks', require('./housekeeping/housekeeping.routes'))
 router.use('/dashboard', require('./dashboard/dashboard.routes'));
 router.use('/activities', require('./activities/activities.routes'));
 router.use('/leave-requests', require('./leaves/leave.routes'));
+router.use('/approvals', require('./approvals/approvals.routes'));
 
 module.exports = router;

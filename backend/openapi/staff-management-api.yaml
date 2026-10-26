@@ -809,16 +809,104 @@ paths:
       summary: Cancel a reservation
       description: |
         Only for `confirmed` reservations. A guest who is already checked in is checked out instead (409 `CONFLICT`).
-        Payments are never deleted. If `paid_amount` is above zero the response has `refund_pending: true`, and the manager handles the refund in the Manager system. The room goes back to `available` if it was `reserved`.
+        If nothing was paid (or everything was already refunded) the reservation is cancelled immediately and the response is `200`.
+        If money was paid, the reservation is NOT cancelled: a `CANCELLATION` approval request is opened for the manager and the response is `202` with `status: PENDING_APPROVAL`. A second cancel while the approval is pending returns `409 CONFLICT`.
+        Payments are never deleted. The room goes back to `available` when the cancellation is finally executed.
       parameters:
         - $ref: '#/components/parameters/ReservationId'
+        - $ref: '#/components/parameters/IdempotencyKey'
+        - $ref: '#/components/parameters/AuthorizationHeader'
+        - $ref: '#/components/parameters/TestTimeHeader'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [reason]
+              properties:
+                reason:
+                  type: string
+                  maxLength: 500
       responses:
         '200':
-          description: Reservation cancelled
+          description: Reservation cancelled immediately (nothing was paid)
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Reservation'
+        '202':
+          description: Money was paid. An approval request was opened for the manager
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [data]
+                properties:
+                  data:
+                    type: object
+                    required: [approval_id, status]
+                    properties:
+                      approval_id:
+                        type: string
+                      status:
+                        type: string
+                        enum: [PENDING_APPROVAL]
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '409':
+          $ref: '#/components/responses/Conflict'
+  /approval-requests:
+    post:
+      tags: [Approvals]
+      operationId: createApprovalRequest
+      summary: Open an approval request for the manager
+      description: |
+        Types: `REFUND`, `DISCOUNT`, `CANCELLATION`, `UPGRADE`, `PRICE_OVERRIDE`. The reservation must be `confirmed` or `checked_in`.
+        `requested_refund_amount` is allowed only for `REFUND` and `CANCELLATION` and must not exceed the net paid amount. `new_room_id` is required for `UPGRADE` and not allowed otherwise.
+        Only one `PENDING` request per reservation and type. For the money types, nothing is paid out here: the manager decides in the Manager system.
+      parameters:
+        - $ref: '#/components/parameters/AuthorizationHeader'
+        - $ref: '#/components/parameters/TestTimeHeader'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [request_type, booking_id, reason]
+              properties:
+                request_type:
+                  type: string
+                  enum: [REFUND, DISCOUNT, CANCELLATION, UPGRADE, PRICE_OVERRIDE]
+                booking_id:
+                  type: string
+                reason:
+                  type: string
+                  maxLength: 500
+                requested_refund_amount:
+                  type: number
+                new_room_id:
+                  type: string
+      responses:
+        '201':
+          description: Approval request created
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [data]
+                properties:
+                  data:
+                    $ref: '#/components/schemas/ApprovalRequest'
+        '400':
+          $ref: '#/components/responses/BadRequest'
         '401':
           $ref: '#/components/responses/Unauthorized'
         '403':
@@ -1649,6 +1737,57 @@ components:
         - SHIFT_CLOSED
         - SHIFT_HANDOVER_ONLY
         - TOO_MANY_REQUESTS
+        - BAD_REQUEST
+        - RECORD_ALREADY_DECIDED
+        - CANNOT_APPROVE_OWN_REQUEST
+    ApprovalRequest:
+      type: object
+      required: [approval_id, booking_id, request_type, status, reason, requested_refund_amount, net_paid_amount, approved_refund_amount, retained_amount]
+      properties:
+        approval_id:
+          type: string
+        booking_id:
+          type: string
+          nullable: true
+        request_type:
+          type: string
+          enum: [REFUND, DISCOUNT, CANCELLATION, UPGRADE, PRICE_OVERRIDE]
+        status:
+          type: string
+          enum: [PENDING, APPROVED, REJECTED, CANCELLED]
+        requested_by_staff_id:
+          type: string
+          nullable: true
+        requested_by_name:
+          type: string
+          nullable: true
+        reason:
+          type: string
+        requested_refund_amount:
+          $ref: '#/components/schemas/Money'
+        net_paid_amount:
+          $ref: '#/components/schemas/Money'
+        approved_refund_amount:
+          $ref: '#/components/schemas/Money'
+        retained_amount:
+          $ref: '#/components/schemas/Money'
+        manager_comment:
+          type: string
+          nullable: true
+        decided_by_staff_id:
+          type: string
+          nullable: true
+        decided_at:
+          type: string
+          format: date-time
+          nullable: true
+        created_at:
+          type: string
+          format: date-time
+          nullable: true
+        reservation:
+          type: object
+          nullable: true
     Meta:
       type: object
       required: [page, limit, total]

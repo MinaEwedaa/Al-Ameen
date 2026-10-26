@@ -33,8 +33,7 @@ function toReservationDto(r) {
   };
 
   // refund_pending بيظهر بس لو الحجز ملغي وفيه مدفوع
-  if (r.status === 'cancelled' && paid > 0) dto.refund_pending = true;
-
+  if (r.pending_refund || (r.status === 'cancelled' && paid > 0 && !r.refund_settled)) dto.refund_pending = true;
   return dto;
 }
 

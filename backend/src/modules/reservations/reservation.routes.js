@@ -17,5 +17,6 @@ router.post('/', requireShift, idempotent(), reservationController.createReserva
 router.post('/:reservation_id/check-in', requireShift, idempotent(), reservationController.checkIn);
 router.post('/:reservation_id/extend', requireShift, idempotent(), reservationController.extendStay);
 router.post('/:reservation_id/check-out', requireShift, idempotent(), reservationController.checkOut);
+router.post('/:reservation_id/cancel', requireShift, idempotent(), reservationController.cancel);
 
 module.exports = router;

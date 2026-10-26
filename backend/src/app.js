@@ -67,7 +67,9 @@ app.use(
     validateRequests: { removeAdditional: 'all' },
     validateResponses: env.nodeEnv !== 'production',
     validateSecurity: false,
-    ignorePaths: (p) => /^\/(health|docs|api\/v1\/test-|api\/v1\/leave-requests)/.test(p) || MANAGER_PREFIX.test(p),
+      ignorePaths: (p) =>
+      /^\/(health|docs|api\/v1\/test-|api\/v1\/leave-requests)/.test(p) ||
+      MANAGER_PREFIX.test(p),
   })
 );
 
@@ -94,6 +96,7 @@ app.use('/api/v1/rooms', require('./modules/rooms/room.routes'));
 app.use('/api/v1/dashboard', require('./modules/dashboard/dashboard.routes'));
 app.use('/api/v1/guests', require('./modules/guests/guest.routes'));
 app.use('/api/v1/reservations', require('./modules/reservations/reservation.routes'));
+app.use('/api/v1/approval-requests', require('./modules/approvals/approval.routes'));
 app.use('/api/v1/payments', require('./modules/payments/payment.routes'));
 app.use('/api/v1/cleaning-tasks', require('./modules/cleaning/cleaning.routes'));
 app.use('/api/v1/maintenance-issues', require('./modules/maintenance/maintenance.routes'));

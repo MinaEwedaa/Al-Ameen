@@ -208,6 +208,133 @@ paths:
           $ref: '#/components/responses/Unauthorized'
         '403':
           $ref: '#/components/responses/Forbidden'
+  /approvals:
+    get:
+      summary: List approval requests
+      description: Newest first. `status` defaults to `PENDING` (also `APPROVED`, `REJECTED`, `CANCELLED`, `ALL`).
+      operationId: listApprovals
+      parameters:
+        - $ref: '#/components/parameters/Page'
+        - $ref: '#/components/parameters/Limit'
+        - name: status
+          in: query
+          schema:
+            type: string
+        - name: request_type
+          in: query
+          description: REFUND, DISCOUNT, CANCELLATION, UPGRADE or PRICE_OVERRIDE
+          schema:
+            type: string
+        - name: booking_id
+          in: query
+          schema:
+            $ref: '#/components/schemas/ObjectId'
+      responses:
+        '200':
+          description: Approval requests
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [data, meta]
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/ApprovalRequest'
+                  meta:
+                    $ref: '#/components/schemas/Meta'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+  /approvals/{id}:
+    get:
+      summary: Approval request detail
+      description: For a `PENDING` request `net_paid_amount` is the live net. After a decision it is the final stored value.
+      operationId: getApproval
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            $ref: '#/components/schemas/ObjectId'
+      responses:
+        '200':
+          description: Approval request
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [data]
+                properties:
+                  data:
+                    $ref: '#/components/schemas/ApprovalRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+  /approvals/{id}/decision:
+    patch:
+      summary: Decide on an approval request
+      description: |
+        `REJECT` needs `manager_comment`. `APPROVE` of `CANCELLATION` or `REFUND` needs `approved_refund_amount` (0 up to the net paid, at most 2 decimals) and runs in one transaction: refund payment, cancellation and settlement for `CANCELLATION`. For the other types the decision is only recorded and `approved_refund_amount` is not allowed.
+        A manager cannot decide their own request (`403 CANNOT_APPROVE_OWN_REQUEST`). A second decision returns `409 RECORD_ALREADY_DECIDED`.
+      operationId: decideApproval
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            $ref: '#/components/schemas/ObjectId'
+        - $ref: '#/components/parameters/IdempotencyKey'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [action]
+              properties:
+                action:
+                  type: string
+                  enum: [APPROVE, REJECT]
+                approved_refund_amount:
+                  type: number
+                  minimum: 0
+                manager_comment:
+                  type: string
+                  maxLength: 500
+                  nullable: true
+      responses:
+        '200':
+          description: Decision recorded
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [data]
+                properties:
+                  data:
+                    $ref: '#/components/schemas/ApprovalDecisionResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '409':
+          description: Already decided (`RECORD_ALREADY_DECIDED`) or the money path cannot run (no active shift, nothing left to refund, reservation not cancellable)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
 components:
   securitySchemes:
     bearerAuth:
@@ -278,6 +405,109 @@ components:
           type: integer
         unread_count:
           type: integer
+    ApprovalRequest:
+      type: object
+      required: [approval_id, request_type, status, reason, requested_refund_amount, net_paid_amount, approved_refund_amount, retained_amount]
+      properties:
+        approval_id:
+          type: string
+        booking_id:
+          type: string
+          nullable: true
+        request_type:
+          type: string
+          enum: [REFUND, DISCOUNT, CANCELLATION, UPGRADE, PRICE_OVERRIDE]
+        status:
+          type: string
+          enum: [PENDING, APPROVED, REJECTED, CANCELLED]
+        requested_by_staff_id:
+          type: string
+          nullable: true
+        requested_by_name:
+          type: string
+          nullable: true
+        reason:
+          type: string
+        requested_refund_amount:
+          type: number
+        net_paid_amount:
+          type: number
+        approved_refund_amount:
+          type: number
+        retained_amount:
+          type: number
+        manager_comment:
+          type: string
+          nullable: true
+        decided_by_staff_id:
+          type: string
+          nullable: true
+        decided_at:
+          type: string
+          nullable: true
+        created_at:
+          type: string
+          nullable: true
+        reservation:
+          type: object
+          nullable: true
+          properties:
+            guest_name:
+              type: string
+              nullable: true
+            room_number:
+              type: string
+              nullable: true
+            check_in:
+              type: string
+              nullable: true
+            check_out:
+              type: string
+              nullable: true
+            status:
+              type: string
+    ApprovalDecisionResponse:
+      type: object
+      required: [approval_id, request_type, status, net_paid_amount, approved_refund_amount, retained_amount, decided_by_staff_id, decided_at]
+      properties:
+        approval_id:
+          type: string
+        booking_id:
+          type: string
+          nullable: true
+        request_type:
+          type: string
+        status:
+          type: string
+          enum: [APPROVED, REJECTED]
+        net_paid_amount:
+          type: number
+        approved_refund_amount:
+          type: number
+        retained_amount:
+          type: number
+        decided_by_staff_id:
+          type: string
+        decided_at:
+          type: string
+        execution_result:
+          type: object
+          nullable: true
+          properties:
+            booking_status:
+              type: string
+              nullable: true
+            room_status:
+              type: string
+              nullable: true
+            refund_payment_id:
+              type: string
+              nullable: true
+            settlement_id:
+              type: string
+              nullable: true
+            shift_id:
+              type: string
     Error:
       type: object
       required: [error]

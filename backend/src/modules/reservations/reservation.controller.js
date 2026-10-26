@@ -1,4 +1,5 @@
 const reservationService = require('./reservation.service');
+const { cancelReservation } = require('./reservation.cancel');
 const { getNow } = require('../../utils/clock');
 
 async function createReservation(req, res, next) {
@@ -99,7 +100,20 @@ async function checkOut(req, res, next) {
     next(err);
   }
 }
-
+async function cancel(req, res, next) {
+  try {
+    const out = await cancelReservation({
+      reservation_id: req.params.reservation_id,
+      reason: req.body?.reason,
+      staff: req.auth.staff,
+      shift: req.shift,
+      ip: req.ip,
+    });
+    res.status(out.status).json(out.body);
+  } catch (err) {
+    next(err);
+  }
+}
 module.exports = {
   createReservation,
   listReservations,
@@ -107,4 +121,5 @@ module.exports = {
   checkIn,
   extendStay,
   checkOut,
+  cancel,
 };

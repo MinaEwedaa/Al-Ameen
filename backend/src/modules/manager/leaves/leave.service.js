@@ -344,7 +344,9 @@ async function decideLeaveRequest(id, { action, manager_comment, cancel_schedule
       {
         type: 'LEAVE_DECISION',
         title: `Leave ${cleanAction.toLowerCase()}`,
-        message: manager_comment ? sanitizeText(manager_comment) : '',
+        message:
+          (manager_comment && sanitizeText(manager_comment)) ||
+          `Your leave request was ${cleanAction === 'APPROVE' ? 'approved' : 'rejected'}.`,
         refType: 'LeaveRequest',
         refId: id,
       },
