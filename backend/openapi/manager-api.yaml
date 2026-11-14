@@ -335,6 +335,241 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
+
+  /shift-reports:
+    get:
+      summary: List shift reports
+      description: Newest business date first. Use `business_date` for one day, or `from` and `to` for a range (YYYY-MM-DD).
+      operationId: listShiftReports
+      parameters:
+        - $ref: '#/components/parameters/Page'
+        - $ref: '#/components/parameters/Limit'
+        - name: from
+          in: query
+          schema:
+            type: string
+        - name: to
+          in: query
+          schema:
+            type: string
+        - name: business_date
+          in: query
+          schema:
+            type: string
+        - name: shift_id
+          in: query
+          schema:
+            $ref: '#/components/schemas/ObjectId'
+        - name: staff_id
+          in: query
+          schema:
+            $ref: '#/components/schemas/ObjectId'
+        - name: review_status
+          in: query
+          schema:
+            type: string
+            enum: [PENDING_REVIEW, APPROVED, NEEDS_REVIEW]
+      responses:
+        '200':
+          description: Shift reports
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [data, meta]
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/ShiftReportListItem'
+                  meta:
+                    $ref: '#/components/schemas/Meta'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+  /shift-reports/{id}:
+    get:
+      summary: Shift report detail
+      operationId: getShiftReport
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Shift report
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [data]
+                properties:
+                  data:
+                    $ref: '#/components/schemas/ShiftReportDetail'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+  /shift-reports/{id}/review:
+    patch:
+      summary: Review a shift report
+      description: |
+        `NEEDS_REVIEW` requires `manager_comment` and removes any stored PDF. `APPROVED` is final: a second review returns `422`. Approving stores the PDF.
+      operationId: reviewShiftReport
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [review_status]
+              properties:
+                review_status:
+                  type: string
+                  enum: [APPROVED, NEEDS_REVIEW]
+                manager_comment:
+                  type: string
+                  maxLength: 500
+                  nullable: true
+      responses:
+        '200':
+          description: Review recorded
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [data]
+                properties:
+                  data:
+                    $ref: '#/components/schemas/ShiftReportDetail'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '422':
+          description: The report is already APPROVED
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /shift-reports/{id}/pdf:
+    get:
+      summary: Shift report PDF
+      description: Served inline with `Cache-Control private, no-store`. Built on request when none is stored.
+      operationId: getShiftReportPdf
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: PDF document
+          content:
+            application/pdf:
+              schema:
+                type: string
+                format: binary
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+  /shift-reports/{id}/activities:
+    get:
+      summary: Audit activities of the report's shift
+      description: Only `id`, `action`, `entity`, `entity_id` and `at`. Details and IP are never returned.
+      operationId: getShiftReportActivities
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+        - $ref: '#/components/parameters/Page'
+        - $ref: '#/components/parameters/Limit'
+      responses:
+        '200':
+          description: Activities, newest first
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [data, meta]
+                properties:
+                  data:
+                    type: array
+                    items:
+                      type: object
+                      required: [id, action, entity, entity_id, at]
+                      properties:
+                        id:
+                          type: string
+                        action:
+                          type: string
+                        entity:
+                          type: string
+                          nullable: true
+                        entity_id:
+                          type: string
+                          nullable: true
+                        at:
+                          type: string
+                  meta:
+                    $ref: '#/components/schemas/Meta'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+  /shift-reports/{id}/handover:
+    get:
+      summary: Handover summary of the report's shift
+      description: The report stores only the count of pending items, so `pending_items` is always an empty list.
+      operationId: getShiftReportHandover
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Handover
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [data]
+                properties:
+                  data:
+                    $ref: '#/components/schemas/ShiftReportHandover'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
 components:
   securitySchemes:
     bearerAuth:
@@ -508,6 +743,129 @@ components:
               nullable: true
             shift_id:
               type: string
+    
+    ShiftReportListItem:
+      type: object
+      properties:
+        report_id:
+          type: string
+        shift_id:
+          type: string
+        business_date:
+          type: string
+          nullable: true
+        shift_type:
+          type: string
+          nullable: true
+        staff_id:
+          type: string
+          nullable: true
+        staff_name:
+          type: string
+          nullable: true
+        review_status:
+          type: string
+          enum: [PENDING_REVIEW, APPROVED, NEEDS_REVIEW]
+        gross_revenue:
+          type: number
+          nullable: true
+        refunds_total:
+          type: number
+          nullable: true
+        net_revenue:
+          type: number
+          nullable: true
+        created_at:
+          type: string
+          nullable: true
+    ShiftReportDetail:
+      type: object
+      properties:
+        report_id:
+          type: string
+        shift_id:
+          type: string
+        business_date:
+          type: string
+          nullable: true
+        shift_type:
+          type: string
+          nullable: true
+        staff_id:
+          type: string
+          nullable: true
+        staff_name:
+          type: string
+          nullable: true
+        rooms_handled:
+          type: number
+          nullable: true
+        cleaning_tasks:
+          type: number
+          nullable: true
+        maintenance_requests:
+          type: number
+          nullable: true
+        pending_items:
+          type: number
+          nullable: true
+        cash_total:
+          type: number
+          nullable: true
+        instapay_total:
+          type: number
+          nullable: true
+        vodafone_cash_total:
+          type: number
+          nullable: true
+        gross_revenue:
+          type: number
+          nullable: true
+        refunds_total:
+          type: number
+          nullable: true
+        cancellation_retained_total:
+          type: number
+          nullable: true
+        net_revenue:
+          type: number
+          nullable: true
+        review_status:
+          type: string
+          enum: [PENDING_REVIEW, APPROVED, NEEDS_REVIEW]
+        reviewed_by_staff_id:
+          type: string
+          nullable: true
+        reviewed_at:
+          type: string
+          nullable: true
+        manager_comment:
+          type: string
+          nullable: true
+        pdf_url:
+          type: string
+    ShiftReportHandover:
+      type: object
+      properties:
+        report_id:
+          type: string
+        shift_id:
+          type: string
+        staff_name:
+          type: string
+          nullable: true
+        submitted_at:
+          type: string
+          nullable: true
+        notes:
+          type: string
+          nullable: true
+        pending_items_count:
+          type: number
+        pending_items:
+          type: array
+          items:
+            type: object
     Error:
       type: object
       required: [error]
