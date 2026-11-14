@@ -16,5 +16,7 @@ router.use('/activities', require('./activities/activities.routes'));
 router.use('/leave-requests', require('./leaves/leave.routes'));
 router.use('/approvals', require('./approvals/approvals.routes'));
 router.use('/shift-reports', require('./shiftReports/shiftReports.routes'));
+router.use('/daily-closings', require('./finance/dailyClosings.routes'));
+router.use('/payments', require('./finance/payments.routes'));
 
 module.exports = router;
