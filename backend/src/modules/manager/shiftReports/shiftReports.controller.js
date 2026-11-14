@@ -26,7 +26,7 @@ async function getById(req, res, next) {
 
 async function activities(req, res, next) {
   try {
-    res.json({ data: await service.getReportActivities(req.params.id) });
+    res.json(await service.getReportActivities(req.params.id, req.query));
   } catch (err) {
     next(err);
   }

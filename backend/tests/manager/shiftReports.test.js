@@ -233,4 +233,119 @@ describe('Manager Feature M9: Shift Reports', () => {
       expect(res.headers['content-disposition']).toContain('inline');
     });
   });
+    describe('activities', () => {
+    it('returns data and meta with only the safe fields (no details, no ip)', async () => {
+      const report = await makeReport({ shift_date: '2030-06-01' });
+      await AuditLog.collection.insertOne({
+        action: 'SHIFT_OPENED',
+        entity: 'Shift',
+        entity_id: String(report.shift_id),
+        details: { secret: 'must-not-leak' },
+        ip: '10.0.0.9',
+        at: new Date(),
+      });
+
+      const res = await request(app)
+        .get(`${BASE}/${report._id}/activities`)
+        .set(auth(mgrToken));
+
+      expect(res.status).toBe(200);
+      expect(res.body.meta).toMatchObject({ page: 1, limit: 20, total: 1, total_pages: 1 });
+      expect(res.body.data).toHaveLength(1);
+      expect(Object.keys(res.body.data[0]).sort()).toEqual(['action', 'at', 'entity', 'entity_id', 'id']);
+      expect(res.body.data[0].action).toBe('SHIFT_OPENED');
+      expect(JSON.stringify(res.body)).not.toContain('must-not-leak');
+      expect(JSON.stringify(res.body)).not.toContain('10.0.0.9');
+    });
+
+    it('returns 404 for an unknown report', async () => {
+      const res = await request(app)
+        .get(`${BASE}/${newId()}/activities`)
+        .set(auth(mgrToken));
+      expect(res.status).toBe(404);
+    });
+  });
+
+  describe('handover', () => {
+    it('returns the guide shape with the pending count and an empty list', async () => {
+      const { Shift } = require('../../src/db/models');
+      const shift = await Shift.create({
+        staff_id: newId(),
+        shift_date: '2030-07-01',
+        shift_type: 'morning',
+        start_at: new Date('2030-07-01T04:00:00Z'),
+        end_at: new Date('2030-07-01T13:00:00Z'),
+        status: 'handed_over',
+        handed_over_at: new Date('2030-07-01T13:05:00Z'),
+      });
+      const report = await makeReport({
+        shift_id: shift._id,
+        shift_date: '2030-07-01',
+        pending_items: 2,
+        notes: 'Room 12 key missing',
+      });
+
+      const res = await request(app)
+        .get(`${BASE}/${report._id}/handover`)
+        .set(auth(mgrToken));
+
+      expect(res.status).toBe(200);
+      expect(res.body.data).toMatchObject({
+        report_id: String(report._id),
+        shift_id: String(shift._id),
+        staff_name: 'Ahmed Hassan',
+        notes: 'Room 12 key missing',
+        pending_items_count: 2,
+        pending_items: [],
+      });
+      expect(res.body.data.submitted_at).toBeDefined();
+    });
+
+    it('returns 404 when the report is unknown', async () => {
+      const res = await request(app)
+        .get(`${BASE}/${newId()}/handover`)
+        .set(auth(mgrToken));
+      expect(res.status).toBe(404);
+    });
+  });
+
+  describe('pdf storage', () => {
+    it('stores the PDF when approved and removes it when sent back to review', async () => {
+      const report = await makeReport({ shift_date: '2030-08-01' });
+
+      const approve = await request(app)
+        .patch(`${BASE}/${report._id}/review`)
+        .set(auth(mgrToken))
+        .send({ review_status: 'APPROVED' });
+      expect(approve.status).toBe(200);
+
+      const stored = await ShiftReport.findById(report._id).select('+pdf_data').lean();
+      expect(stored.pdf_data).toBeTruthy();
+      expect(stored.pdf_data.length()).toBeGreaterThan(0);
+      expect(stored.pdf_generated_at).toBeTruthy();
+
+      const pdfRes = await request(app).get(`${BASE}/${report._id}/pdf`).set(auth(mgrToken));
+      expect(pdfRes.status).toBe(200);
+      expect(pdfRes.headers['content-type']).toContain('application/pdf');
+      expect(pdfRes.headers['cache-control']).toContain('no-store');
+    });
+
+    it('clears a stored PDF when the report goes back to NEEDS_REVIEW', async () => {
+      const report = await makeReport({ shift_date: '2030-08-02' });
+      await ShiftReport.updateOne(
+        { _id: report._id },
+        { $set: { pdf_data: Buffer.from('%PDF-old'), pdf_generated_at: new Date() } }
+      );
+
+      const res = await request(app)
+        .patch(`${BASE}/${report._id}/review`)
+        .set(auth(mgrToken))
+        .send({ review_status: 'NEEDS_REVIEW', manager_comment: 'Check the cash total' });
+      expect(res.status).toBe(200);
+
+      const after = await ShiftReport.findById(report._id).select('+pdf_data').lean();
+      expect(after.pdf_data).toBeNull();
+      expect(after.pdf_generated_at).toBeNull();
+    });
+  });
 });

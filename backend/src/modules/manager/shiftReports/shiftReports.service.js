@@ -1,4 +1,3 @@
-
 const mongoose = require('mongoose');
 const {
   ShiftReport,
@@ -66,6 +65,7 @@ function toReportDto(report) {
     pdf_url: `/api/v1/manager/shift-reports/${report._id}/pdf`,
   };
 }
+
 async function listReports({
   from,
   to,
@@ -150,22 +150,40 @@ async function getReport(id) {
   return toReportDto(await findReport(id));
 }
 
-async function getReportActivities(id) {
+async function getReportActivities(id, { page = 1, limit = 20 } = {}) {
   const report = await findReport(id);
   const shiftId = String(report.shift_id);
+  const p = Math.max(1, Number.parseInt(page, 10) || 1);
+  const l = Math.min(100, Math.max(1, Number.parseInt(limit, 10) || 20));
 
-  const activities = await AuditLog.find({
+  const filter = {
     $or: [
       { entity: 'Shift', entity_id: shiftId },
       { entity: 'ShiftReport', entity_id: String(report._id) },
       { 'details.shift_id': shiftId },
     ],
-  })
-    .sort({ at: -1 })
-    .limit(200)
-    .lean();
+  };
 
-  return activities;
+  const [rows, total] = await Promise.all([
+    AuditLog.find(filter)
+      .select('action entity entity_id at')
+      .sort({ at: -1 })
+      .skip((p - 1) * l)
+      .limit(l)
+      .lean(),
+    AuditLog.countDocuments(filter),
+  ]);
+
+  return {
+    data: rows.map((a) => ({
+      id: String(a._id),
+      action: a.action,
+      entity: a.entity,
+      entity_id: a.entity_id,
+      at: a.at,
+    })),
+    meta: { page: p, limit: l, total, total_pages: Math.ceil(total / l) || 1 },
+  };
 }
 
 async function getHandover(id) {
@@ -176,18 +194,16 @@ async function getHandover(id) {
     throw E.notFound('Shift not found');
   }
 
+  // The report stores only the COUNT of pending items, so the list stays empty
+  // (rebuilding it from live data would change after the shift ended)
   return {
-    report_id: report._id,
-    shift_id: shift._id,
-    business_date: report.shift_date,
-    shift_type: report.shift_type,
-    staff_id: report.staff_id,
+    report_id: String(report._id),
+    shift_id: String(shift._id),
     staff_name: report.staff_name,
-    shift_status: shift.status,
-    report_status: shift.report_status,
-    handed_over_at: shift.handed_over_at,
-    shift_notes: shift.shift_notes,
-    pending_items: report.pending_items,
+    submitted_at: shift.handed_over_at || report.created_at || null,
+    notes: report.notes || shift.shift_notes || null,
+    pending_items_count: report.pending_items || 0,
+    pending_items: [],
   };
 }
 
@@ -244,6 +260,7 @@ async function loadOrBuildPdf(id) {
 
   return { report, pdfBuffer };
 }
+
 async function getReportPdf(id) {
   if (!validId(id)) {
     throw E.notFound('Shift report not found');
@@ -310,6 +327,10 @@ async function reviewReport(id, body = {}, actor, ip = null) {
             reviewed_by_staff_id: actor._id,
             reviewed_at: new Date(),
             manager_comment: managerComment,
+            // A report that goes back to review loses its stored PDF
+            ...(status === 'NEEDS_REVIEW'
+              ? { pdf: null, pdf_data: null, pdf_generated_at: null }
+              : {}),
           },
         },
         { returnDocument: 'after', session }
@@ -337,7 +358,7 @@ async function reviewReport(id, body = {}, actor, ip = null) {
     await session.endSession();
   }
 
-    if (status === 'APPROVED') {
+  if (status === 'APPROVED') {
     try {
       await loadOrBuildPdf(id);
     } catch (err) {
