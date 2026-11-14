@@ -327,6 +327,15 @@ describe('Manager Feature M6: Shift Schedule', () => {
       const updatedShift = await Shift.findById(realShift._id);
       expect(updatedShift.status).toBe('handed_over');
       expect(updatedShift.shift_notes).toContain('FORCE CLOSED by manager');
+      
+      // The forced close also produces a PENDING_REVIEW report
+      const { ShiftReport } = require('../../src/db/models');
+      const report = await ShiftReport.findOne({ shift_id: realShift._id }).lean();
+      expect(report).toBeTruthy();
+      expect(report.review_status).toBe('PENDING_REVIEW');
+      expect(report.notes).toContain('FORCE CLOSED by manager');
+      expect(String(report.staff_id)).toBe(String(receptionist._id));
+      expect(report.shift_date).toBe(shiftDate);
 
       // Verify sessions revoked
       const activeSessions = await Session.countDocuments({
