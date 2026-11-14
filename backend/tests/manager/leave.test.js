@@ -18,8 +18,16 @@ describe('Manager Feature M7: Leave Requests', () => {
   let manager1, manager2, receptionist;
   let manager1Token, manager2Token, receptionistToken;
   const today = todayCairo();
+  
 
-  beforeEach(async () => {
+  const { DateTime } = require('luxon');
+const { ZONE } = require('../../src/utils/time');
+// Dates relative to today so the tests do not rot as time passes
+const d = (n) => DateTime.now().setZone(ZONE).plus({ days: n }).toFormat('yyyy-MM-dd');
+const D10 = d(10), D12 = d(12), D15 = d(15), D18 = d(18), D20 = d(20), D22 = d(22);
+const DEC = (i) => d(40 + i);
+const DEC20 = d(60), DEC21 = d(61);
+beforeEach(async () => {
     await Staff.deleteMany({});
     await Session.deleteMany({});
     await Shift.deleteMany({});
@@ -94,8 +102,8 @@ describe('Manager Feature M7: Leave Requests', () => {
         .set('Authorization', `Bearer ${receptionistToken}`)
         .send({
           leave_type: 'ANNUAL',
-          start_date: '2026-11-10',
-          end_date: '2026-11-12',
+          start_date: D10,
+          end_date: D12,
           reason: 'Family trip',
         });
 
@@ -126,8 +134,8 @@ describe('Manager Feature M7: Leave Requests', () => {
       await LeaveRequest.create({
         staff_id: receptionist._id,
         leave_type: 'ANNUAL',
-        start_date: '2026-11-10',
-        end_date: '2026-11-15',
+        start_date: D10,
+        end_date: D15,
         status: 'PENDING',
       });
 
@@ -136,8 +144,8 @@ describe('Manager Feature M7: Leave Requests', () => {
         .set('Authorization', `Bearer ${receptionistToken}`)
         .send({
           leave_type: 'SICK',
-          start_date: '2026-11-12',
-          end_date: '2026-11-18',
+          start_date: D12,
+          end_date: D18,
           reason: 'Overlap test',
         });
 
@@ -149,8 +157,8 @@ describe('Manager Feature M7: Leave Requests', () => {
         await LeaveRequest.create({
           staff_id: receptionist._id,
           leave_type: 'UNPAID',
-          start_date: `2026-12-0${i}`,
-          end_date: `2026-12-0${i}`,
+          start_date: DEC(i),
+          end_date: DEC(i),
           status: 'PENDING',
         });
       }
@@ -160,8 +168,8 @@ describe('Manager Feature M7: Leave Requests', () => {
         .set('Authorization', `Bearer ${receptionistToken}`)
         .send({
           leave_type: 'UNPAID',
-          start_date: '2026-12-20',
-          end_date: '2026-12-21',
+          start_date: DEC20,
+          end_date: DEC21,
           reason: 'Sixth pending request',
         });
 
@@ -174,8 +182,8 @@ describe('Manager Feature M7: Leave Requests', () => {
         .set('Authorization', `Bearer ${manager1Token}`)
         .send({
           leave_type: 'ANNUAL',
-          start_date: '2026-11-10',
-          end_date: '2026-11-12',
+          start_date: D10,
+          end_date: D12,
           reason: 'Manager asking leave',
         });
 
@@ -190,8 +198,8 @@ describe('Manager Feature M7: Leave Requests', () => {
       leaveDoc = await LeaveRequest.create({
         staff_id: receptionist._id,
         leave_type: 'ANNUAL',
-        start_date: '2026-11-10',
-        end_date: '2026-11-12',
+        start_date: D10,
+        end_date: D12,
         reason: 'Rest and relaxation',
         status: 'PENDING',
       });
@@ -237,8 +245,8 @@ describe('Manager Feature M7: Leave Requests', () => {
       leaveDoc = await LeaveRequest.create({
         staff_id: receptionist._id,
         leave_type: 'ANNUAL',
-        start_date: '2026-11-10',
-        end_date: '2026-11-12',
+        start_date: D10,
+        end_date: D12,
         reason: 'Rest',
         status: 'PENDING',
       });
@@ -248,8 +256,8 @@ describe('Manager Feature M7: Leave Requests', () => {
       const ownLeave = await LeaveRequest.create({
         staff_id: manager1._id,
         leave_type: 'ANNUAL',
-        start_date: '2026-11-20',
-        end_date: '2026-11-22',
+        start_date: D20,
+        end_date: D22,
         reason: 'Manager own leave',
         status: 'PENDING',
       });
@@ -274,10 +282,10 @@ describe('Manager Feature M7: Leave Requests', () => {
 
     it('approves request with cancellation: cancels future shifts and notifies employee', async () => {
       // Future shift in range
-      const win = shiftWindow('2026-11-10', 'morning');
+      const win = shiftWindow(D10, 'morning');
       await ShiftSchedule.create({
         staff_id: receptionist._id,
-        shift_date: '2026-11-10',
+        shift_date: D10,
         shift_type: 'morning',
         start_at: win.start_at,
         end_at: win.end_at,
@@ -298,7 +306,7 @@ describe('Manager Feature M7: Leave Requests', () => {
       expect(res.body.data.shifts_cancelled_count).toBe(3);
 
       // Verify shift schedule cancelled
-      const sched = await ShiftSchedule.findOne({ staff_id: receptionist._id, shift_date: '2026-11-10' });
+      const sched = await ShiftSchedule.findOne({ staff_id: receptionist._id, shift_date: D10 });
       expect(sched.status).toBe('CANCELLED');
       expect(sched.cancel_reason).toBe('LEAVE_APPROVED');
 
