@@ -570,6 +570,226 @@ paths:
           $ref: '#/components/responses/Forbidden'
         '404':
           $ref: '#/components/responses/NotFound'
+
+  /daily-closings/current:
+    get:
+      summary: Current business day
+      description: |
+        Returns the open business day with live totals and blockers, or `data: null` when no day is open.
+      operationId: getCurrentDailyClosing
+      responses:
+        '200':
+          description: The open day, or null
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [data]
+                properties:
+                  data:
+                    type: object
+                    nullable: true
+                    allOf:
+                      - $ref: '#/components/schemas/CurrentDailyClosing'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+  /daily-closings/open:
+    post:
+      summary: Open the business day
+      description: |
+        The business date is set by the server (today in Cairo time). Returns `409 ACTIVE_BUSINESS_DAY_EXISTS` when another day is already open.
+      operationId: openDailyClosing
+      parameters:
+        - $ref: '#/components/parameters/IdempotencyKey'
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                notes:
+                  type: string
+                  maxLength: 1000
+                  nullable: true
+      responses:
+        '201':
+          description: Business day opened
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [data]
+                properties:
+                  data:
+                    $ref: '#/components/schemas/OpenedDailyClosing'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '409':
+          description: A day is already open, or this date was already closed
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /daily-closings/close:
+    post:
+      summary: Close the business day
+      description: |
+        Checks in order: an open day exists, no pending approvals (`PENDING_APPROVALS_EXIST`), no active shift, no `PENDING_REVIEW` reports (`UNREVIEWED_REPORTS_EXIST`).
+      operationId: closeDailyClosing
+      parameters:
+        - $ref: '#/components/parameters/IdempotencyKey'
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                notes:
+                  type: string
+                  maxLength: 1000
+                  nullable: true
+      responses:
+        '200':
+          description: Business day closed
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [data]
+                properties:
+                  data:
+                    $ref: '#/components/schemas/ClosedDailyClosing'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '409':
+          description: No open day, pending approvals, an open shift, or unreviewed reports
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /daily-closings:
+    get:
+      summary: List daily closings
+      operationId: listDailyClosings
+      parameters:
+        - name: from
+          in: query
+          required: false
+          schema:
+            type: string
+            format: date
+        - name: to
+          in: query
+          required: false
+          schema:
+            type: string
+            format: date
+        - name: status
+          in: query
+          required: false
+          schema:
+            type: string
+            enum: [OPEN, CLOSED]
+        - $ref: '#/components/parameters/Page'
+        - $ref: '#/components/parameters/Limit'
+      responses:
+        '200':
+          description: Paginated list of closings
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [data, meta]
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/DailyClosingItem'
+                  meta:
+                    $ref: '#/components/schemas/Meta'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+  /payments:
+    get:
+      summary: Payments ledger (read only)
+      description: |
+        Refunds and corrections are negative amounts. `meta.summary` totals the whole filtered set, not just the page.
+      operationId: listPayments
+      parameters:
+        - name: from
+          in: query
+          required: false
+          schema:
+            type: string
+            format: date
+        - name: to
+          in: query
+          required: false
+          schema:
+            type: string
+            format: date
+        - name: shift_id
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: booking_id
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: method
+          in: query
+          required: false
+          schema:
+            type: string
+            enum: [CASH, INSTAPAY, VODAFONE_CASH]
+        - name: type
+          in: query
+          required: false
+          schema:
+            type: string
+            enum: [PAYMENT, REFUND, CORRECTION]
+        - $ref: '#/components/parameters/Page'
+        - $ref: '#/components/parameters/Limit'
+      responses:
+        '200':
+          description: Paginated payments
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [data, meta]
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/PaymentItem'
+                  meta:
+                    allOf:
+                      - $ref: '#/components/schemas/Meta'
+                      - type: object
+                        properties:
+                          summary:
+                            $ref: '#/components/schemas/PaymentsSummary'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
 components:
   securitySchemes:
     bearerAuth:
@@ -623,6 +843,154 @@ components:
           schema:
             $ref: '#/components/schemas/Error'
   schemas:
+    DailyClosingTotals:
+      type: object
+      properties:
+        cash_total:
+          type: number
+        instapay_total:
+          type: number
+        vodafone_cash_total:
+          type: number
+        gross_revenue:
+          type: number
+        refunds_total:
+          type: number
+        total_revenue:
+          type: number
+    CurrentDailyClosing:
+      allOf:
+        - $ref: '#/components/schemas/DailyClosingTotals'
+        - type: object
+          properties:
+            closing_id:
+              type: string
+            business_date:
+              type: string
+            status:
+              type: string
+              enum: [OPEN, CLOSED]
+            opened_at:
+              type: string
+              nullable: true
+            opened_by_staff_id:
+              type: string
+              nullable: true
+            blockers:
+              type: object
+              properties:
+                pending_approvals:
+                  type: integer
+                unreviewed_reports:
+                  type: integer
+                active_shifts:
+                  type: integer
+            can_close:
+              type: boolean
+    OpenedDailyClosing:
+      type: object
+      properties:
+        closing_id:
+          type: string
+        business_date:
+          type: string
+        status:
+          type: string
+        opened_at:
+          type: string
+          nullable: true
+        opened_by_staff_id:
+          type: string
+          nullable: true
+    ClosedDailyClosing:
+      allOf:
+        - $ref: '#/components/schemas/DailyClosingTotals'
+        - type: object
+          properties:
+            closing_id:
+              type: string
+            business_date:
+              type: string
+            status:
+              type: string
+            closed_by_staff_id:
+              type: string
+              nullable: true
+            closed_at:
+              type: string
+              nullable: true
+    DailyClosingItem:
+      allOf:
+        - $ref: '#/components/schemas/DailyClosingTotals'
+        - type: object
+          properties:
+            closing_id:
+              type: string
+            business_date:
+              type: string
+            status:
+              type: string
+              enum: [OPEN, CLOSED]
+            opened_at:
+              type: string
+              nullable: true
+            opened_by_staff_id:
+              type: string
+              nullable: true
+            closed_at:
+              type: string
+              nullable: true
+            closed_by_staff_id:
+              type: string
+              nullable: true
+            notes:
+              type: string
+              nullable: true
+    PaymentItem:
+      type: object
+      properties:
+        payment_id:
+          type: string
+        booking_id:
+          type: string
+          nullable: true
+        shift_id:
+          type: string
+          nullable: true
+        method:
+          type: string
+          enum: [CASH, INSTAPAY, VODAFONE_CASH]
+        type:
+          type: string
+          enum: [PAYMENT, REFUND, CORRECTION]
+        amount:
+          type: number
+        staff_id:
+          type: string
+          nullable: true
+        staff_name:
+          type: string
+          nullable: true
+        approval_id:
+          type: string
+          nullable: true
+        created_at:
+          type: string
+          nullable: true
+    PaymentsSummary:
+      type: object
+      properties:
+        count:
+          type: integer
+        cash:
+          type: number
+        instapay:
+          type: number
+        vodafone_cash:
+          type: number
+        refunds:
+          type: number
+  
     ObjectId:
       type: string
       pattern: '^[a-f0-9]{24}$'
