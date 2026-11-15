@@ -23,14 +23,43 @@ let SHIFT_HOURS = {
   night: { start: 23, end: 7 },
 };
 
+const ORDER = ['morning', 'evening', 'night'];
+
+function validateHours(h) {
+  if (!h || typeof h !== 'object') return false;
+  let total = 0;
+  for (const k of ORDER) {
+    const { start, end } = h[k] || {};
+    if (
+      !Number.isInteger(start) ||
+      !Number.isInteger(end) ||
+      start < 0 ||
+      start > 23 ||
+      end < 0 ||
+      end > 23 ||
+      start === end
+    ) {
+      return false;
+    }
+    total += (end - start + 24) % 24;
+  }
+  return (
+    total === 24 &&
+    h.morning.end === h.evening.start &&
+    h.evening.end === h.night.start &&
+    h.night.end === h.morning.start
+  );
+}
+
 function getShiftHours() {
   return JSON.parse(JSON.stringify(SHIFT_HOURS));
 }
 
 function setShiftHours(h) {
-  if (h && typeof h === 'object') {
-    SHIFT_HOURS = Object.freeze(JSON.parse(JSON.stringify(h)));
+  if (!validateHours(h)) {
+    throw new Error('Invalid shift hours: must cover 24 hours continuously with no gaps or overlaps');
   }
+  SHIFT_HOURS = Object.freeze(JSON.parse(JSON.stringify(h)));
 }
 
 function todayCairo() {
@@ -106,6 +135,7 @@ module.exports = {
   shiftWindow,
   getShiftHours,
   setShiftHours,
+  validateHours,
   stayDay,
   noonCairo,
   nightsBetween,

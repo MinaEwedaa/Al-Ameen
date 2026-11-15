@@ -1,4 +1,5 @@
 const request = require('supertest');
+const { DateTime } = require('luxon');
 const app = require('../../src/app');
 const { makeToken } = require('../helpers/managerAuth');
 const { Room } = require('../../src/db/models');
@@ -127,17 +128,18 @@ describe('Manager Features 0-3 Endpoints', () => {
     });
 
     test('POST /api/v1/manager/shifts schedules a shift for staff', async () => {
+      const targetDate = DateTime.now().setZone('Africa/Cairo').plus({ days: 2 }).toISODate();
       const res = await request(app)
         .post('/api/v1/manager/shifts')
         .set('Authorization', `Bearer ${managerToken}`)
         .send({
           staff_id: createdStaffId,
-          business_date: '2026-11-15',
+          business_date: targetDate,
           shift_type: 'MORNING',
         });
 
       expect(res.status).toBe(201);
-      expect(res.body.data).toHaveProperty('business_date', '2026-11-15');
+      expect(res.body.data).toHaveProperty('business_date', targetDate);
       expect(res.body.data).toHaveProperty('shift_type', 'MORNING');
     });
   });

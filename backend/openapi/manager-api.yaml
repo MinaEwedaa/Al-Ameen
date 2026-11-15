@@ -902,6 +902,129 @@ paths:
           $ref: '#/components/responses/Unauthorized'
         '403':
           $ref: '#/components/responses/Forbidden'
+  /hotel-settings:
+    get:
+      summary: Get hotel settings
+      operationId: getHotelSettings
+      responses:
+        '200':
+          description: Hotel settings
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [data]
+                properties:
+                  data:
+                    $ref: '#/components/schemas/HotelSettings'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+    patch:
+      summary: Update hotel settings
+      operationId: updateHotelSettings
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/HotelSettingsPatch'
+      responses:
+        '200':
+          description: Updated hotel settings
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [data]
+                properties:
+                  data:
+                    $ref: '#/components/schemas/HotelSettings'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+  /shift-settings:
+    get:
+      summary: Get shift settings
+      operationId: getShiftSettings
+      responses:
+        '200':
+          description: Shift settings
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [data]
+                properties:
+                  data:
+                    $ref: '#/components/schemas/ShiftSettings'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+    patch:
+      summary: Update shift settings
+      operationId: updateShiftSettings
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ShiftSettingsPatch'
+      responses:
+        '200':
+          description: Updated shift settings
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [data]
+                properties:
+                  data:
+                    $ref: '#/components/schemas/ShiftSettingsPatchResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+  /search:
+    get:
+      summary: Universal search across rooms, staff and shift reports
+      operationId: search
+      parameters:
+        - name: q
+          in: query
+          required: true
+          schema:
+            type: string
+            minLength: 2
+            maxLength: 50
+        - name: limit
+          in: query
+          required: false
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 10
+            default: 5
+      responses:
+        '200':
+          description: Search results
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SearchResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
 components:
   securitySchemes:
     bearerAuth:
@@ -1652,4 +1775,194 @@ components:
           type: boolean
         system:
           type: boolean
+    HotelSettings:
+      type: object
+      required:
+        - name
+        - location
+        - floors_count
+        - total_rooms
+        - updated_at
+      properties:
+        name:
+          type: string
+        location:
+          type: string
+        floors_count:
+          type: integer
+        total_rooms:
+          type: integer
+        updated_at:
+          type: string
+          format: date-time
+    HotelSettingsPatch:
+      type: object
+      minProperties: 1
+      properties:
+        name:
+          type: string
+          minLength: 1
+          maxLength: 100
+        location:
+          type: string
+          maxLength: 200
+        floors_count:
+          type: integer
+          minimum: 1
+          maximum: 100
+    ShiftHourRange:
+      type: object
+      required:
+        - start
+        - end
+      properties:
+        start:
+          type: integer
+          minimum: 0
+          maximum: 23
+        end:
+          type: integer
+          minimum: 0
+          maximum: 23
+    ShiftSettings:
+      type: object
+      required:
+        - morning
+        - evening
+        - night
+      properties:
+        morning:
+          $ref: '#/components/schemas/ShiftHourRange'
+        evening:
+          $ref: '#/components/schemas/ShiftHourRange'
+        night:
+          $ref: '#/components/schemas/ShiftHourRange'
+    ShiftSettingsPatch:
+      type: object
+      minProperties: 1
+      properties:
+        morning:
+          $ref: '#/components/schemas/ShiftHourRange'
+        evening:
+          $ref: '#/components/schemas/ShiftHourRange'
+        night:
+          $ref: '#/components/schemas/ShiftHourRange'
+        apply_to_future:
+          type: boolean
+          default: true
+    ShiftSettingsPatchResponse:
+      type: object
+      required:
+        - morning
+        - evening
+        - night
+        - updated_future_shifts
+      properties:
+        morning:
+          $ref: '#/components/schemas/ShiftHourRange'
+        evening:
+          $ref: '#/components/schemas/ShiftHourRange'
+        night:
+          $ref: '#/components/schemas/ShiftHourRange'
+        updated_future_shifts:
+          type: integer
+    SearchRoomItem:
+      type: object
+      required:
+        - id
+        - room_number
+        - floor
+        - room_type_name
+        - physical_status
+        - occupancy_status
+      properties:
+        id:
+          type: string
+        room_number:
+          type: string
+        floor:
+          type: integer
+        room_type_name:
+          type: string
+        physical_status:
+          type: string
+        occupancy_status:
+          type: string
+    SearchStaffItem:
+      type: object
+      required:
+        - id
+        - full_name
+        - staff_type
+        - is_active
+      properties:
+        id:
+          type: string
+        full_name:
+          type: string
+        staff_type:
+          type: string
+        department:
+          type: string
+          nullable: true
+        is_active:
+          type: boolean
+        national_id:
+          type: string
+          nullable: true
+    SearchShiftReportItem:
+      type: object
+      required:
+        - report_id
+        - business_date
+        - shift_type
+        - staff_name
+        - review_status
+      properties:
+        report_id:
+          type: string
+        business_date:
+          type: string
+        shift_type:
+          type: string
+        staff_name:
+          type: string
+        review_status:
+          type: string
+    SearchResponse:
+      type: object
+      required:
+        - data
+        - meta
+      properties:
+        data:
+          type: object
+          required:
+            - rooms
+            - staff
+            - shift_reports
+          properties:
+            rooms:
+              type: array
+              items:
+                $ref: '#/components/schemas/SearchRoomItem'
+            staff:
+              type: array
+              items:
+                $ref: '#/components/schemas/SearchStaffItem'
+            shift_reports:
+              type: array
+              items:
+                $ref: '#/components/schemas/SearchShiftReportItem'
+        meta:
+          type: object
+          required:
+            - q
+            - limit
+          properties:
+            q:
+              type: string
+            limit:
+              type: integer
+
 

@@ -1,6 +1,7 @@
 // Tests for Manager Feature M6: Shift Schedule & Baseline Materialization
 
 const request = require('supertest');
+const { DateTime } = require('luxon');
 const app = require('../../src/app');
 const {
   Staff,
@@ -12,7 +13,7 @@ const {
 } = require('../../src/db/models');
 const { hashPassword } = require('../../src/utils/password');
 const { signAccess } = require('../../src/modules/auth/auth.service');
-const { todayCairo, shiftWindow } = require('../../src/utils/time');
+const { todayCairo, shiftWindow, ZONE } = require('../../src/utils/time');
 const { ensureBaseline } = require('../../src/modules/manager/common/schedule.service');
 
 describe('Manager Feature M6: Shift Schedule', () => {
@@ -131,7 +132,7 @@ describe('Manager Feature M6: Shift Schedule', () => {
     });
 
     it('rejects shift overlapping with existing scheduled shift with 409 SHIFT_OVERLAP', async () => {
-      const futureDate = '2026-11-15';
+      const futureDate = DateTime.now().setZone(ZONE).plus({ days: 5 }).toISODate();
       const win = shiftWindow(futureDate, 'morning');
 
       await ShiftSchedule.create({
