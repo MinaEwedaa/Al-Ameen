@@ -22,6 +22,7 @@ const { runInTransaction } = require('../../../utils/transaction');
 const { ensureBaseline } = require('../common/schedule.service');
 const { deriveStatus, toShiftDto } = require('./shifts.dto');
 const { isOpenShift } = require('../common/shift.mapper');
+const { saveShiftReport } = require('../shiftReports/report.builder');
 
 const SHIFT_TYPES = ['morning', 'evening', 'night'];
 const WEEK_START = 6; // Saturday (Egyptian week)
@@ -555,6 +556,8 @@ async function forceCloseShift(shiftId, { reason }, actorStaff, ip) {
 
   const now = new Date();
 
+  const owner = await Staff.findById(schedule.staff_id).select('name').lean();
+
   await runInTransaction(async (session) => {
     actual.status = 'handed_over';
     actual.handed_over_at = now;
@@ -567,6 +570,16 @@ async function forceCloseShift(shiftId, { reason }, actorStaff, ip) {
       { $set: { revoked_at: now } },
       { session }
     );
+
+    // The forced close still produces a PENDING_REVIEW report, so the daily
+    // closing (M10) sees the money of an abandoned shift.
+    await saveShiftReport(actual, {
+      notes: reason.trim(),
+      forced: true,
+      session,
+      staff: owner,
+      now,
+    });
   });
 
   await audit({
