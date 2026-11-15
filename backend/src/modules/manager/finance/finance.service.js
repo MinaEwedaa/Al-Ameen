@@ -87,6 +87,8 @@ async function getCurrent() {
     status: day.status,
     opened_at: iso(day.opened_at),
     opened_by_staff_id: idOrNull(day.opened_by_staff_id),
+    closed_at: iso(day.closed_at) || null,
+    transactions_count: fin.transactions_count || 0,
     ...totalsDto(fin),
     blockers,
     can_close,

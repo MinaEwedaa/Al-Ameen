@@ -81,8 +81,9 @@ app.use(
     validateResponses: env.nodeEnv !== 'production',
     validateSecurity: false,
       ignorePaths: (p) =>
-      /^\/(health|docs|api\/v1\/test-|api\/v1\/leave-requests)/.test(p) ||
-      MANAGER_PREFIX.test(p),
+      /^\/(health|docs|api\/v1\/test-|api\/v1\/leave-requests|api\/v1\/mock-only)/.test(p) ||
+      MANAGER_PREFIX.test(p) ||
+      /^\/api\/v1\/(daily-closings|hotel-settings|shift-settings|shift-reports|room-types|mock-only)/.test(p),
   })
 );
 
@@ -115,6 +116,15 @@ app.use('/api/v1/cleaning-tasks', require('./modules/cleaning/cleaning.routes'))
 app.use('/api/v1/maintenance-issues', require('./modules/maintenance/maintenance.routes'));
 app.use('/api/v1/leave-requests', require('./modules/manager/leaves/receptionistLeave.routes'));
 app.use('/api/v1/manager', require('./modules/manager'));
+
+// Frontend design & alias routes for manager services calling un-prefixed URLs
+const managerAuth = [require('./middleware/auth').authenticate, require('./middleware/requireRole')('manager', 'admin')];
+app.use('/api/v1/daily-closings', managerAuth, require('./modules/manager/finance/dailyClosings.routes'));
+app.use('/api/v1/hotel-settings', managerAuth, require('./modules/manager/settings/hotelSettings.routes'));
+app.use('/api/v1/shift-settings', managerAuth, require('./modules/manager/settings/shiftSettings.routes'));
+app.use('/api/v1/shift-reports', managerAuth, require('./modules/manager/shiftReports/shiftReports.routes'));
+app.use('/api/v1/room-types', managerAuth, require('./modules/manager/roomTypes/roomTypes.routes'));
+app.use('/api/v1/mock-only', require('./modules/manager/finance/mockFinance.routes'));
 if (env.nodeEnv === 'test') {
   app.post(
     '/api/v1/test-shift-write',

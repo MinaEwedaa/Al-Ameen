@@ -46,7 +46,7 @@ export async function getPayments(
   if (filters.status && filters.status !== 'ALL') params.status = filters.status;
   if (filters.search) params.search = filters.search;
 
-  return request<ListEnvelopeDto<FinancePaymentDto>>('/payments', {
+  return request<ListEnvelopeDto<FinancePaymentDto>>('/manager/payments', {
     method: 'GET',
     params,
   });
@@ -57,7 +57,7 @@ export async function getPayments(
  * Live balances of the open business day (cash, instapay, vodafone, gross, refunds, total).
  */
 export async function getDailyClosingCurrent(): Promise<DailyClosingCurrentDto> {
-  const res = await request<SingleEnvelopeDto<DailyClosingCurrentDto>>('/daily-closings/current', {
+  const res = await request<SingleEnvelopeDto<DailyClosingCurrentDto>>('/manager/daily-closings/current', {
     method: 'GET',
   });
   return res.data;
