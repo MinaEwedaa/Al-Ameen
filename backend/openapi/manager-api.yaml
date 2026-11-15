@@ -790,6 +790,118 @@ paths:
           $ref: '#/components/responses/Unauthorized'
         '403':
           $ref: '#/components/responses/Forbidden'
+  /dashboard/overview:
+    get:
+      summary: Dashboard overview
+      operationId: getDashboardOverview
+      responses:
+        '200':
+          description: Dashboard KPIs
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [data]
+                properties:
+                  data:
+                    $ref: '#/components/schemas/DashboardOverview'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+  /dashboard/revenue:
+    get:
+      summary: Dashboard revenue series
+      description: '`days` from 1 to 90, default 7 (larger values are capped).'
+      operationId: getDashboardRevenue
+      parameters:
+        - name: days
+          in: query
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 90
+            default: 7
+      responses:
+        '200':
+          description: Revenue totals, series and payment methods
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [data]
+                properties:
+                  data:
+                    $ref: '#/components/schemas/DashboardRevenue'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+  /dashboard/issues:
+    get:
+      summary: Open maintenance and cleaning issues
+      operationId: getDashboardIssues
+      parameters:
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 20
+            default: 4
+      responses:
+        '200':
+          description: Issues, most severe first
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [data]
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/DashboardIssue'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+  /activities:
+    get:
+      summary: Hotel activity feed
+      description: Newest first. Details and IP are never returned.
+      operationId: listActivities
+      parameters:
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 50
+            default: 4
+      responses:
+        '200':
+          description: Activities
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [data]
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/ActivityItem'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
 components:
   securitySchemes:
     bearerAuth:
@@ -1234,6 +1346,170 @@ components:
           type: array
           items:
             type: object
+    DashboardOverview:
+      type: object
+      properties:
+        kpis:
+          type: object
+          properties:
+            total_rooms:
+              type: number
+            occupied_rooms:
+              type: number
+            available_rooms:
+              type: number
+            cleaning_rooms:
+              type: number
+            maintenance_rooms:
+              type: number
+            occupancy_rate:
+              type: number
+            today_revenue:
+              type: number
+            today_revenue_change_pct:
+              type: number
+            pending_tasks:
+              type: number
+        room_counts:
+          type: object
+          properties:
+            total:
+              type: number
+            standard:
+              type: number
+            vip:
+              type: number
+            occupied:
+              type: number
+            available:
+              type: number
+            reserved:
+              type: number
+            cleaning:
+              type: number
+            maintenance:
+              type: number
+        floors_occupancy:
+          type: array
+          items:
+            type: object
+            properties:
+              floor:
+                type: number
+              total:
+                type: number
+              occupied:
+                type: number
+              standard_count:
+                type: number
+              vip_count:
+                type: number
+              occupancy_pct:
+                type: number
+    DashboardMethodShare:
+      type: object
+      properties:
+        method:
+          type: string
+        amount:
+          type: number
+        share_pct:
+          type: number
+        percentage:
+          type: number
+    DashboardSeriesPoint:
+      type: object
+      properties:
+        business_date:
+          type: string
+        date:
+          type: string
+        net_revenue:
+          type: number
+        revenue:
+          type: number
+    DashboardRevenue:
+      type: object
+      properties:
+        totals:
+          type: object
+          properties:
+            today:
+              type: number
+            week:
+              type: number
+            month:
+              type: number
+            year:
+              type: number
+        change_pct_vs_previous_day:
+          type: number
+        comparison_percentage:
+          type: number
+        today_revenue:
+          type: number
+        week_total:
+          type: number
+        month_total:
+          type: number
+        year_total:
+          type: number
+        series:
+          type: array
+          items:
+            $ref: '#/components/schemas/DashboardSeriesPoint'
+        chart_series:
+          type: array
+          items:
+            $ref: '#/components/schemas/DashboardSeriesPoint'
+        by_method:
+          type: array
+          items:
+            $ref: '#/components/schemas/DashboardMethodShare'
+        payment_methods:
+          type: array
+          items:
+            $ref: '#/components/schemas/DashboardMethodShare'
+    DashboardIssue:
+      type: object
+      properties:
+        issue_id:
+          type: string
+        id:
+          type: string
+        title:
+          type: string
+        type:
+          type: string
+        issue_type:
+          type: string
+        severity:
+          type: string
+        priority:
+          type: string
+        room_number:
+          type: string
+        description:
+          type: string
+        created_at:
+          type: string
+        reported_at:
+          type: string
+    ActivityItem:
+      type: object
+      properties:
+        id:
+          type: string
+        title:
+          type: string
+        description:
+          type: string
+        timestamp:
+          type: string
+        category:
+          type: string
+        actor_name:
+          type: string
     Error:
       type: object
       required: [error]
