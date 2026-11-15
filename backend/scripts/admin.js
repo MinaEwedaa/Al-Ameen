@@ -16,7 +16,7 @@ if (fs.existsSync(adminEnvPath)) {
   dotenv.config({ path: defaultEnvPath });
 }
 
-const { connectDB } = require('../src/db/connect');
+const connectDB = require('../src/db/connect');
 const staffCmds = require('./admin/staff');
 const roomCmds = require('./admin/rooms');
 const shiftCmds = require('./admin/shifts');
