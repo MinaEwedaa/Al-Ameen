@@ -11,6 +11,15 @@ async function createStaff({ username, name, shiftType, role = 'receptionist', p
     details: { username, name, shift_type: shiftType, role },
   });
 
+  const validRoles = ['receptionist', 'manager', 'admin', 'housekeeper', 'technician'];
+  if (!validRoles.includes(role)) {
+    throw new Error(`Invalid role '${role}'. Must be one of: ${validRoles.join(', ')}.`);
+  }
+
+  if (role === 'receptionist' && !shiftType) {
+    throw new Error('Default shift type (--shift or --shift-type) is required for receptionists.');
+  }
+
   const existing = await Staff.findOne({ username });
   if (existing) {
     throw new Error(`Staff member with username '${username}' already exists.`);
@@ -22,7 +31,7 @@ async function createStaff({ username, name, shiftType, role = 'receptionist', p
   const staff = await Staff.create({
     username,
     name,
-    default_shift_type: shiftType,
+    default_shift_type: role === 'receptionist' ? shiftType : null,
     role,
     password_hash: passwordHash,
     active: true,
@@ -32,7 +41,8 @@ async function createStaff({ username, name, shiftType, role = 'receptionist', p
     staff_id: String(staff._id),
     username: staff.username,
     name: staff.name,
-    password: plainPassword,
+    role: staff.role,
+    password: ['housekeeper', 'technician'].includes(role) && !password ? null : plainPassword,
   };
 }
 

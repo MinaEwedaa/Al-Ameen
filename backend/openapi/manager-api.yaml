@@ -3,24 +3,28 @@ info:
   title: Al-Amin Manager API
   version: '1.2'
 servers:
-  - url: /api/v1/manager
+- url: /api/v1/manager
 security:
-  - bearerAuth: []
+- bearerAuth: []
 paths:
   /password-reset-requests:
     get:
       summary: List password reset requests
       operationId: listPasswordResetRequests
       parameters:
-        - name: status
-          in: query
-          required: false
-          schema:
-            type: string
-            enum: [PENDING, IN_REVIEW, APPROVED, REJECTED]
-            default: PENDING
-        - $ref: '#/components/parameters/Page'
-        - $ref: '#/components/parameters/Limit'
+      - name: status
+        in: query
+        required: false
+        schema:
+          type: string
+          enum:
+          - PENDING
+          - IN_REVIEW
+          - APPROVED
+          - REJECTED
+          default: PENDING
+      - $ref: '#/components/parameters/Page'
+      - $ref: '#/components/parameters/Limit'
       responses:
         '200':
           description: Paginated list of password reset requests
@@ -28,7 +32,9 @@ paths:
             application/json:
               schema:
                 type: object
-                required: [data, meta]
+                required:
+                - data
+                - meta
                 properties:
                   data:
                     type: array
@@ -45,12 +51,12 @@ paths:
       summary: Decide on a password reset request
       operationId: decidePasswordResetRequest
       parameters:
-        - name: id
-          in: path
-          required: true
-          schema:
-            $ref: '#/components/schemas/ObjectId'
-        - $ref: '#/components/parameters/IdempotencyKey'
+      - name: id
+        in: path
+        required: true
+        schema:
+          $ref: '#/components/schemas/ObjectId'
+      - $ref: '#/components/parameters/IdempotencyKey'
       requestBody:
         required: true
         content:
@@ -64,7 +70,8 @@ paths:
             application/json:
               schema:
                 type: object
-                required: [data]
+                required:
+                - data
                 properties:
                   data:
                     $ref: '#/components/schemas/PasswordResetDecisionResponse'
@@ -87,13 +94,13 @@ paths:
       summary: List manager notifications
       operationId: listNotifications
       parameters:
-        - name: is_read
-          in: query
-          required: false
-          schema:
-            type: boolean
-        - $ref: '#/components/parameters/Page'
-        - $ref: '#/components/parameters/Limit'
+      - name: is_read
+        in: query
+        required: false
+        schema:
+          type: boolean
+      - $ref: '#/components/parameters/Page'
+      - $ref: '#/components/parameters/Limit'
       responses:
         '200':
           description: Paginated notifications
@@ -101,7 +108,9 @@ paths:
             application/json:
               schema:
                 type: object
-                required: [data, meta]
+                required:
+                - data
+                - meta
                 properties:
                   data:
                     type: array
@@ -118,11 +127,11 @@ paths:
       summary: Mark notification as read
       operationId: markNotificationRead
       parameters:
-        - name: id
-          in: path
-          required: true
-          schema:
-            $ref: '#/components/schemas/ObjectId'
+      - name: id
+        in: path
+        required: true
+        schema:
+          $ref: '#/components/schemas/ObjectId'
       responses:
         '200':
           description: Notification marked as read
@@ -130,7 +139,8 @@ paths:
             application/json:
               schema:
                 type: object
-                required: [data]
+                required:
+                - data
                 properties:
                   data:
                     $ref: '#/components/schemas/NotificationItem'
@@ -151,11 +161,13 @@ paths:
             application/json:
               schema:
                 type: object
-                required: [data]
+                required:
+                - data
                 properties:
                   data:
                     type: object
-                    required: [updated]
+                    required:
+                    - updated
                     properties:
                       updated:
                         type: integer
@@ -174,7 +186,8 @@ paths:
             application/json:
               schema:
                 type: object
-                required: [data]
+                required:
+                - data
                 properties:
                   data:
                     $ref: '#/components/schemas/NotificationPreferences'
@@ -198,7 +211,8 @@ paths:
             application/json:
               schema:
                 type: object
-                required: [data]
+                required:
+                - data
                 properties:
                   data:
                     $ref: '#/components/schemas/NotificationPreferences'
@@ -211,24 +225,25 @@ paths:
   /approvals:
     get:
       summary: List approval requests
-      description: Newest first. `status` defaults to `PENDING` (also `APPROVED`, `REJECTED`, `CANCELLED`, `ALL`).
+      description: Newest first. `status` defaults to `PENDING` (also `APPROVED`,
+        `REJECTED`, `CANCELLED`, `ALL`).
       operationId: listApprovals
       parameters:
-        - $ref: '#/components/parameters/Page'
-        - $ref: '#/components/parameters/Limit'
-        - name: status
-          in: query
-          schema:
-            type: string
-        - name: request_type
-          in: query
-          description: REFUND, DISCOUNT, CANCELLATION, UPGRADE or PRICE_OVERRIDE
-          schema:
-            type: string
-        - name: booking_id
-          in: query
-          schema:
-            $ref: '#/components/schemas/ObjectId'
+      - $ref: '#/components/parameters/Page'
+      - $ref: '#/components/parameters/Limit'
+      - name: status
+        in: query
+        schema:
+          type: string
+      - name: request_type
+        in: query
+        description: REFUND, DISCOUNT, CANCELLATION, UPGRADE or PRICE_OVERRIDE
+        schema:
+          type: string
+      - name: booking_id
+        in: query
+        schema:
+          $ref: '#/components/schemas/ObjectId'
       responses:
         '200':
           description: Approval requests
@@ -236,7 +251,9 @@ paths:
             application/json:
               schema:
                 type: object
-                required: [data, meta]
+                required:
+                - data
+                - meta
                 properties:
                   data:
                     type: array
@@ -253,14 +270,15 @@ paths:
   /approvals/{id}:
     get:
       summary: Approval request detail
-      description: For a `PENDING` request `net_paid_amount` is the live net. After a decision it is the final stored value.
+      description: For a `PENDING` request `net_paid_amount` is the live net. After
+        a decision it is the final stored value.
       operationId: getApproval
       parameters:
-        - name: id
-          in: path
-          required: true
-          schema:
-            $ref: '#/components/schemas/ObjectId'
+      - name: id
+        in: path
+        required: true
+        schema:
+          $ref: '#/components/schemas/ObjectId'
       responses:
         '200':
           description: Approval request
@@ -268,7 +286,8 @@ paths:
             application/json:
               schema:
                 type: object
-                required: [data]
+                required:
+                - data
                 properties:
                   data:
                     $ref: '#/components/schemas/ApprovalRequest'
@@ -281,28 +300,38 @@ paths:
   /approvals/{id}/decision:
     patch:
       summary: Decide on an approval request
-      description: |
-        `REJECT` needs `manager_comment`. `APPROVE` of `CANCELLATION` or `REFUND` needs `approved_refund_amount` (0 up to the net paid, at most 2 decimals) and runs in one transaction: refund payment, cancellation and settlement for `CANCELLATION`. For the other types the decision is only recorded and `approved_refund_amount` is not allowed.
-        A manager cannot decide their own request (`403 CANNOT_APPROVE_OWN_REQUEST`). A second decision returns `409 RECORD_ALREADY_DECIDED`.
+      description: '`REJECT` needs `manager_comment`. `APPROVE` of `CANCELLATION`
+        or `REFUND` needs `approved_refund_amount` (0 up to the net paid, at most
+        2 decimals) and runs in one transaction: refund payment, cancellation and
+        settlement for `CANCELLATION`. For the other types the decision is only recorded
+        and `approved_refund_amount` is not allowed.
+
+        A manager cannot decide their own request (`403 CANNOT_APPROVE_OWN_REQUEST`).
+        A second decision returns `409 RECORD_ALREADY_DECIDED`.
+
+        '
       operationId: decideApproval
       parameters:
-        - name: id
-          in: path
-          required: true
-          schema:
-            $ref: '#/components/schemas/ObjectId'
-        - $ref: '#/components/parameters/IdempotencyKey'
+      - name: id
+        in: path
+        required: true
+        schema:
+          $ref: '#/components/schemas/ObjectId'
+      - $ref: '#/components/parameters/IdempotencyKey'
       requestBody:
         required: true
         content:
           application/json:
             schema:
               type: object
-              required: [action]
+              required:
+              - action
               properties:
                 action:
                   type: string
-                  enum: [APPROVE, REJECT]
+                  enum:
+                  - APPROVE
+                  - REJECT
                 approved_refund_amount:
                   type: number
                   minimum: 0
@@ -317,7 +346,8 @@ paths:
             application/json:
               schema:
                 type: object
-                required: [data]
+                required:
+                - data
                 properties:
                   data:
                     $ref: '#/components/schemas/ApprovalDecisionResponse'
@@ -330,45 +360,49 @@ paths:
         '404':
           $ref: '#/components/responses/NotFound'
         '409':
-          description: Already decided (`RECORD_ALREADY_DECIDED`) or the money path cannot run (no active shift, nothing left to refund, reservation not cancellable)
+          description: Already decided (`RECORD_ALREADY_DECIDED`) or the money path
+            cannot run (no active shift, nothing left to refund, reservation not cancellable)
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
-
   /shift-reports:
     get:
       summary: List shift reports
-      description: Newest business date first. Use `business_date` for one day, or `from` and `to` for a range (YYYY-MM-DD).
+      description: Newest business date first. Use `business_date` for one day, or
+        `from` and `to` for a range (YYYY-MM-DD).
       operationId: listShiftReports
       parameters:
-        - $ref: '#/components/parameters/Page'
-        - $ref: '#/components/parameters/Limit'
-        - name: from
-          in: query
-          schema:
-            type: string
-        - name: to
-          in: query
-          schema:
-            type: string
-        - name: business_date
-          in: query
-          schema:
-            type: string
-        - name: shift_id
-          in: query
-          schema:
-            $ref: '#/components/schemas/ObjectId'
-        - name: staff_id
-          in: query
-          schema:
-            $ref: '#/components/schemas/ObjectId'
-        - name: review_status
-          in: query
-          schema:
-            type: string
-            enum: [PENDING_REVIEW, APPROVED, NEEDS_REVIEW]
+      - $ref: '#/components/parameters/Page'
+      - $ref: '#/components/parameters/Limit'
+      - name: from
+        in: query
+        schema:
+          type: string
+      - name: to
+        in: query
+        schema:
+          type: string
+      - name: business_date
+        in: query
+        schema:
+          type: string
+      - name: shift_id
+        in: query
+        schema:
+          $ref: '#/components/schemas/ObjectId'
+      - name: staff_id
+        in: query
+        schema:
+          $ref: '#/components/schemas/ObjectId'
+      - name: review_status
+        in: query
+        schema:
+          type: string
+          enum:
+          - PENDING_REVIEW
+          - APPROVED
+          - NEEDS_REVIEW
       responses:
         '200':
           description: Shift reports
@@ -376,7 +410,9 @@ paths:
             application/json:
               schema:
                 type: object
-                required: [data, meta]
+                required:
+                - data
+                - meta
                 properties:
                   data:
                     type: array
@@ -395,11 +431,11 @@ paths:
       summary: Shift report detail
       operationId: getShiftReport
       parameters:
-        - name: id
-          in: path
-          required: true
-          schema:
-            type: string
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
       responses:
         '200':
           description: Shift report
@@ -407,7 +443,8 @@ paths:
             application/json:
               schema:
                 type: object
-                required: [data]
+                required:
+                - data
                 properties:
                   data:
                     $ref: '#/components/schemas/ShiftReportDetail'
@@ -420,26 +457,32 @@ paths:
   /shift-reports/{id}/review:
     patch:
       summary: Review a shift report
-      description: |
-        `NEEDS_REVIEW` requires `manager_comment` and removes any stored PDF. `APPROVED` is final: a second review returns `422`. Approving stores the PDF.
+      description: '`NEEDS_REVIEW` requires `manager_comment` and removes any stored
+        PDF. `APPROVED` is final: a second review returns `422`. Approving stores
+        the PDF.
+
+        '
       operationId: reviewShiftReport
       parameters:
-        - name: id
-          in: path
-          required: true
-          schema:
-            type: string
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
       requestBody:
         required: true
         content:
           application/json:
             schema:
               type: object
-              required: [review_status]
+              required:
+              - review_status
               properties:
                 review_status:
                   type: string
-                  enum: [APPROVED, NEEDS_REVIEW]
+                  enum:
+                  - APPROVED
+                  - NEEDS_REVIEW
                 manager_comment:
                   type: string
                   maxLength: 500
@@ -451,7 +494,8 @@ paths:
             application/json:
               schema:
                 type: object
-                required: [data]
+                required:
+                - data
                 properties:
                   data:
                     $ref: '#/components/schemas/ShiftReportDetail'
@@ -472,14 +516,15 @@ paths:
   /shift-reports/{id}/pdf:
     get:
       summary: Shift report PDF
-      description: Served inline with `Cache-Control private, no-store`. Built on request when none is stored.
+      description: Served inline with `Cache-Control private, no-store`. Built on
+        request when none is stored.
       operationId: getShiftReportPdf
       parameters:
-        - name: id
-          in: path
-          required: true
-          schema:
-            type: string
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
       responses:
         '200':
           description: PDF document
@@ -497,16 +542,17 @@ paths:
   /shift-reports/{id}/activities:
     get:
       summary: Audit activities of the report's shift
-      description: Only `id`, `action`, `entity`, `entity_id` and `at`. Details and IP are never returned.
+      description: Only `id`, `action`, `entity`, `entity_id` and `at`. Details and
+        IP are never returned.
       operationId: getShiftReportActivities
       parameters:
-        - name: id
-          in: path
-          required: true
-          schema:
-            type: string
-        - $ref: '#/components/parameters/Page'
-        - $ref: '#/components/parameters/Limit'
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+      - $ref: '#/components/parameters/Page'
+      - $ref: '#/components/parameters/Limit'
       responses:
         '200':
           description: Activities, newest first
@@ -514,13 +560,20 @@ paths:
             application/json:
               schema:
                 type: object
-                required: [data, meta]
+                required:
+                - data
+                - meta
                 properties:
                   data:
                     type: array
                     items:
                       type: object
-                      required: [id, action, entity, entity_id, at]
+                      required:
+                      - id
+                      - action
+                      - entity
+                      - entity_id
+                      - at
                       properties:
                         id:
                           type: string
@@ -545,14 +598,15 @@ paths:
   /shift-reports/{id}/handover:
     get:
       summary: Handover summary of the report's shift
-      description: The report stores only the count of pending items, so `pending_items` is always an empty list.
+      description: The report stores only the count of pending items, so `pending_items`
+        is always an empty list.
       operationId: getShiftReportHandover
       parameters:
-        - name: id
-          in: path
-          required: true
-          schema:
-            type: string
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
       responses:
         '200':
           description: Handover
@@ -560,7 +614,8 @@ paths:
             application/json:
               schema:
                 type: object
-                required: [data]
+                required:
+                - data
                 properties:
                   data:
                     $ref: '#/components/schemas/ShiftReportHandover'
@@ -570,12 +625,13 @@ paths:
           $ref: '#/components/responses/Forbidden'
         '404':
           $ref: '#/components/responses/NotFound'
-
   /daily-closings/current:
     get:
       summary: Current business day
-      description: |
-        Returns the open business day with live totals and blockers, or `data: null` when no day is open.
+      description: 'Returns the open business day with live totals and blockers, or
+        `data: null` when no day is open.
+
+        '
       operationId: getCurrentDailyClosing
       responses:
         '200':
@@ -584,13 +640,14 @@ paths:
             application/json:
               schema:
                 type: object
-                required: [data]
+                required:
+                - data
                 properties:
                   data:
                     type: object
                     nullable: true
                     allOf:
-                      - $ref: '#/components/schemas/CurrentDailyClosing'
+                    - $ref: '#/components/schemas/CurrentDailyClosing'
         '401':
           $ref: '#/components/responses/Unauthorized'
         '403':
@@ -598,11 +655,13 @@ paths:
   /daily-closings/open:
     post:
       summary: Open the business day
-      description: |
-        The business date is set by the server (today in Cairo time). Returns `409 ACTIVE_BUSINESS_DAY_EXISTS` when another day is already open.
+      description: 'The business date is set by the server (today in Cairo time).
+        Returns `409 ACTIVE_BUSINESS_DAY_EXISTS` when another day is already open.
+
+        '
       operationId: openDailyClosing
       parameters:
-        - $ref: '#/components/parameters/IdempotencyKey'
+      - $ref: '#/components/parameters/IdempotencyKey'
       requestBody:
         required: false
         content:
@@ -621,7 +680,8 @@ paths:
             application/json:
               schema:
                 type: object
-                required: [data]
+                required:
+                - data
                 properties:
                   data:
                     $ref: '#/components/schemas/OpenedDailyClosing'
@@ -638,11 +698,13 @@ paths:
   /daily-closings/close:
     post:
       summary: Close the business day
-      description: |
-        Checks in order: an open day exists, no pending approvals (`PENDING_APPROVALS_EXIST`), no active shift, no `PENDING_REVIEW` reports (`UNREVIEWED_REPORTS_EXIST`).
+      description: 'Checks in order: an open day exists, no pending approvals (`PENDING_APPROVALS_EXIST`),
+        no active shift, no `PENDING_REVIEW` reports (`UNREVIEWED_REPORTS_EXIST`).
+
+        '
       operationId: closeDailyClosing
       parameters:
-        - $ref: '#/components/parameters/IdempotencyKey'
+      - $ref: '#/components/parameters/IdempotencyKey'
       requestBody:
         required: false
         content:
@@ -661,7 +723,8 @@ paths:
             application/json:
               schema:
                 type: object
-                required: [data]
+                required:
+                - data
                 properties:
                   data:
                     $ref: '#/components/schemas/ClosedDailyClosing'
@@ -670,7 +733,8 @@ paths:
         '403':
           $ref: '#/components/responses/Forbidden'
         '409':
-          description: No open day, pending approvals, an open shift, or unreviewed reports
+          description: No open day, pending approvals, an open shift, or unreviewed
+            reports
           content:
             application/json:
               schema:
@@ -680,26 +744,28 @@ paths:
       summary: List daily closings
       operationId: listDailyClosings
       parameters:
-        - name: from
-          in: query
-          required: false
-          schema:
-            type: string
-            format: date
-        - name: to
-          in: query
-          required: false
-          schema:
-            type: string
-            format: date
-        - name: status
-          in: query
-          required: false
-          schema:
-            type: string
-            enum: [OPEN, CLOSED]
-        - $ref: '#/components/parameters/Page'
-        - $ref: '#/components/parameters/Limit'
+      - name: from
+        in: query
+        required: false
+        schema:
+          type: string
+          format: date
+      - name: to
+        in: query
+        required: false
+        schema:
+          type: string
+          format: date
+      - name: status
+        in: query
+        required: false
+        schema:
+          type: string
+          enum:
+          - OPEN
+          - CLOSED
+      - $ref: '#/components/parameters/Page'
+      - $ref: '#/components/parameters/Limit'
       responses:
         '200':
           description: Paginated list of closings
@@ -707,7 +773,9 @@ paths:
             application/json:
               schema:
                 type: object
-                required: [data, meta]
+                required:
+                - data
+                - meta
                 properties:
                   data:
                     type: array
@@ -724,46 +792,54 @@ paths:
   /payments:
     get:
       summary: Payments ledger (read only)
-      description: |
-        Refunds and corrections are negative amounts. `meta.summary` totals the whole filtered set, not just the page.
+      description: 'Refunds and corrections are negative amounts. `meta.summary` totals
+        the whole filtered set, not just the page.
+
+        '
       operationId: listPayments
       parameters:
-        - name: from
-          in: query
-          required: false
-          schema:
-            type: string
-            format: date
-        - name: to
-          in: query
-          required: false
-          schema:
-            type: string
-            format: date
-        - name: shift_id
-          in: query
-          required: false
-          schema:
-            type: string
-        - name: booking_id
-          in: query
-          required: false
-          schema:
-            type: string
-        - name: method
-          in: query
-          required: false
-          schema:
-            type: string
-            enum: [CASH, INSTAPAY, VODAFONE_CASH]
-        - name: type
-          in: query
-          required: false
-          schema:
-            type: string
-            enum: [PAYMENT, REFUND, CORRECTION]
-        - $ref: '#/components/parameters/Page'
-        - $ref: '#/components/parameters/Limit'
+      - name: from
+        in: query
+        required: false
+        schema:
+          type: string
+          format: date
+      - name: to
+        in: query
+        required: false
+        schema:
+          type: string
+          format: date
+      - name: shift_id
+        in: query
+        required: false
+        schema:
+          type: string
+      - name: booking_id
+        in: query
+        required: false
+        schema:
+          type: string
+      - name: method
+        in: query
+        required: false
+        schema:
+          type: string
+          enum:
+          - CASH
+          - INSTAPAY
+          - VODAFONE_CASH
+      - name: type
+        in: query
+        required: false
+        schema:
+          type: string
+          enum:
+          - PAYMENT
+          - REFUND
+          - CORRECTION
+      - $ref: '#/components/parameters/Page'
+      - $ref: '#/components/parameters/Limit'
       responses:
         '200':
           description: Paginated payments
@@ -771,7 +847,9 @@ paths:
             application/json:
               schema:
                 type: object
-                required: [data, meta]
+                required:
+                - data
+                - meta
                 properties:
                   data:
                     type: array
@@ -779,11 +857,11 @@ paths:
                       $ref: '#/components/schemas/PaymentItem'
                   meta:
                     allOf:
-                      - $ref: '#/components/schemas/Meta'
-                      - type: object
-                        properties:
-                          summary:
-                            $ref: '#/components/schemas/PaymentsSummary'
+                    - $ref: '#/components/schemas/Meta'
+                    - type: object
+                      properties:
+                        summary:
+                          $ref: '#/components/schemas/PaymentsSummary'
         '400':
           $ref: '#/components/responses/BadRequest'
         '401':
@@ -801,7 +879,8 @@ paths:
             application/json:
               schema:
                 type: object
-                required: [data]
+                required:
+                - data
                 properties:
                   data:
                     $ref: '#/components/schemas/DashboardOverview'
@@ -815,13 +894,13 @@ paths:
       description: '`days` from 1 to 90, default 7 (larger values are capped).'
       operationId: getDashboardRevenue
       parameters:
-        - name: days
-          in: query
-          schema:
-            type: integer
-            minimum: 1
-            maximum: 90
-            default: 7
+      - name: days
+        in: query
+        schema:
+          type: integer
+          minimum: 1
+          maximum: 90
+          default: 7
       responses:
         '200':
           description: Revenue totals, series and payment methods
@@ -829,7 +908,8 @@ paths:
             application/json:
               schema:
                 type: object
-                required: [data]
+                required:
+                - data
                 properties:
                   data:
                     $ref: '#/components/schemas/DashboardRevenue'
@@ -844,13 +924,13 @@ paths:
       summary: Open maintenance and cleaning issues
       operationId: getDashboardIssues
       parameters:
-        - name: limit
-          in: query
-          schema:
-            type: integer
-            minimum: 1
-            maximum: 20
-            default: 4
+      - name: limit
+        in: query
+        schema:
+          type: integer
+          minimum: 1
+          maximum: 20
+          default: 4
       responses:
         '200':
           description: Issues, most severe first
@@ -858,7 +938,8 @@ paths:
             application/json:
               schema:
                 type: object
-                required: [data]
+                required:
+                - data
                 properties:
                   data:
                     type: array
@@ -876,13 +957,13 @@ paths:
       description: Newest first. Details and IP are never returned.
       operationId: listActivities
       parameters:
-        - name: limit
-          in: query
-          schema:
-            type: integer
-            minimum: 1
-            maximum: 50
-            default: 4
+      - name: limit
+        in: query
+        schema:
+          type: integer
+          minimum: 1
+          maximum: 50
+          default: 4
       responses:
         '200':
           description: Activities
@@ -890,7 +971,8 @@ paths:
             application/json:
               schema:
                 type: object
-                required: [data]
+                required:
+                - data
                 properties:
                   data:
                     type: array
@@ -913,7 +995,8 @@ paths:
             application/json:
               schema:
                 type: object
-                required: [data]
+                required:
+                - data
                 properties:
                   data:
                     $ref: '#/components/schemas/HotelSettings'
@@ -937,7 +1020,8 @@ paths:
             application/json:
               schema:
                 type: object
-                required: [data]
+                required:
+                - data
                 properties:
                   data:
                     $ref: '#/components/schemas/HotelSettings'
@@ -958,7 +1042,8 @@ paths:
             application/json:
               schema:
                 type: object
-                required: [data]
+                required:
+                - data
                 properties:
                   data:
                     $ref: '#/components/schemas/ShiftSettings'
@@ -982,7 +1067,8 @@ paths:
             application/json:
               schema:
                 type: object
-                required: [data]
+                required:
+                - data
                 properties:
                   data:
                     $ref: '#/components/schemas/ShiftSettingsPatchResponse'
@@ -997,21 +1083,21 @@ paths:
       summary: Universal search across rooms, staff and shift reports
       operationId: search
       parameters:
-        - name: q
-          in: query
-          required: true
-          schema:
-            type: string
-            minLength: 2
-            maxLength: 50
-        - name: limit
-          in: query
-          required: false
-          schema:
-            type: integer
-            minimum: 1
-            maximum: 10
-            default: 5
+      - name: q
+        in: query
+        required: true
+        schema:
+          type: string
+          minLength: 2
+          maxLength: 50
+      - name: limit
+        in: query
+        required: false
+        schema:
+          type: integer
+          minimum: 1
+          maximum: 10
+          default: 5
       responses:
         '200':
           description: Search results
@@ -1025,6 +1111,835 @@ paths:
           $ref: '#/components/responses/Unauthorized'
         '403':
           $ref: '#/components/responses/Forbidden'
+  /staff:
+    get:
+      summary: List staff members
+      operationId: listStaff
+      parameters:
+      - $ref: '#/components/parameters/Page'
+      - $ref: '#/components/parameters/Limit'
+      - name: role
+        in: query
+        schema:
+          type: string
+          enum:
+          - receptionist
+          - manager
+          - admin
+          - housekeeper
+          - technician
+      - name: department
+        in: query
+        schema:
+          type: string
+      - name: is_active
+        in: query
+        schema:
+          type: boolean
+      - name: on_shift
+        in: query
+        schema:
+          type: boolean
+      - name: q
+        in: query
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Staff list
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                - data
+                - meta
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/StaffItem'
+                  meta:
+                    $ref: '#/components/schemas/Meta'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+    post:
+      summary: Create staff member
+      operationId: createStaff
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/StaffCreateRequest'
+      responses:
+        '201':
+          description: Staff created
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                - data
+                properties:
+                  data:
+                    $ref: '#/components/schemas/StaffCreateResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+  /staff/{id}:
+    get:
+      summary: Get staff member by ID
+      operationId: getStaffById
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          $ref: '#/components/schemas/ObjectId'
+      responses:
+        '200':
+          description: Staff details
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                - data
+                properties:
+                  data:
+                    $ref: '#/components/schemas/StaffItem'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+    patch:
+      summary: Update staff member
+      operationId: updateStaff
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          $ref: '#/components/schemas/ObjectId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/StaffUpdateRequest'
+      responses:
+        '200':
+          description: Staff updated
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                - data
+                properties:
+                  data:
+                    $ref: '#/components/schemas/StaffItem'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+    delete:
+      summary: Deactivate staff member
+      operationId: deactivateStaff
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          $ref: '#/components/schemas/ObjectId'
+      responses:
+        '200':
+          description: Staff deactivated
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: '#/components/schemas/StaffItem'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+  /staff/{id}/reactivate:
+    post:
+      summary: Reactivate staff member
+      operationId: reactivateStaff
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          $ref: '#/components/schemas/ObjectId'
+      responses:
+        '200':
+          description: Staff reactivated
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: '#/components/schemas/StaffItem'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+  /staff/{id}/reset-password:
+    post:
+      summary: Reset staff password
+      operationId: resetStaffPassword
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          $ref: '#/components/schemas/ObjectId'
+      responses:
+        '200':
+          description: Password reset
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      temporary_password:
+                        type: string
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+  /rooms:
+    get:
+      summary: List rooms
+      operationId: listRooms
+      parameters:
+      - $ref: '#/components/parameters/Page'
+      - $ref: '#/components/parameters/Limit'
+      - name: floor
+        in: query
+        schema:
+          type: integer
+      - name: room_type_id
+        in: query
+        schema:
+          $ref: '#/components/schemas/ObjectId'
+      - name: physical_status
+        in: query
+        schema:
+          type: string
+      - name: occupancy_status
+        in: query
+        schema:
+          type: string
+      - name: q
+        in: query
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Rooms list
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/RoomItem'
+                  meta:
+                    $ref: '#/components/schemas/Meta'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+  /rooms/{id}:
+    patch:
+      summary: Update room
+      operationId: updateRoom
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          $ref: '#/components/schemas/ObjectId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RoomUpdateRequest'
+      responses:
+        '200':
+          description: Room updated
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: '#/components/schemas/RoomItem'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+  /rooms/{id}/activities:
+    get:
+      summary: Get room activities
+      operationId: getRoomActivities
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          $ref: '#/components/schemas/ObjectId'
+      - $ref: '#/components/parameters/Page'
+      - $ref: '#/components/parameters/Limit'
+      responses:
+        '200':
+          description: Room activities
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/RoomActivityItem'
+                  meta:
+                    $ref: '#/components/schemas/Meta'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+  /room-types:
+    get:
+      summary: List room types
+      operationId: listRoomTypes
+      responses:
+        '200':
+          description: Room types list
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/RoomTypeItem'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+    post:
+      summary: Create room type
+      operationId: createRoomType
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RoomTypeCreateRequest'
+      responses:
+        '201':
+          description: Room type created
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: '#/components/schemas/RoomTypeItem'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+  /room-types/{id}:
+    patch:
+      summary: Update room type
+      operationId: updateRoomType
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          $ref: '#/components/schemas/ObjectId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RoomTypeUpdateRequest'
+      responses:
+        '200':
+          description: Room type updated
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: '#/components/schemas/RoomTypeItem'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+    get:
+      summary: Get room type by ID
+      operationId: getRoomTypeById
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          $ref: '#/components/schemas/ObjectId'
+      responses:
+        '200':
+          description: Room type details
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: '#/components/schemas/RoomTypeItem'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+  /housekeeping-tasks:
+    get:
+      summary: List housekeeping tasks
+      operationId: listHousekeepingTasks
+      parameters:
+      - $ref: '#/components/parameters/Page'
+      - $ref: '#/components/parameters/Limit'
+      - name: status
+        in: query
+        schema:
+          type: string
+          enum:
+          - PENDING
+          - COMPLETED
+          - ALL
+      - name: priority
+        in: query
+        schema:
+          type: string
+      - name: room_id
+        in: query
+        schema:
+          $ref: '#/components/schemas/ObjectId'
+      responses:
+        '200':
+          description: Housekeeping tasks list
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/HousekeepingTaskItem'
+                  meta:
+                    $ref: '#/components/schemas/Meta'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+  /housekeeping-tasks/{id}/assign:
+    patch:
+      summary: Assign housekeeping task
+      operationId: assignHousekeepingTask
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          $ref: '#/components/schemas/ObjectId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/HousekeepingTaskAssignRequest'
+      responses:
+        '200':
+          description: Task assigned
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: '#/components/schemas/HousekeepingTaskItem'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+  /shifts:
+    get:
+      summary: List shifts
+      operationId: listShifts
+      parameters:
+      - $ref: '#/components/parameters/Page'
+      - $ref: '#/components/parameters/Limit'
+      - name: from
+        in: query
+        schema:
+          type: string
+      - name: to
+        in: query
+        schema:
+          type: string
+      - name: staff_id
+        in: query
+        schema:
+          $ref: '#/components/schemas/ObjectId'
+      - name: shift_type
+        in: query
+        schema:
+          type: string
+      - name: status
+        in: query
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Shifts list
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/ShiftScheduleItem'
+                  meta:
+                    $ref: '#/components/schemas/Meta'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+    post:
+      summary: Create shift schedule
+      operationId: createShiftSchedule
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ShiftCreateRequest'
+      responses:
+        '201':
+          description: Shift schedule created
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: '#/components/schemas/ShiftScheduleItem'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+  /shifts/overview:
+    get:
+      summary: Get shifts overview
+      operationId: getShiftsOverview
+      responses:
+        '200':
+          description: Shifts overview
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: '#/components/schemas/ShiftOverview'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+  /shifts/roster:
+    get:
+      summary: Get shifts roster
+      operationId: getShiftsRoster
+      parameters:
+      - name: week_start
+        in: query
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Shifts roster
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: '#/components/schemas/ShiftRoster'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+  /shifts/{id}:
+    patch:
+      summary: Update shift schedule
+      operationId: updateShiftSchedule
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          $ref: '#/components/schemas/ObjectId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ShiftUpdateRequest'
+      responses:
+        '200':
+          description: Shift schedule updated
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: '#/components/schemas/ShiftScheduleItem'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+    delete:
+      summary: Cancel shift schedule
+      operationId: cancelShiftSchedule
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          $ref: '#/components/schemas/ObjectId'
+      responses:
+        '200':
+          description: Shift schedule cancelled
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: '#/components/schemas/ShiftScheduleItem'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+  /shifts/{id}/force-close:
+    post:
+      summary: Force close active shift
+      operationId: forceCloseShift
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          $ref: '#/components/schemas/ObjectId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ShiftForceCloseRequest'
+      responses:
+        '200':
+          description: Shift force closed
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      shift_id:
+                        type: string
+                      status:
+                        type: string
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+  /leave-requests:
+    get:
+      summary: List leave requests
+      operationId: listLeaveRequests
+      parameters:
+      - $ref: '#/components/parameters/Page'
+      - $ref: '#/components/parameters/Limit'
+      - name: status
+        in: query
+        schema:
+          type: string
+          enum:
+          - PENDING
+          - APPROVED
+          - REJECTED
+          - ALL
+      - name: staff_id
+        in: query
+        schema:
+          $ref: '#/components/schemas/ObjectId'
+      - name: from
+        in: query
+        schema:
+          type: string
+      - name: to
+        in: query
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Leave requests list
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/LeaveRequestItem'
+                  meta:
+                    $ref: '#/components/schemas/Meta'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+  /leave-requests/{id}:
+    get:
+      summary: Get leave request by ID
+      operationId: getLeaveRequestById
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          $ref: '#/components/schemas/ObjectId'
+      responses:
+        '200':
+          description: Leave request details
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: '#/components/schemas/LeaveRequestItem'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+  /leave-requests/{id}/decision:
+    patch:
+      summary: Decide on leave request
+      operationId: decideLeaveRequest
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          $ref: '#/components/schemas/ObjectId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LeaveDecisionRequest'
+      responses:
+        '200':
+          description: Leave decision recorded
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: '#/components/schemas/LeaveDecisionResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
 components:
   securitySchemes:
     bearerAuth:
@@ -1095,33 +2010,35 @@ components:
           type: number
     CurrentDailyClosing:
       allOf:
-        - $ref: '#/components/schemas/DailyClosingTotals'
-        - type: object
-          properties:
-            closing_id:
-              type: string
-            business_date:
-              type: string
-            status:
-              type: string
-              enum: [OPEN, CLOSED]
-            opened_at:
-              type: string
-              nullable: true
-            opened_by_staff_id:
-              type: string
-              nullable: true
-            blockers:
-              type: object
-              properties:
-                pending_approvals:
-                  type: integer
-                unreviewed_reports:
-                  type: integer
-                active_shifts:
-                  type: integer
-            can_close:
-              type: boolean
+      - $ref: '#/components/schemas/DailyClosingTotals'
+      - type: object
+        properties:
+          closing_id:
+            type: string
+          business_date:
+            type: string
+          status:
+            type: string
+            enum:
+            - OPEN
+            - CLOSED
+          opened_at:
+            type: string
+            nullable: true
+          opened_by_staff_id:
+            type: string
+            nullable: true
+          blockers:
+            type: object
+            properties:
+              pending_approvals:
+                type: integer
+              unreviewed_reports:
+                type: integer
+              active_shifts:
+                type: integer
+          can_close:
+            type: boolean
     OpenedDailyClosing:
       type: object
       properties:
@@ -1139,48 +2056,50 @@ components:
           nullable: true
     ClosedDailyClosing:
       allOf:
-        - $ref: '#/components/schemas/DailyClosingTotals'
-        - type: object
-          properties:
-            closing_id:
-              type: string
-            business_date:
-              type: string
-            status:
-              type: string
-            closed_by_staff_id:
-              type: string
-              nullable: true
-            closed_at:
-              type: string
-              nullable: true
+      - $ref: '#/components/schemas/DailyClosingTotals'
+      - type: object
+        properties:
+          closing_id:
+            type: string
+          business_date:
+            type: string
+          status:
+            type: string
+          closed_by_staff_id:
+            type: string
+            nullable: true
+          closed_at:
+            type: string
+            nullable: true
     DailyClosingItem:
       allOf:
-        - $ref: '#/components/schemas/DailyClosingTotals'
-        - type: object
-          properties:
-            closing_id:
-              type: string
-            business_date:
-              type: string
-            status:
-              type: string
-              enum: [OPEN, CLOSED]
-            opened_at:
-              type: string
-              nullable: true
-            opened_by_staff_id:
-              type: string
-              nullable: true
-            closed_at:
-              type: string
-              nullable: true
-            closed_by_staff_id:
-              type: string
-              nullable: true
-            notes:
-              type: string
-              nullable: true
+      - $ref: '#/components/schemas/DailyClosingTotals'
+      - type: object
+        properties:
+          closing_id:
+            type: string
+          business_date:
+            type: string
+          status:
+            type: string
+            enum:
+            - OPEN
+            - CLOSED
+          opened_at:
+            type: string
+            nullable: true
+          opened_by_staff_id:
+            type: string
+            nullable: true
+          closed_at:
+            type: string
+            nullable: true
+          closed_by_staff_id:
+            type: string
+            nullable: true
+          notes:
+            type: string
+            nullable: true
     PaymentItem:
       type: object
       properties:
@@ -1194,10 +2113,16 @@ components:
           nullable: true
         method:
           type: string
-          enum: [CASH, INSTAPAY, VODAFONE_CASH]
+          enum:
+          - CASH
+          - INSTAPAY
+          - VODAFONE_CASH
         type:
           type: string
-          enum: [PAYMENT, REFUND, CORRECTION]
+          enum:
+          - PAYMENT
+          - REFUND
+          - CORRECTION
         amount:
           type: number
         staff_id:
@@ -1225,13 +2150,16 @@ components:
           type: number
         refunds:
           type: number
-  
     ObjectId:
       type: string
-      pattern: '^[a-f0-9]{24}$'
+      pattern: ^[a-f0-9]{24}$
     Meta:
       type: object
-      required: [page, limit, total, total_pages]
+      required:
+      - page
+      - limit
+      - total
+      - total_pages
       properties:
         page:
           type: integer
@@ -1245,7 +2173,15 @@ components:
           type: integer
     ApprovalRequest:
       type: object
-      required: [approval_id, request_type, status, reason, requested_refund_amount, net_paid_amount, approved_refund_amount, retained_amount]
+      required:
+      - approval_id
+      - request_type
+      - status
+      - reason
+      - requested_refund_amount
+      - net_paid_amount
+      - approved_refund_amount
+      - retained_amount
       properties:
         approval_id:
           type: string
@@ -1254,10 +2190,19 @@ components:
           nullable: true
         request_type:
           type: string
-          enum: [REFUND, DISCOUNT, CANCELLATION, UPGRADE, PRICE_OVERRIDE]
+          enum:
+          - REFUND
+          - DISCOUNT
+          - CANCELLATION
+          - UPGRADE
+          - PRICE_OVERRIDE
         status:
           type: string
-          enum: [PENDING, APPROVED, REJECTED, CANCELLED]
+          enum:
+          - PENDING
+          - APPROVED
+          - REJECTED
+          - CANCELLED
         requested_by_staff_id:
           type: string
           nullable: true
@@ -1306,7 +2251,15 @@ components:
               type: string
     ApprovalDecisionResponse:
       type: object
-      required: [approval_id, request_type, status, net_paid_amount, approved_refund_amount, retained_amount, decided_by_staff_id, decided_at]
+      required:
+      - approval_id
+      - request_type
+      - status
+      - net_paid_amount
+      - approved_refund_amount
+      - retained_amount
+      - decided_by_staff_id
+      - decided_at
       properties:
         approval_id:
           type: string
@@ -1317,7 +2270,9 @@ components:
           type: string
         status:
           type: string
-          enum: [APPROVED, REJECTED]
+          enum:
+          - APPROVED
+          - REJECTED
         net_paid_amount:
           type: number
         approved_refund_amount:
@@ -1346,7 +2301,6 @@ components:
               nullable: true
             shift_id:
               type: string
-    
     ShiftReportListItem:
       type: object
       properties:
@@ -1368,7 +2322,10 @@ components:
           nullable: true
         review_status:
           type: string
-          enum: [PENDING_REVIEW, APPROVED, NEEDS_REVIEW]
+          enum:
+          - PENDING_REVIEW
+          - APPROVED
+          - NEEDS_REVIEW
         gross_revenue:
           type: number
           nullable: true
@@ -1435,7 +2392,10 @@ components:
           nullable: true
         review_status:
           type: string
-          enum: [PENDING_REVIEW, APPROVED, NEEDS_REVIEW]
+          enum:
+          - PENDING_REVIEW
+          - APPROVED
+          - NEEDS_REVIEW
         reviewed_by_staff_id:
           type: string
           nullable: true
@@ -1635,11 +2595,14 @@ components:
           type: string
     Error:
       type: object
-      required: [error]
+      required:
+      - error
       properties:
         error:
           type: object
-          required: [code, message]
+          required:
+          - code
+          - message
           properties:
             code:
               type: string
@@ -1649,7 +2612,13 @@ components:
               type: object
     PasswordResetRequestItem:
       type: object
-      required: [id, staff_id, staff_name, username, status, requested_at]
+      required:
+      - id
+      - staff_id
+      - staff_name
+      - username
+      - status
+      - requested_at
       properties:
         id:
           type: string
@@ -1661,7 +2630,11 @@ components:
           type: string
         status:
           type: string
-          enum: [PENDING, IN_REVIEW, APPROVED, REJECTED]
+          enum:
+          - PENDING
+          - IN_REVIEW
+          - APPROVED
+          - REJECTED
         requested_at:
           type: string
           format: date-time
@@ -1677,11 +2650,14 @@ components:
           nullable: true
     PasswordResetDecisionRequest:
       type: object
-      required: [action]
+      required:
+      - action
       properties:
         action:
           type: string
-          enum: [APPROVE, REJECT]
+          enum:
+          - APPROVE
+          - REJECT
         manager_comment:
           type: string
           nullable: true
@@ -1690,7 +2666,10 @@ components:
           nullable: true
     PasswordResetDecisionResponse:
       type: object
-      required: [id, status, staff_id]
+      required:
+      - id
+      - status
+      - staff_id
       properties:
         id:
           type: string
@@ -1703,21 +2682,27 @@ components:
           nullable: true
     NotificationItem:
       type: object
-      required: [id, type, title, message, is_read, created_at]
+      required:
+      - id
+      - type
+      - title
+      - message
+      - is_read
+      - created_at
       properties:
         id:
           type: string
         type:
           type: string
           enum:
-            - APPROVAL_REQUEST
-            - APPROVAL_DECISION
-            - LEAVE_REQUEST
-            - LEAVE_DECISION
-            - CRITICAL_MAINTENANCE
-            - CRITICAL_COMPLAINT
-            - SHIFT_REPORT_SUBMITTED
-            - SYSTEM
+          - APPROVAL_REQUEST
+          - APPROVAL_DECISION
+          - LEAVE_REQUEST
+          - LEAVE_DECISION
+          - CRITICAL_MAINTENANCE
+          - CRITICAL_COMPLAINT
+          - SHIFT_REPORT_SUBMITTED
+          - SYSTEM
         title:
           type: string
         message:
@@ -1740,12 +2725,12 @@ components:
     NotificationPreferences:
       type: object
       required:
-        - approval_request
-        - leave_request
-        - critical_maintenance
-        - critical_complaint
-        - shift_report_submitted
-        - system
+      - approval_request
+      - leave_request
+      - critical_maintenance
+      - critical_complaint
+      - shift_report_submitted
+      - system
       properties:
         approval_request:
           type: boolean
@@ -1778,11 +2763,11 @@ components:
     HotelSettings:
       type: object
       required:
-        - name
-        - location
-        - floors_count
-        - total_rooms
-        - updated_at
+      - name
+      - location
+      - floors_count
+      - total_rooms
+      - updated_at
       properties:
         name:
           type: string
@@ -1813,8 +2798,8 @@ components:
     ShiftHourRange:
       type: object
       required:
-        - start
-        - end
+      - start
+      - end
       properties:
         start:
           type: integer
@@ -1827,9 +2812,9 @@ components:
     ShiftSettings:
       type: object
       required:
-        - morning
-        - evening
-        - night
+      - morning
+      - evening
+      - night
       properties:
         morning:
           $ref: '#/components/schemas/ShiftHourRange'
@@ -1853,10 +2838,10 @@ components:
     ShiftSettingsPatchResponse:
       type: object
       required:
-        - morning
-        - evening
-        - night
-        - updated_future_shifts
+      - morning
+      - evening
+      - night
+      - updated_future_shifts
       properties:
         morning:
           $ref: '#/components/schemas/ShiftHourRange'
@@ -1869,12 +2854,12 @@ components:
     SearchRoomItem:
       type: object
       required:
-        - id
-        - room_number
-        - floor
-        - room_type_name
-        - physical_status
-        - occupancy_status
+      - id
+      - room_number
+      - floor
+      - room_type_name
+      - physical_status
+      - occupancy_status
       properties:
         id:
           type: string
@@ -1891,10 +2876,10 @@ components:
     SearchStaffItem:
       type: object
       required:
-        - id
-        - full_name
-        - staff_type
-        - is_active
+      - id
+      - full_name
+      - staff_type
+      - is_active
       properties:
         id:
           type: string
@@ -1913,11 +2898,11 @@ components:
     SearchShiftReportItem:
       type: object
       required:
-        - report_id
-        - business_date
-        - shift_type
-        - staff_name
-        - review_status
+      - report_id
+      - business_date
+      - shift_type
+      - staff_name
+      - review_status
       properties:
         report_id:
           type: string
@@ -1932,15 +2917,15 @@ components:
     SearchResponse:
       type: object
       required:
-        - data
-        - meta
+      - data
+      - meta
       properties:
         data:
           type: object
           required:
-            - rooms
-            - staff
-            - shift_reports
+          - rooms
+          - staff
+          - shift_reports
           properties:
             rooms:
               type: array
@@ -1957,12 +2942,392 @@ components:
         meta:
           type: object
           required:
-            - q
-            - limit
+          - q
+          - limit
           properties:
             q:
               type: string
             limit:
               type: integer
-
-
+    StaffItem:
+      type: object
+      required:
+      - id
+      - username
+      - full_name
+      - staff_type
+      - is_active
+      properties:
+        id:
+          type: string
+        username:
+          type: string
+        full_name:
+          type: string
+        staff_type:
+          type: string
+        email:
+          type: string
+          nullable: true
+        phone:
+          type: string
+          nullable: true
+        department:
+          type: string
+          nullable: true
+        hire_date:
+          type: string
+          nullable: true
+        default_shift_type:
+          type: string
+          nullable: true
+        national_id:
+          type: string
+          nullable: true
+        is_active:
+          type: boolean
+        deactivated_at:
+          type: string
+          nullable: true
+        created_at:
+          type: string
+    StaffCreateRequest:
+      type: object
+      required:
+      - username
+      - full_name
+      - staff_type
+      properties:
+        username:
+          type: string
+        full_name:
+          type: string
+        staff_type:
+          type: string
+          enum:
+          - RECEPTIONIST
+          - MANAGER
+          - HOUSEKEEPER
+          - TECHNICIAN
+        default_shift_type:
+          type: string
+          enum:
+          - morning
+          - evening
+          - night
+        email:
+          type: string
+        phone:
+          type: string
+        department:
+          type: string
+        hire_date:
+          type: string
+        national_id:
+          type: string
+    StaffCreateResponse:
+      type: object
+      properties:
+        id:
+          type: string
+        username:
+          type: string
+        full_name:
+          type: string
+        staff_type:
+          type: string
+        temporary_password:
+          type: string
+          nullable: true
+    StaffUpdateRequest:
+      type: object
+      properties:
+        full_name:
+          type: string
+        email:
+          type: string
+        phone:
+          type: string
+        department:
+          type: string
+        default_shift_type:
+          type: string
+    RoomItem:
+      type: object
+      properties:
+        id:
+          type: string
+        room_number:
+          type: string
+        floor:
+          type: integer
+        room_type_id:
+          type: string
+        room_type_name:
+          type: string
+        physical_status:
+          type: string
+        occupancy_status:
+          type: string
+        base_price:
+          type: number
+        rack_rate:
+          type: number
+    RoomUpdateRequest:
+      type: object
+      properties:
+        physical_status:
+          type: string
+        rack_rate:
+          type: number
+    RoomActivityItem:
+      type: object
+      properties:
+        type:
+          type: string
+        at:
+          type: string
+        title:
+          type: string
+        status:
+          type: string
+        ref_id:
+          type: string
+        staff_name:
+          type: string
+          nullable: true
+    RoomTypeItem:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        description:
+          type: string
+        base_price:
+          type: number
+        capacity:
+          type: integer
+        amenities:
+          type: array
+          items:
+            type: string
+        rooms_count:
+          type: integer
+        price_min:
+          type: number
+        price_max:
+          type: number
+        is_active:
+          type: boolean
+    RoomTypeCreateRequest:
+      type: object
+      required:
+      - name
+      - base_price
+      - capacity
+      properties:
+        name:
+          type: string
+        base_price:
+          type: number
+        capacity:
+          type: integer
+        description:
+          type: string
+        amenities:
+          type: array
+          items:
+            type: string
+    RoomTypeUpdateRequest:
+      type: object
+      properties:
+        name:
+          type: string
+        base_price:
+          type: number
+        capacity:
+          type: integer
+        description:
+          type: string
+        amenities:
+          type: array
+          items:
+            type: string
+        is_active:
+          type: boolean
+    HousekeepingTaskItem:
+      type: object
+      properties:
+        id:
+          type: string
+        room_id:
+          type: string
+        room_number:
+          type: string
+        cleaner_name:
+          type: string
+          nullable: true
+        assigned_to_staff_id:
+          type: string
+          nullable: true
+        priority:
+          type: string
+        status:
+          type: string
+        notes:
+          type: string
+        created_at:
+          type: string
+    HousekeepingTaskAssignRequest:
+      type: object
+      properties:
+        cleaner_name:
+          type: string
+        assigned_to_staff_id:
+          type: string
+        priority:
+          type: string
+        notes:
+          type: string
+    ShiftScheduleItem:
+      type: object
+      properties:
+        id:
+          type: string
+        staff_id:
+          type: string
+        staff_name:
+          type: string
+        shift_date:
+          type: string
+        shift_type:
+          type: string
+        status:
+          type: string
+        start_at:
+          type: string
+        end_at:
+          type: string
+        is_manual:
+          type: boolean
+        actual_shift_id:
+          type: string
+          nullable: true
+    ShiftOverview:
+      type: object
+      properties:
+        as_of:
+          type: string
+        business_date:
+          type: string
+        counts:
+          type: object
+        upcoming_uncovered:
+          type: array
+          items:
+            type: object
+    ShiftRoster:
+      type: object
+      properties:
+        week_start:
+          type: string
+        days:
+          type: array
+          items:
+            type: string
+        staff_schedules:
+          type: array
+          items:
+            type: object
+    ShiftCreateRequest:
+      type: object
+      required:
+      - staff_id
+      - shift_date
+      - shift_type
+      properties:
+        staff_id:
+          type: string
+        shift_date:
+          type: string
+        shift_type:
+          type: string
+          enum:
+          - morning
+          - evening
+          - night
+    ShiftUpdateRequest:
+      type: object
+      properties:
+        staff_id:
+          type: string
+        shift_type:
+          type: string
+          enum:
+          - morning
+          - evening
+          - night
+    ShiftForceCloseRequest:
+      type: object
+      properties:
+        reason:
+          type: string
+    LeaveRequestItem:
+      type: object
+      properties:
+        id:
+          type: string
+        staff_id:
+          type: string
+        staff_name:
+          type: string
+        leave_type:
+          type: string
+        start_date:
+          type: string
+        end_date:
+          type: string
+        days_count:
+          type: integer
+        reason:
+          type: string
+        status:
+          type: string
+        decided_at:
+          type: string
+          nullable: true
+        decided_by_staff_id:
+          type: string
+          nullable: true
+        manager_comment:
+          type: string
+          nullable: true
+        created_at:
+          type: string
+    LeaveDecisionRequest:
+      type: object
+      required:
+      - decision
+      properties:
+        decision:
+          type: string
+          enum:
+          - APPROVE
+          - REJECT
+        manager_comment:
+          type: string
+    LeaveDecisionResponse:
+      type: object
+      properties:
+        id:
+          type: string
+        status:
+          type: string
+        decision:
+          type: string
+        decided_at:
+          type: string
+        cancelled_shifts_count:
+          type: integer

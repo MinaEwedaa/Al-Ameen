@@ -58,9 +58,26 @@ const passwordResetRateLimiter = rateLimit({
   },
 });
 
+const managerResetTestMax = Number(process.env.MANAGER_RESET_RATE_LIMIT_MAX);
+const MANAGER_RESET_MAX =
+  process.env.NODE_ENV === 'test' && managerResetTestMax > 0 ? managerResetTestMax : 10;
+
+const managerResetStaffPasswordRateLimiter = rateLimit({
+  windowMs: 60 * 1000, // 1 minute
+  max: MANAGER_RESET_MAX,
+  keyGenerator: (req) => String(req.auth?.staff?._id || req.ip),
+  validate: { keyGeneratorIpFallback: false },
+  standardHeaders: true,
+  legacyHeaders: false,
+  handler: (req, res, next) => {
+    next(E.tooMany('Too many staff password reset requests', 60));
+  },
+});
+
 module.exports = {
   loginRateLimiter,
   generalRateLimiter,
   changePasswordRateLimiter,
   passwordResetRateLimiter,
+  managerResetStaffPasswordRateLimiter,
 };

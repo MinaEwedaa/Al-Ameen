@@ -6,3 +6,4 @@ router.get('/', controller.getShifts);
 router.patch('/', controller.updateShifts);
 
 module.exports = router;
+

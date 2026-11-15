@@ -6,3 +6,4 @@ router.get('/', controller.getHotel);
 router.patch('/', controller.updateHotel);
 
 module.exports = router;
+

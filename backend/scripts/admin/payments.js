@@ -46,6 +46,7 @@ async function reversePayment({ paymentId, by, reason, yes }) {
             staff_id: original.staff_id,
             shift_id: original.shift_id,
             amount: -original.amount,
+            payment_type: 'correction',
             payment_method: original.payment_method,
             notes: `Admin reversal: ${reason}`,
             payment_datetime: new Date(),

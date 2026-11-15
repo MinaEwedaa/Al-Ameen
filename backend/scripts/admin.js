@@ -41,11 +41,17 @@ async function main() {
         .option('name', { type: 'string', demandOption: true, describe: 'Full staff name' })
         .option('shift-type', {
           type: 'string',
-          demandOption: true,
+          alias: 'shift',
+          demandOption: false,
           choices: ['morning', 'evening', 'night'],
-          describe: 'Default shift type',
+          describe: 'Default shift type (required for receptionist)',
         })
-        .option('role', { type: 'string', default: 'receptionist', describe: 'Staff role' })
+        .option('role', {
+          type: 'string',
+          default: 'receptionist',
+          choices: ['receptionist', 'manager', 'admin', 'housekeeper', 'technician'],
+          describe: 'Staff role',
+        })
         .option('password', { type: 'string', describe: 'Explicit password (random if omitted)' })
         .option('by', { type: 'string', demandOption: true, describe: 'Admin operator name' })
         .option('reason', { type: 'string', demandOption: true, describe: 'Operational reason' })
@@ -55,7 +61,7 @@ async function main() {
       const res = await staffCmds.createStaff({
         username: argv.username,
         name: argv.name,
-        shiftType: argv['shift-type'],
+        shiftType: argv['shift-type'] || argv.shift,
         role: argv.role,
         password: argv.password,
         by: argv.by,
@@ -65,7 +71,10 @@ async function main() {
       console.log('✓ Staff created successfully:');
       console.log(`  Staff ID: ${res.staff_id}`);
       console.log(`  Username: ${res.username}`);
-      console.log(`  Password: ${res.password} (Printed once - store securely!)`);
+      console.log(`  Role: ${res.role}`);
+      if (res.password) {
+        console.log(`  Password: ${res.password} (Printed once - store securely!)`);
+      }
     }
   );
 

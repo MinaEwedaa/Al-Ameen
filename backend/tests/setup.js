@@ -16,6 +16,8 @@ process.env.GENERAL_RATE_LIMIT_MAX = '5000';
 // قيمة مؤقتة عشان env.js ما يرميش خطأ وقت الـ require (الـ URI الحقيقي بيتحط تحت في beforeAll)
 process.env.MONGODB_URI = process.env.MONGODB_URI || 'mongodb://127.0.0.1:27017/test_placeholder';
 
+process.env.MONGOMS_VERSION = process.env.MONGOMS_VERSION || '7.0.14';
+
 const mongoose = require('mongoose');
 const { MongoMemoryReplSet } = require('mongodb-memory-server');
 

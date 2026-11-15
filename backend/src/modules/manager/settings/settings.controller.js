@@ -58,3 +58,4 @@ module.exports = {
   getShifts,
   updateShifts,
 };
+
