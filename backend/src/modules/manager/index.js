@@ -21,5 +21,6 @@ router.use('/payments', require('./finance/payments.routes'));
 router.use('/hotel-settings', require('./settings/hotelSettings.routes'));
 router.use('/shift-settings', require('./settings/shiftSettings.routes'));
 router.use('/search', require('./search/search.routes'));
+router.use('/maintenance-issues', require('./maintenance/maintenance.routes'));
 
 module.exports = router;

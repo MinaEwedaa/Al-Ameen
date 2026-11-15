@@ -17,6 +17,15 @@ const maintenanceIssueSchema = new Schema(
       ref: 'Staff',
       default: null,
     },
+    assigned_to_staff_id: {
+      type: Schema.Types.ObjectId,
+      ref: 'Staff',
+      default: null,
+    },
+    expected_resolution_at: {
+      type: Date,
+      default: null,
+    },
     problem: {
       type: String,
       required: true,
