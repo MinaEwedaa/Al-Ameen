@@ -40,7 +40,7 @@ export async function getDailyClosings(
   if (query.start_date) params.start_date = query.start_date;
   if (query.end_date) params.end_date = query.end_date;
 
-  return request<ListEnvelopeDto<DailyClosingHistoryDto>>('/daily-closings', {
+  return request<ListEnvelopeDto<DailyClosingHistoryDto>>('/manager/daily-closings', {
     method: 'GET',
     params,
   });
@@ -54,7 +54,7 @@ export async function getDashboardRevenue(
   days = 30,
 ): Promise<DashboardRevenueResponseDto> {
   const res = await request<SingleEnvelopeDto<DashboardRevenueResponseDto>>(
-    '/dashboard/revenue',
+    '/manager/dashboard/revenue',
     {
       method: 'GET',
       params: { days },
@@ -69,7 +69,7 @@ export async function getDashboardRevenue(
  */
 export async function getDashboardOverview(): Promise<DashboardOverviewResponseDto> {
   const res = await request<SingleEnvelopeDto<DashboardOverviewResponseDto>>(
-    '/dashboard/overview',
+    '/manager/dashboard/overview',
     {
       method: 'GET',
     },
