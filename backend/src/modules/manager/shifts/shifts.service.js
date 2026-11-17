@@ -148,10 +148,22 @@ async function getShiftOverview(businessDate) {
     const nonCancelledStaffCount = counts.scheduled + counts.active + counts.completed;
     const coverage = nonCancelledStaffCount > 0 ? 'COVERED' : 'UNCOVERED';
 
+    const now = new Date();
+    let cardStatus = 'SCHEDULED';
+    if (counts.active > 0 || (now >= win.start_at && now < win.end_at)) {
+      cardStatus = 'ACTIVE';
+    } else if (counts.completed > 0 || now >= win.end_at) {
+      cardStatus = 'COMPLETED';
+    }
+
     cards.push({
       shift_type: type,
       start_at: win.start_at.toISOString(),
       end_at: win.end_at.toISOString(),
+      start_time: win.start_at.toISOString(),
+      end_time: win.end_at.toISOString(),
+      team_count: nonCancelledStaffCount,
+      status: cardStatus,
       counts,
       coverage,
       staff: staffItems,

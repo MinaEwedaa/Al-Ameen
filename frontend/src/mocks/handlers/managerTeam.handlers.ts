@@ -383,6 +383,58 @@ export const managerTeamHandlers = [
     return HttpResponse.json({ data });
   }),
 
+  http.get(`${API}/manager/shifts/overview`, async ({ request }) => {
+    await delay(250);
+    const day = new URL(request.url).searchParams.get('business_date') ?? TODAY;
+    const data = SHIFT_TYPES.map((type) => {
+      const team = shifts.filter((shift) => shift.business_date === day && shift.shift_type === type && shift.status !== 'CANCELLED');
+      const lead = team.map((shift) => staff.find((member) => member.staff_id === shift.staff_id)).find((member) => member?.staff_type === 'RECEPTIONIST');
+      const leadShift = team.find((shift) => shift.staff_id === lead?.staff_id) ?? team[0];
+      const report = reports.find((item) => item.business_date === day && item.shift_type === type);
+      return {
+        shift_type: type,
+        shift_id: leadShift?.shift_id ?? null,
+        status: team.some((shift) => shift.status === 'ACTIVE') ? 'ACTIVE' : leadShift?.status ?? 'SCHEDULED',
+        ...shiftTimes({ business_date: day, shift_type: type }),
+        staff: lead ? { staff_id: lead.staff_id, full_name: lead.full_name } : null,
+        team_count: team.length,
+        ...(day === TODAY ? shiftStats[type] : { rooms_handled: 0, gross_revenue: 0, cleaning_tasks: 0, maintenance_requests: 0, pending_items: 0 }),
+        report: report ? { report_id: report.report_id, review_status: report.review_status } : null,
+      };
+    });
+    return HttpResponse.json({ data });
+  }),
+
+  http.get(`${API}/manager/shifts`, async ({ request }) => {
+    await delay(200);
+    const url = new URL(request.url);
+    const day = url.searchParams.get('business_date');
+    const type = url.searchParams.get('shift_type');
+    const staffId = url.searchParams.get('staff_id');
+    const list = shifts
+      .filter((shift) => shift.status !== 'CANCELLED')
+      .filter((shift) => !day || shift.business_date === day)
+      .filter((shift) => !type || shift.shift_type === type)
+      .filter((shift) => !staffId || shift.staff_id === staffId)
+      .map(shiftView);
+    return HttpResponse.json(paged(list, url));
+  }),
+
+  http.post(`${API}/manager/shifts`, async ({ request }) => {
+    await delay(300);
+    const body = (await request.json()) as { staff_id?: string; business_date?: string; shift_type?: ShiftType };
+    const member = staff.find((item) => item.staff_id === body.staff_id);
+    if (!member || !member.is_active) return errorResponse('VALIDATION_ERROR', 'Invalid staff_id', 400, { field: 'staff_id' });
+    if (!SHIFT_TYPES.includes(body.shift_type as ShiftType)) return errorResponse('VALIDATION_ERROR', 'Invalid shift_type', 400, { field: 'shift_type' });
+    const day = body.business_date ?? TODAY;
+    if (shifts.some((shift) => shift.staff_id === member.staff_id && shift.business_date === day && shift.status !== 'CANCELLED')) {
+      return errorResponse('SHIFT_OVERLAP', 'Staff member already has a shift that day', 409);
+    }
+    const shift: MockShift = { shift_id: oid('shift', nextShiftId++), staff_id: member.staff_id, business_date: day, shift_type: body.shift_type as ShiftType, status: 'SCHEDULED' };
+    shifts.push(shift);
+    return HttpResponse.json({ data: shiftView(shift) }, { status: 201 });
+  }),
+
   http.get(`${API}/shifts`, async ({ request }) => {
     await delay(200);
     const url = new URL(request.url);

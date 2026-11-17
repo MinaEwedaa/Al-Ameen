@@ -42,8 +42,101 @@ export async function scheduleShift(staffId: string, businessDate: string, shift
 }
 
 export async function getShiftCoverage(businessDate: string): Promise<ShiftCoverage[]> {
-  const response = await request<{ data: ShiftCoverage[] }>('/manager/shifts/overview', { params: { business_date: businessDate } });
-  return response.data.map(({ shift_type, shift_id, status, start_time, end_time, staff, team_count }) => (
-    { shift_type, shift_id, status, start_time, end_time, staff, team_count }
-  ));
+  const response = await request<unknown>('/manager/shifts/overview', { params: { business_date: businessDate } });
+  const body = response as Record<string, unknown> | unknown[] | null | undefined;
+
+  let rawCards: Record<string, unknown>[] = [];
+  if (Array.isArray(body)) {
+    rawCards = body as Record<string, unknown>[];
+  } else if (body && typeof body === 'object') {
+    const data = (body as { data?: unknown }).data;
+    if (Array.isArray(data)) {
+      rawCards = data as Record<string, unknown>[];
+    } else if (data && typeof data === 'object') {
+      const cards = (data as { cards?: unknown }).cards;
+      if (Array.isArray(cards)) {
+        rawCards = cards as Record<string, unknown>[];
+      }
+    } else if (Array.isArray((body as { cards?: unknown }).cards)) {
+      rawCards = (body as { cards: Record<string, unknown>[] }).cards;
+    }
+  }
+
+  return rawCards.map((card) => {
+    const rawType = String(card.shift_type || 'MORNING').toUpperCase();
+    const shiftType: ShiftType = (['MORNING', 'EVENING', 'NIGHT'].includes(rawType)
+      ? rawType
+      : 'MORNING') as ShiftType;
+
+    const startTime = String(card.start_time || card.start_at || '');
+    const endTime = String(card.end_time || card.end_at || '');
+
+    const rawStatus = typeof card.status === 'string' ? card.status.toUpperCase() : '';
+    let status: ShiftCoverage['status'] = 'SCHEDULED';
+    if (['SCHEDULED', 'ACTIVE', 'COMPLETED', 'CANCELLED'].includes(rawStatus)) {
+      status = rawStatus as ShiftCoverage['status'];
+    } else {
+      const counts = card.counts as { active?: number; completed?: number; scheduled?: number } | undefined;
+      if (counts?.active && counts.active > 0) {
+        status = 'ACTIVE';
+      } else {
+        const now = Date.now();
+        const start = startTime ? new Date(startTime).getTime() : NaN;
+        const end = endTime ? new Date(endTime).getTime() : NaN;
+        if (!Number.isNaN(start) && !Number.isNaN(end)) {
+          if (now >= start && now < end) {
+            status = 'ACTIVE';
+          } else if (now >= end) {
+            status = 'COMPLETED';
+          } else {
+            status = 'SCHEDULED';
+          }
+        } else if (counts?.completed && counts.completed > 0 && !counts.scheduled) {
+          status = 'COMPLETED';
+        }
+      }
+    }
+
+    let leadStaff: ShiftCoverage['staff'] = null;
+    const rawStaff = card.staff;
+    if (Array.isArray(rawStaff)) {
+      const staffList = rawStaff as Record<string, unknown>[];
+      const receptionist = staffList.find((s) => {
+        const dep = String(s.department || '').toLowerCase();
+        return dep === 'reception' || dep === 'front_desk';
+      }) ?? staffList[0];
+
+      if (receptionist) {
+        leadStaff = {
+          staff_id: String(receptionist.staff_id || receptionist.id || ''),
+          full_name: String(receptionist.full_name || receptionist.staff_name || receptionist.name || ''),
+        };
+      }
+    } else if (rawStaff && typeof rawStaff === 'object') {
+      const staffObj = rawStaff as Record<string, unknown>;
+      leadStaff = {
+        staff_id: String(staffObj.staff_id || staffObj.id || ''),
+        full_name: String(staffObj.full_name || staffObj.staff_name || staffObj.name || ''),
+      };
+    }
+
+    const counts = card.counts as { active?: number; completed?: number; scheduled?: number } | undefined;
+    const teamCount = typeof card.team_count === 'number'
+      ? card.team_count
+      : counts
+        ? (counts.scheduled || 0) + (counts.active || 0) + (counts.completed || 0)
+        : Array.isArray(rawStaff)
+          ? rawStaff.length
+          : leadStaff ? 1 : 0;
+
+    return {
+      shift_type: shiftType,
+      shift_id: card.shift_id ? String(card.shift_id) : null,
+      status,
+      start_time: startTime,
+      end_time: endTime,
+      staff: leadStaff,
+      team_count: teamCount,
+    };
+  });
 }

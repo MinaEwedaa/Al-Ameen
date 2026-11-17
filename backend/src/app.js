@@ -81,9 +81,9 @@ app.use(
     validateResponses: env.nodeEnv !== 'production',
     validateSecurity: false,
       ignorePaths: (p) =>
-      /^\/(health|docs|api\/v1\/test-|api\/v1\/leave-requests|api\/v1\/mock-only)/.test(p) ||
+      /^\/(health|docs|api\/v1\/test-|api\/v1\/leave-requests)/.test(p) ||
       MANAGER_PREFIX.test(p) ||
-      /^\/api\/v1\/(daily-closings|hotel-settings|shift-settings|shift-reports|room-types|mock-only)/.test(p),
+      /^\/api\/v1\/(daily-closings|hotel-settings|shift-settings|shift-reports|room-types)/.test(p),
   })
 );
 
@@ -124,7 +124,6 @@ app.use('/api/v1/hotel-settings', managerAuth, require('./modules/manager/settin
 app.use('/api/v1/shift-settings', managerAuth, require('./modules/manager/settings/shiftSettings.routes'));
 app.use('/api/v1/shift-reports', managerAuth, require('./modules/manager/shiftReports/shiftReports.routes'));
 app.use('/api/v1/room-types', managerAuth, require('./modules/manager/roomTypes/roomTypes.routes'));
-app.use('/api/v1/mock-only', require('./modules/manager/finance/mockFinance.routes'));
 if (env.nodeEnv === 'test') {
   app.post(
     '/api/v1/test-shift-write',

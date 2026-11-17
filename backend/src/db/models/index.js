@@ -23,6 +23,7 @@ const PasswordResetRequest = require('./PasswordResetRequest');
 const DailyClosing = require('./DailyClosing');
 const Notification = require('./Notification');
 const Setting = require('./Setting');
+const Expense = require('./Expense');
 
 module.exports = {
   Staff,
@@ -50,4 +51,5 @@ module.exports = {
   DailyClosing,
   Notification,
   Setting,
+  Expense,
 };

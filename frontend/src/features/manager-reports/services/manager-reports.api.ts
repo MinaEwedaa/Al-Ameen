@@ -104,7 +104,7 @@ export async function getAggregatedReport(
   if (filters.end_date) params.end_date = filters.end_date;
 
   const res = await request<SingleEnvelopeDto<ReportAggregatedDto>>(
-    '/mock-only/reports/aggregated',
+    '/manager/reports/aggregated',
     {
       method: 'GET',
       params,

@@ -79,20 +79,19 @@ export async function getExpenses(
   if (filters.category && filters.category !== 'ALL') params.category = filters.category;
   if (filters.search) params.search = filters.search;
 
-  return request<ListEnvelopeDto<FinanceExpenseDto>>('/mock-only/expenses', {
+  return request<ListEnvelopeDto<FinanceExpenseDto>>('/manager/expenses', {
     method: 'GET',
     params,
   });
 }
 
 /**
- * GET /mock-only/finance/hourly-revenue
+ * GET /manager/finance/hourly-revenue
  * Shift hourly revenue series for the Finance overview curve chart.
- * Not in contract v1.2; served from /mock-only/ mock handler.
  */
 export async function getHourlyRevenue(): Promise<HourlyRevenueDto> {
   const res = await request<SingleEnvelopeDto<HourlyRevenueDto>>(
-    '/mock-only/finance/hourly-revenue',
+    '/manager/finance/hourly-revenue',
     {
       method: 'GET',
     },
@@ -101,9 +100,8 @@ export async function getHourlyRevenue(): Promise<HourlyRevenueDto> {
 }
 
 /**
- * PATCH /mock-only/payments/:id/status
+ * PATCH /manager/payments/:id/status
  * Updates a payment's status (completed, pending, refunded, cancelled).
- * Conflict note: Contract v1.2 specifies payments are immutable; provided on /mock-only/ for design parity.
  */
 export async function updatePaymentStatus(
   paymentId: string,
@@ -112,7 +110,7 @@ export async function updatePaymentStatus(
 ): Promise<FinancePaymentDto> {
   const body: UpdatePaymentStatusDto = { status, reason };
   const res = await request<SingleEnvelopeDto<FinancePaymentDto>>(
-    `/mock-only/payments/${paymentId}/status`,
+    `/manager/payments/${paymentId}/status`,
     {
       method: 'PATCH',
       body,
@@ -122,16 +120,15 @@ export async function updatePaymentStatus(
 }
 
 /**
- * PATCH /mock-only/expenses/:id
+ * PATCH /manager/expenses/:id
  * Updates an operational expense entry.
- * Not in contract v1.2; served from /mock-only/ mock handler.
  */
 export async function updateExpense(
   expenseId: string,
   payload: UpdateExpenseDto,
 ): Promise<FinanceExpenseDto> {
   const res = await request<SingleEnvelopeDto<FinanceExpenseDto>>(
-    `/mock-only/expenses/${expenseId}`,
+    `/manager/expenses/${expenseId}`,
     {
       method: 'PATCH',
       body: payload,
